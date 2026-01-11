@@ -2,13 +2,14 @@ import * as THREE from "three";
 import { ActivePokemon } from "../entities/ActivePokemon.js";
 
 export class PokeballPhysics {
-  constructor(scene, camera, player, uiManager, pokemonManager, saveManager) {
+  constructor(scene, camera, player, uiManager, pokemonManager, saveManager, inputManager = null) {
     this.scene = scene;
     this.camera = camera;
     this.player = player;
     this.uiManager = uiManager;
     this.pokemonManager = pokemonManager;
     this.saveManager = saveManager; // ✅ Stocker le SaveManager
+    this.inputManager = inputManager; // ✅ Référence à l'InputManager pour vérifier le pointer lock
 
     // État du lancer
     this.isCharging = false;
@@ -231,11 +232,11 @@ export class PokeballPhysics {
   }
   setupInputs() {
     document.addEventListener("mousedown", (e) => {
-      // ✅ FIX: Supporte Clic Gauche (0) et Clic Droit (2)
-      // On autorise le clic gauche seulement si on n'est pas sur un bouton de menu
-      const isOverButton = e.target.closest("button") || e.target.closest("input");
-      
-      if ((e.button === 0 || e.button === 2) && !isOverButton) {
+      // ✅ FIX: Ne lancer la pokéball que si le pointer lock est actif
+      // Cela évite de lancer la pokéball lors des clics sur les menus UI
+      const isPointerLocked = this.inputManager?.isLocked() || document.pointerLockElement !== null;
+
+      if ((e.button === 0 || e.button === 2) && isPointerLocked) {
         // e.preventDefault(); // Optionnel selon l'effet sur le PointerLock
         this.startCharging();
       }

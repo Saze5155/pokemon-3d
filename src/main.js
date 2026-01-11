@@ -177,7 +177,7 @@ class PokemonGame {
     // Managers
     this.sceneManager = new SceneManager(this.renderer);
     this.worldManager = new WorldManager(this.sceneManager);
-    this.inputManager = new InputManager(this.camera, document.body);
+    this.inputManager = new InputManager(this.camera, this.renderer.domElement);
     this.ui = new UIManager();
     this.saveManager = new SaveManager();
     this.typeManager = new TypeManager();
@@ -901,7 +901,8 @@ class PokemonGame {
       this.camera,
       this.ui,
       this.pokemonManager,
-      this.saveManager // ✅ INJECTION DEPENDANCE (2ème instance)
+      this.saveManager, // ✅ INJECTION DEPENDANCE (2ème instance)
+      this.inputManager // ✅ Passer l'InputManager pour vérifier le pointer lock
     );
 
 
@@ -961,7 +962,8 @@ class PokemonGame {
       this.camera,
       this.ui,
       this.pokemonManager,
-      this.saveManager // ✅ INJECTION_DEPENDANCE
+      this.saveManager, // ✅ INJECTION_DEPENDANCE
+      this.inputManager // ✅ Passer l'InputManager pour vérifier le pointer lock
     );
 
     // Système de combat

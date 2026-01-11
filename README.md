@@ -438,10 +438,6 @@ pokemon-3d/
 - [x] Zones jusqu'à Argenta
 
 ### Prochaines versions
-- [ ] Premier badge (Pierre)
-- [ ] Système PC (stockage Pokémon)
-- [ ] Animations joueur
-- [ ] Mode Hardcore
 - [ ] Support VR (WebXR)
 - [ ] Multijoueur (échanges)
 

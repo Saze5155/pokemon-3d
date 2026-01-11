@@ -2,8 +2,8 @@
   "sauvegarde_1": {
     "joueur": {
       "nom": "RED",
-      "idDresseur": 29170,
-      "argent": 3060,
+      "idDresseur": 30561,
+      "argent": 3000,
       "badges": [
         false,
         false,
@@ -14,7 +14,7 @@
         false,
         false
       ],
-      "tempsJeu": 161,
+      "tempsJeu": 59,
       "position": {
         "map": "maisonetage",
         "x": 5,
@@ -25,8 +25,8 @@
     },
     "equipe": [
       1,
-      2,
-      3,
+      null,
+      null,
       null,
       null,
       null
@@ -43,14 +43,10 @@
     },
     "pokedex": {
       "vus": [
-        4,
-        10,
-        43
+        4
       ],
       "captures": [
-        4,
-        10,
-        43
+        4
       ]
     },
     "drapeaux": {
@@ -66,11 +62,9 @@
       "foret_jade_traversee": false,
       "badge_roche": false
     },
-    "dresseursVaincus": [
-      "dresseur_insecte_1_1"
-    ],
-    "dateCreation": "2026-01-11T19:22:26.782Z",
-    "dateSauvegarde": "2026-01-11T19:25:18.032Z"
+    "dresseursVaincus": [],
+    "dateCreation": "2026-01-11T19:31:38.390Z",
+    "dateSauvegarde": "2026-01-11T19:32:40.237Z"
   },
   "sauvegarde_2": null,
   "sauvegarde_3": null
