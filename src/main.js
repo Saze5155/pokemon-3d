@@ -486,14 +486,14 @@ class PokemonGame {
 
   async loadGame() {
     // RÃƒÂ©cupÃƒÂ©rer la liste des scÃƒÂ¨nes depuis le serveur
-    const scenesResponse = await fetch("http://localhost:3000/list-scenes");
+    const scenesResponse = await fetch("/list-scenes");
     const scenesData = await scenesResponse.json();
 
     // Charger chaque scÃƒÂ¨ne
     for (const sceneName of scenesData.scenes) {
       // Charger les donnÃƒÂ©es de la scÃƒÂ¨ne
       const response = await fetch(
-        `http://localhost:3000/load-scene/${sceneName}`
+        `/load-scene/${sceneName}`
       );
       const data = await response.json();
 
@@ -507,7 +507,7 @@ class PokemonGame {
       // Charger les donnÃƒÂ©es
       await this.sceneManager.loadSceneFromServer(
         sceneName,
-        `http://localhost:3000/load-scene/${sceneName}`
+        `/load-scene/${sceneName}`
       );
     }
 
@@ -539,14 +539,14 @@ class PokemonGame {
     }
 
     // Toujours charger les scènes en mode classique d'abord
-    const scenesResponse = await fetch("http://localhost:3000/list-scenes");
+    const scenesResponse = await fetch("/list-scenes");
     const scenesData = await scenesResponse.json();
     console.log("📂 Scènes disponibles sur le serveur:", scenesData.scenes);
 
     // Charger chaque scÃ¨ne
     for (const sceneName of scenesData.scenes) {
       const response = await fetch(
-        `http://localhost:3000/load-scene/${sceneName}`
+        `/load-scene/${sceneName}`
       );
       const data = await response.json();
 
@@ -558,7 +558,7 @@ class PokemonGame {
 
       await this.sceneManager.loadSceneFromServer(
         sceneName,
-        `http://localhost:3000/load-scene/${sceneName}`
+        `/load-scene/${sceneName}`
       );
     }
 
