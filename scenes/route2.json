@@ -2714,6 +2714,13 @@
             "maxLevel": 5
           },
           {
+            "id": 54,
+            "nom": "Psykokwak",
+            "weight": 5,
+            "minLevel": 3,
+            "maxLevel": 5
+          },
+          {
             "id": 69,
             "nom": "Chétiflor",
             "weight": 20,
