@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokemon 3D Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #1a1a2e;
+        --bg-secondary: #16213e;
+        --bg-tertiary: #0f0f1a;
+        --bg-panel: rgba(22, 33, 62, 0.98);
+        --bg-hover: rgba(255, 255, 255, 0.08);
+        --bg-active: rgba(99, 102, 241, 0.2);
+        --accent: #6366f1;
+        --accent-hover: #818cf8;
+        --accent-glow: rgba(99, 102, 241, 0.4);
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --border: rgba(255, 255, 255, 0.1);
+        --border-focus: rgba(99, 102, 241, 0.5);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        --radius-sm: 6px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --sidebar-width: 280px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        overflow: hidden;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+      }
+
+      #canvas-container {
+        position: absolute;
+        left: var(--sidebar-width);
+        right: var(--sidebar-width);
+        top: 0;
+        bottom: 0;
+        transition: left 0.3s ease, right 0.3s ease;
+      }
+
+      #canvas-container.left-collapsed {
+        left: 0;
+      }
+
+      #canvas-container.right-collapsed {
+        right: 0;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--text-muted);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-secondary);
+      }
+
+      /* Sidebars */
+      .sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar-left {
+        left: 0;
+        border-left: none;
+        border-top: none;
+        border-bottom: none;
+      }
+
+      .sidebar-left.collapsed {
+        transform: translateX(calc(-1 * var(--sidebar-width)));
+      }
+
+      .sidebar-right {
+        right: 0;
+        border-right: none;
+        border-top: none;
+        border-bottom: none;
+      }
+
+      .sidebar-right.collapsed {
+        transform: translateX(var(--sidebar-width));
+      }
+
+      /* Toggle buttons */
+      .sidebar-toggle {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 60px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 101;
+        color: var(--text-secondary);
+      }
+
+      .sidebar-toggle:hover {
+        background: var(--bg-active);
+        color: var(--text-primary);
+        border-color: var(--accent);
+      }
+
+      .sidebar-toggle-left {
+        left: var(--sidebar-width);
+        border-left: none;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        transition: left 0.3s ease, background 0.2s, color 0.2s,
+          border-color 0.2s;
+      }
+
+      .sidebar-toggle-left.collapsed {
+        left: 0;
+      }
+
+      .sidebar-toggle-right {
+        right: var(--sidebar-width);
+        border-right: none;
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        transition: right 0.3s ease, background 0.2s, color 0.2s,
+          border-color 0.2s;
+      }
+
+      .sidebar-toggle-right.collapsed {
+        right: 0;
+      }
+
+      .sidebar-toggle svg {
+        width: 14px;
+        height: 14px;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar-toggle-left.collapsed svg {
+        transform: rotate(180deg);
+      }
+
+      .sidebar-toggle-right.collapsed svg {
+        transform: rotate(180deg);
+      }
+
+      .sidebar-header {
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+      }
+
+      .sidebar-title {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .sidebar-title svg {
+        width: 16px;
+        height: 16px;
+        opacity: 0.7;
+      }
+
+      .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+      }
+
+      /* Search Input */
+      .search-box {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 8px 12px;
+        padding-left: 32px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 12px;
+        font-family: inherit;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: 8px center;
+        background-size: 16px;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .search-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      /* Category Accordion */
+      .category {
+        margin-bottom: 4px;
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      .category-header:hover {
+        background: var(--bg-active);
+        border-color: var(--border-focus);
+      }
+
+      .category-header.active {
+        background: var(--bg-active);
+        border-color: var(--accent);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .category-icon {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+        transition: transform 0.2s;
+      }
+
+      .category-header.active .category-icon {
+        transform: rotate(90deg);
+      }
+
+      .category-name {
+        flex: 1;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+
+      .category-count {
+        font-size: 10px;
+        color: var(--text-muted);
+        background: var(--bg-tertiary);
+        padding: 2px 6px;
+        border-radius: 10px;
+      }
+
+      .category-items {
+        display: none;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+        padding: 8px;
+        margin-bottom: 4px;
+      }
+
+      .category-header.active + .category-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      /* Gallery Items */
+      .gallery-item {
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        padding: 8px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        color: var(--text-secondary);
+        text-align: center;
+        min-height: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        font-size: 10px;
+        font-weight: 500;
+      }
+
+      .gallery-item:hover {
+        background: var(--bg-active);
+        border-color: var(--border-focus);
+        color: var(--text-primary);
+      }
+
+      .gallery-item.selected {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+
+      .gallery-item canvas {
+        max-width: 100%;
+        max-height: 45px;
+        margin-bottom: 4px;
+      }
+
+      /* Toolbar */
+      #toolbar {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 4px;
+        padding: 6px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        z-index: 100;
+      }
+
+      .tool-btn {
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        font-size: 16px;
+      }
+
+      .tool-btn:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      .tool-btn.active {
+        background: var(--accent);
+        color: white;
+      }
+
+      .toolbar-divider {
+        width: 1px;
+        background: var(--border);
+        margin: 4px 4px;
+      }
+
+      /* Help Button */
+      .help-btn {
+        width: 28px;
+        height: 28px;
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        cursor: pointer;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+      }
+
+      .help-btn:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+
+      /* Sections in right sidebar */
+      .section {
+        margin-bottom: 8px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .section-header:hover {
+        background: var(--bg-active);
+      }
+
+      .section-header.active {
+        border-color: var(--accent);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .section-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        opacity: 0.7;
+      }
+
+      .section-title {
+        flex: 1;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+      }
+
+      .section-toggle {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.2s;
+      }
+
+      .section-header.active .section-toggle {
+        transform: rotate(180deg);
+      }
+
+      .section-content {
+        display: none;
+        padding: 12px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      }
+
+      .section-header.active + .section-content {
+        display: block;
+      }
+
+      /* Form Elements */
+      .form-group {
+        margin-bottom: 12px;
+      }
+
+      .form-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      input[type="number"],
+      input[type="text"] {
+        padding: 6px 10px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 12px;
+        font-family: inherit;
+        transition: border-color 0.15s;
+      }
+
+      input[type="number"]:focus,
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      input[type="color"] {
+        width: 32px;
+        height: 28px;
+        padding: 2px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+      }
+
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 2px;
+      }
+      input[type="color"]::-webkit-color-swatch {
+        border-radius: 2px;
+        border: none;
+      }
+
+      input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 6px 12px;
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 11px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .btn:hover {
+        background: var(--bg-active);
+        border-color: var(--border-focus);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-hover);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        border-color: var(--danger);
+        color: white;
+      }
+
+      .btn-block {
+        width: 100%;
+      }
+
+      .btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* Checkbox styled */
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 11px;
+        color: var(--text-secondary);
+        transition: all 0.15s;
+      }
+
+      .checkbox-row:hover {
+        border-color: var(--border-focus);
+        color: var(--text-primary);
+      }
+
+      .checkbox-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+
+      /* Status bar */
+      .status-bar {
+        display: flex;
+        gap: 16px;
+        padding: 8px 12px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        margin-bottom: 8px;
+      }
+
+      .status-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .status-value {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--text-muted);
+      }
+
+      .status-dot.active {
+        background: var(--success);
+        box-shadow: 0 0 6px var(--success);
+      }
+
+      /* World Map Editor Overlay */
+      #worldmap-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg-primary);
+        display: none;
+        flex-direction: column;
+        z-index: 1000;
+      }
+
+      #worldmap-overlay.visible {
+        display: flex;
+      }
+
+      .worldmap-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        background: var(--bg-panel);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .worldmap-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .worldmap-title svg {
+        width: 20px;
+        height: 20px;
+        color: var(--accent);
+      }
+
+      .worldmap-toolbar {
+        display: flex;
+        gap: 8px;
+      }
+
+      .worldmap-btn {
+        padding: 8px 16px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .worldmap-btn:hover {
+        background: var(--bg-hover);
+        border-color: var(--accent);
+      }
+
+      .worldmap-btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .worldmap-btn.primary:hover {
+        background: var(--accent-hover);
+      }
+
+      .worldmap-btn.danger {
+        background: var(--danger);
+        border-color: var(--danger);
+      }
+
+      .worldmap-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .worldmap-sidebar {
+        width: 280px;
+        background: var(--bg-panel);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .worldmap-sidebar-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      .worldmap-scenes-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+      }
+
+      .worldmap-scene-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        margin-bottom: 6px;
+        cursor: grab;
+        transition: all 0.2s;
+      }
+
+      .worldmap-scene-item:hover {
+        border-color: var(--accent);
+        background: var(--bg-hover);
+      }
+
+      .worldmap-scene-item.placed {
+        opacity: 0.5;
+      }
+
+      .worldmap-scene-item.selected {
+        border-color: var(--accent);
+        background: var(--bg-active);
+      }
+
+      .worldmap-scene-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--bg-tertiary);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .worldmap-scene-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .worldmap-scene-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .worldmap-scene-size {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .worldmap-canvas-container {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        background: #1a1a2e;
+        background-image: linear-gradient(
+            rgba(99, 102, 241, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+      }
+
+      #worldmap-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .worldmap-info {
+        position: absolute;
+        bottom: 16px;
+        left: 16px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+
+      .worldmap-info-row {
+        display: flex;
+        gap: 16px;
+      }
+
+      .worldmap-info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .worldmap-info-value {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .worldmap-properties {
+        width: 260px;
+        background: var(--bg-panel);
+        border-left: 1px solid var(--border);
+        padding: 16px;
+        overflow-y: auto;
+      }
+
+      .worldmap-properties-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+      }
+
+      .worldmap-prop-group {
+        margin-bottom: 16px;
+      }
+
+      .worldmap-prop-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+
+      .worldmap-prop-input {
+        width: 100%;
+        padding: 8px 10px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 12px;
+      }
+
+      .worldmap-prop-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .worldmap-prop-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .worldmap-prop-row .worldmap-prop-group {
+        flex: 1;
+      }
+
+      .worldmap-hint {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .worldmap-hint-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      .worldmap-hint-text {
+        font-size: 14px;
+      }
+
+      /* Test Overlay */
+      #test-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .test-modal {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        text-align: center;
+        max-width: 360px;
+      }
+
+      .test-modal h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--accent);
+      }
+
+      .test-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 20px;
+      }
+
+      .test-control-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background: var(--bg-hover);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+      }
+
+      .test-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+
+      /* Help Modal */
+      #help-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      #help-modal.visible {
+        display: flex;
+      }
+
+      .help-content {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        max-width: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .help-content h3 {
+        font-size: 14px;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+      }
+
+      .shortcut-grid {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px 16px;
+        font-size: 12px;
+      }
+
+      .shortcut-action {
+        color: var(--text-secondary);
+      }
+
+      .shortcut-key {
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-family: "SF Mono", Monaco, monospace;
+        text-align: center;
+      }
+
+      /* Hidden elements for JS compatibility */
+      #filter-buttons {
+        display: none;
+      }
+      #gallery-list {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+
+    <!-- Toggle buttons -->
+    <button class="sidebar-toggle sidebar-toggle-left" id="toggle-left">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button class="sidebar-toggle sidebar-toggle-right" id="toggle-right">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Left Sidebar - Models -->
+    <div class="sidebar sidebar-left">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+            />
+          </svg>
+          Models
+        </div>
+      </div>
+      <div class="search-box">
+        <input
+          type="text"
+          class="search-input"
+          id="model-search"
+          placeholder="Rechercher..."
+        />
+      </div>
+      <!-- Hidden original elements for JS compatibility -->
+      <div id="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+      </div>
+      <div id="gallery-list"></div>
+      <!-- New category-based gallery -->
+      <div class="sidebar-content" id="category-gallery">
+        <!-- Categories will be generated by JS -->
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <!-- Toolbar -->
+    <div id="toolbar">
+      <button
+        class="tool-btn active"
+        data-tool="move"
+        title="Deplacer camera (C)"
+      >
+        <span>🎥</span>
+      </button>
+      <button class="tool-btn" data-tool="mouse" title="Souris libre (M)">
+        <span>🖱️</span>
+      </button>
+      <button
+        class="tool-btn"
+        data-tool="select"
+        title="Selectionner objet (V)"
+      >
+        <span>↖️</span>
+      </button>
+      <button class="tool-btn" data-tool="fill" title="Remplir zone (F)">
+        <span>🎨</span>
+      </button>
+      <button class="tool-btn" data-tool="place" title="Placer objet (P)">
+        <span>➕</span>
+      </button>
+      <button class="tool-btn" data-tool="sculpt" title="Sculpt terrain (T)">
+        🖌️
+      </button>
+      <button class="tool-btn" data-tool="entity" title="Placer entités (E)">
+        🎭
+      </button>
+      <button class="tool-btn" data-tool="portal" title="Placer portail (O)">
+        <span>🚪</span>
+      </button>
+      <button class="tool-btn" id="worldmap-btn" title="World Map Editor (W)">
+        <span>🗺️</span>
+      </button>
+      <div class="toolbar-divider"></div>
+      <button id="test-btn" class="tool-btn" title="Mode Test (T)">
+        <span>▶️</span>
+      </button>
+    </div>
+    <!-- Right Sidebar - Properties & Settings -->
+    <div class="sidebar sidebar-right">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+            />
+          </svg>
+          Inspecteur
+        </div>
+        <button class="help-btn" id="help-btn" title="Raccourcis clavier">
+          ?
+        </button>
+      </div>
+      <div class="sidebar-content">
+        <!-- Status -->
+        <div class="status-bar">
+          <div class="status-item">
+            <span>Objets:</span>
+            <span id="object-count" class="status-value">0</span>
+          </div>
+          <div class="status-item">
+            <div id="snap-indicator" class="status-dot"></div>
+            <span id="snap-status">Snap</span>
+          </div>
+        </div>
+
+        <!-- Object Properties Section -->
+        <div
+          class="section"
+          id="object-properties-section"
+          style="display: none"
+        >
+          <div class="section-header active" data-section="properties">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+              />
+            </svg>
+            <span class="section-title">Objet</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="form-label">Couleur</label>
+              <input type="color" id="color-picker" value="#00ff00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Echelle</label>
+              <div class="form-row">
+                <input
+                  type="number"
+                  id="scale-input"
+                  value="1"
+                  min="0.1"
+                  max="10"
+                  step="0.1"
+                  style="width: 70px"
+                />
+                <button id="apply-scale-btn" class="btn btn-primary">OK</button>
+              </div>
+            </div>
+            <div id="construction-props" style="display: none">
+              <div class="form-group">
+                <label class="form-label">Largeur</label>
+                <div class="form-row">
+                  <input
+                    type="number"
+                    id="construct-width"
+                    value="3"
+                    min="0.5"
+                    max="20"
+                    step="0.5"
+                    style="width: 70px"
+                  />
+                  <button id="apply-width-btn" class="btn">OK</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hauteur</label>
+                <div class="form-row">
+                  <input
+                    type="number"
+                    id="construct-height"
+                    value="3"
+                    min="0.5"
+                    max="20"
+                    step="0.5"
+                    style="width: 70px"
+                  />
+                  <button id="apply-height-btn" class="btn">OK</button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-row">
+                <input type="checkbox" id="has-collision" checked />
+                <span>Collision</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden original panel for JS compatibility -->
+        <div id="object-properties" style="display: none !important"></div>
+
+        <!-- Portal Properties Section -->
+        <div
+          class="section"
+          id="portal-properties-section"
+          style="display: none"
+        >
+          <div class="section-header active" data-section="portal">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M9 3v18" />
+            </svg>
+            <span class="section-title">Portail</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="form-label">Nom du portail</label>
+              <input
+                type="text"
+                id="portal-name"
+                value="portal_1"
+                style="width: 100%"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Scene cible</label>
+              <select
+                id="portal-target-scene"
+                style="
+                  width: 100%;
+                  padding: 6px 10px;
+                  background: var(--bg-secondary);
+                  border: 1px solid var(--border);
+                  border-radius: var(--radius-sm);
+                  color: var(--text-primary);
+                  font-size: 12px;
+                "
+              >
+                <option value="">-- Selectionner --</option>
+              </select>
+              <label class="form-label">Portail de destination (nom)</label>
+              <input
+                type="text"
+                id="portal-linked-name"
+                placeholder="ex: portal_sortie_maison"
+                style="width: 100%"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Taille du portail</label>
+              <div class="form-row">
+                <span style="font-size: 10px; color: var(--text-muted)"
+                  >L:</span
+                >
+                <input
+                  type="number"
+                  id="portal-width"
+                  value="2"
+                  min="0.5"
+                  max="10"
+                  step="0.5"
+                  style="width: 55px"
+                />
+                <span style="font-size: 10px; color: var(--text-muted)"
+                  >H:</span
+                >
+                <input
+                  type="number"
+                  id="portal-height"
+                  value="3"
+                  min="0.5"
+                  max="10"
+                  step="0.5"
+                  style="width: 55px"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label"
+                >Position spawn (dans scene cible)</label
+              >
+              <div class="form-row">
+                <span style="font-size: 10px; color: var(--text-muted)"
+                  >X:</span
+                >
+                <input
+                  type="number"
+                  id="portal-spawn-x"
+                  value="0"
+                  step="0.5"
+                  style="width: 50px"
+                />
+                <span style="font-size: 10px; color: var(--text-muted)"
+                  >Y:</span
+                >
+                <input
+                  type="number"
+                  id="portal-spawn-y"
+                  value="1.6"
+                  step="0.5"
+                  style="width: 50px"
+                />
+                <span style="font-size: 10px; color: var(--text-muted)"
+                  >Z:</span
+                >
+                <input
+                  type="number"
+                  id="portal-spawn-z"
+                  value="0"
+                  step="0.5"
+                  style="width: 50px"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rotation (Y)</label>
+              <div class="form-row">
+                <input
+                  type="number"
+                  id="portal-rotation-y"
+                  value="0"
+                  min="-180"
+                  max="180"
+                  step="15"
+                  style="width: 80px"
+                />
+                <span style="font-size: 10px; color: var(--text-muted)"
+                  >deg</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Couleur portail</label>
+              <input type="color" id="portal-color" value="#6366f1" />
+            </div>
+            <button id="portal-update-btn" class="btn btn-primary btn-block">
+              Mettre a jour
+            </button>
+          </div>
+        </div>
+
+        <!-- Fill Section -->
+        <div class="section">
+          <div class="section-header" data-section="fill">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+            <span class="section-title">Outils</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="form-label">Espacement Fill</label>
+              <input
+                type="number"
+                id="fill-spacing"
+                value="3"
+                min="1"
+                max="20"
+                step="0.5"
+                style="width: 80px"
+              />
+            </div>
+            <button id="load-btn" class="btn btn-block">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Charger scene
+            </button>
+          </div>
+        </div>
+
+        <!-- Construction Section -->
+        <div class="section">
+          <div class="section-header" data-section="construction">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            </svg>
+            <span class="section-title">Construction</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="form-label">Hauteur murs</label>
+              <input
+                type="number"
+                id="wall-height"
+                value="3"
+                min="1"
+                max="10"
+                step="0.5"
+                style="width: 80px"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Couleur murs</label>
+              <input type="color" id="wall-color" value="#ffffff" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Couleur plafond</label>
+              <input type="color" id="ceiling-color" value="#f0f0f0" />
+            </div>
+            <div class="checkbox-grid">
+              <label class="checkbox-row">
+                <input type="checkbox" id="toggle-wall-north" />
+                <span>Nord</span>
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" id="toggle-wall-south" />
+                <span>Sud</span>
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" id="toggle-wall-east" />
+                <span>Est</span>
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" id="toggle-wall-west" />
+                <span>Ouest</span>
+              </label>
+            </div>
+            <label class="checkbox-row" style="margin-top: 6px">
+              <input type="checkbox" id="toggle-ceiling" />
+              <span>Plafond</span>
+            </label>
+          </div>
+        </div>
+        <!-- Section Type de scÃ¨ne - Ã  ajouter avant la section Terrain -->
+        <div class="section">
+          <div class="section-header" data-section="scene-type">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            </svg>
+            <span class="section-title">Type de scene</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="checkbox-row">
+                <input type="checkbox" id="prefab-scene" />
+                <span>Scène préfaite (intérieur)</span>
+              </label>
+            </div>
+            <div id="prefab-options" style="display: none">
+              <div class="form-group">
+                <label class="form-label">Modèle de scène</label>
+                <select
+                  id="prefab-model"
+                  style="
+                    width: 100%;
+                    padding: 6px 10px;
+                    background: var(--bg-secondary);
+                    border: 1px solid var(--border);
+                    border-radius: var(--radius-sm);
+                    color: var(--text-primary);
+                    font-size: 12px;
+                  "
+                >
+                  <option value="">-- SÃ©lectionner --</option>
+                </select>
+              </div>
+              <button id="load-prefab-btn" class="btn btn-primary btn-block">
+                Charger le modÃ¨le
+              </button>
+              <div class="form-group" style="margin-top: 10px">
+                <label class="form-label">Scale</label>
+                <input
+                  type="number"
+                  id="prefab-scale"
+                  value="1"
+                  min="0.001"
+                  max="10"
+                  step="0.001"
+                  style="width: 80px"
+                />
+                <button id="apply-prefab-scale-btn" class="btn">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Terrain Section -->
+        <div class="section">
+          <div class="section-header" data-section="terrain">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M3 20h18L12 4z" />
+            </svg>
+            <span class="section-title">Terrain</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="form-label">Largeur</label>
+              <input
+                type="number"
+                id="ground-width"
+                value="100"
+                min="10"
+                max="500"
+                style="width: 80px"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Profondeur</label>
+              <input
+                type="number"
+                id="ground-height"
+                value="100"
+                min="10"
+                max="500"
+                style="width: 80px"
+              />
+            </div>
+            <button
+              id="update-ground-size-btn"
+              class="btn btn-primary btn-block"
+            >
+              Appliquer taille
+            </button>
+            <div class="form-group">
+              <label class="form-label">Couleur</label>
+              <input type="color" id="ground-color" value="#3a9d23" />
+            </div>
+            <button
+              id="update-ground-color-btn"
+              class="btn btn-primary btn-block"
+            >
+              Appliquer couleur
+            </button>
+            <div class="form-group">
+              <label class="form-label">Résolution (segments)</label>
+              <input
+                type="number"
+                id="ground-segments"
+                value="50"
+                min="10"
+                max="200"
+                style="width: 80px"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Sculpt Terrain Section -->
+        <div class="section">
+          <div class="section-header" data-section="sculpt">
+            <svg
+              class="section-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M20 7h-9M14 17H5M17 20c3-3 3-6 0-9-3 3-3 6 0 9z" />
+            </svg>
+            <span class="section-title">Sculpt Terrain</span>
+            <svg
+              class="section-toggle"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+          <div class="section-content">
+            <div class="form-group">
+              <label class="form-label">Mode</label>
+              <select
+                id="sculpt-mode"
+                style="
+                  width: 100%;
+                  padding: 6px 10px;
+                  background: var(--bg-secondary);
+                  border: 1px solid var(--border);
+                  border-radius: var(--radius-sm);
+                  color: var(--text-primary);
+                  font-size: 12px;
+                  font-family: inherit;
+                "
+              >
+                <option value="raise">Monter</option>
+                <option value="lower">Descendre</option>
+                <option value="smooth">Lisser</option>
+                <option value="flatten">Aplatir</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label"
+                >Taille pinceau: <span id="brush-size-value">5</span></label
+              >
+              <input
+                type="range"
+                id="brush-size"
+                min="1"
+                max="20"
+                value="5"
+                style="width: 100%; accent-color: var(--accent)"
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label"
+                >Force: <span id="brush-strength-value">0.5</span></label
+              >
+              <input
+                type="range"
+                id="brush-strength"
+                min="0.1"
+                max="2"
+                step="0.1"
+                value="0.5"
+                style="width: 100%; accent-color: var(--accent)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- World Map Editor Overlay -->
+    <div id="worldmap-overlay">
+      <div class="worldmap-header">
+        <div class="worldmap-title">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+            <line x1="8" y1="2" x2="8" y2="18" />
+            <line x1="16" y1="6" x2="16" y2="22" />
+          </svg>
+          World Map Editor
+        </div>
+        <div class="worldmap-toolbar">
+          <button class="worldmap-btn" id="worldmap-load-btn">
+            📂 Charger
+          </button>
+          <button class="worldmap-btn primary" id="worldmap-save-btn">
+            💾 Sauvegarder
+          </button>
+          <button class="worldmap-btn danger" id="worldmap-close-btn">
+            ✕ Fermer
+          </button>
+        </div>
+      </div>
+
+      <div class="worldmap-container">
+        <!-- Sidebar avec les scènes disponibles -->
+        <div class="worldmap-sidebar">
+          <div class="worldmap-sidebar-header">📁 Scènes disponibles</div>
+          <div class="worldmap-scenes-list" id="worldmap-scenes-list">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+
+        <!-- Canvas principal -->
+        <div class="worldmap-canvas-container">
+          <canvas id="worldmap-canvas"></canvas>
+
+          <div class="worldmap-hint" id="worldmap-hint">
+            <div class="worldmap-hint-icon">🗺️</div>
+            <div class="worldmap-hint-text">
+              Glissez les scènes depuis la liste<br />
+              ou double-cliquez pour les ajouter
+            </div>
+          </div>
+
+          <div class="worldmap-info">
+            <div class="worldmap-info-row">
+              <div class="worldmap-info-item">
+                Zoom:
+                <span class="worldmap-info-value" id="worldmap-zoom">100%</span>
+              </div>
+              <div class="worldmap-info-item">
+                Position:
+                <span class="worldmap-info-value" id="worldmap-position"
+                  >0, 0</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panneau de propriétés -->
+        <div
+          class="worldmap-properties"
+          id="worldmap-properties"
+          style="display: none"
+        >
+          <div class="worldmap-properties-title">📍 Propriétés de la zone</div>
+
+          <div class="worldmap-prop-group">
+            <div class="worldmap-prop-label">Nom de la scène</div>
+            <input
+              type="text"
+              class="worldmap-prop-input"
+              id="worldmap-prop-name"
+              readonly
+            />
+          </div>
+
+          <div class="worldmap-prop-row">
+            <div class="worldmap-prop-group">
+              <div class="worldmap-prop-label">Position X</div>
+              <input
+                type="number"
+                class="worldmap-prop-input"
+                id="worldmap-prop-x"
+                step="1"
+              />
+            </div>
+            <div class="worldmap-prop-group">
+              <div class="worldmap-prop-label">Position Z</div>
+              <input
+                type="number"
+                class="worldmap-prop-input"
+                id="worldmap-prop-z"
+                step="1"
+              />
+            </div>
+          </div>
+
+          <div class="worldmap-prop-group">
+            <div class="worldmap-prop-label">Taille</div>
+            <input
+              type="text"
+              class="worldmap-prop-input"
+              id="worldmap-prop-size"
+              readonly
+            />
+          </div>
+
+          <button
+            class="worldmap-btn danger"
+            id="worldmap-remove-zone"
+            style="width: 100%; margin-top: 16px"
+          >
+            🗑️ Retirer de la map
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Overlay -->
+    <div id="test-overlay">
+      <div class="test-modal">
+        <h2>MODE TEST</h2>
+        <div class="test-controls">
+          <div class="test-control-item">
+            <span>Deplacer</span>
+            <span class="shortcut-key">ZQSD</span>
+          </div>
+          <div class="test-control-item">
+            <span>Sauter</span>
+            <span class="shortcut-key">Espace</span>
+          </div>
+        </div>
+        <p class="test-hint">Cliquez pour commencer</p>
+        <button id="exit-test-btn" class="btn btn-danger">
+          Quitter (Echap)
+        </button>
+      </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal">
+      <div class="help-content">
+        <h3>Raccourcis clavier</h3>
+        <div class="shortcut-grid">
+          <span class="shortcut-action">Placer objet</span>
+          <span class="shortcut-key">Clic</span>
+          <span class="shortcut-action">Camera libre</span>
+          <span class="shortcut-key">C</span>
+          <span class="shortcut-action">Rotation Y</span>
+          <span class="shortcut-key">R</span>
+          <span class="shortcut-action">Rotation X</span>
+          <span class="shortcut-key">E</span>
+          <span class="shortcut-action">Hauteur</span>
+          <span class="shortcut-key">Molette</span>
+          <span class="shortcut-action">Valider</span>
+          <span class="shortcut-key">Enter</span>
+          <span class="shortcut-action">Snap auto</span>
+          <span class="shortcut-key">Tab</span>
+          <span class="shortcut-action">Supprimer</span>
+          <span class="shortcut-key">Suppr</span>
+          <span class="shortcut-action">Copier</span>
+          <span class="shortcut-key">Ctrl+C</span>
+          <span class="shortcut-action">Coller</span>
+          <span class="shortcut-key">Ctrl+V</span>
+          <span class="shortcut-action">Sauvegarder</span>
+          <span class="shortcut-key">Ctrl+S</span>
+        </div>
+        <button
+          class="btn btn-block"
+          style="margin-top: 16px"
+          onclick="document.getElementById('help-modal').classList.remove('visible')"
+        >
+          Fermer
+        </button>
+      </div>
+    </div>
+
+    <!-- Hidden info panel for compatibility -->
+    <div id="info" style="display: none"></div>
+    <div id="controls" style="display: none"></div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script>
+      // Section toggle
+      document.querySelectorAll(".section-header").forEach((header) => {
+        header.addEventListener("click", () => {
+          header.classList.toggle("active");
+        });
+      });
+
+      // Category toggle
+      document.addEventListener("click", (e) => {
+        if (e.target.closest(".category-header")) {
+          e.target.closest(".category-header").classList.toggle("active");
+        }
+      });
+
+      // Help modal
+      document.getElementById("help-btn").addEventListener("click", () => {
+        document.getElementById("help-modal").classList.add("visible");
+      });
+
+      document.getElementById("help-modal").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) {
+          e.currentTarget.classList.remove("visible");
+        }
+      });
+
+      // Search filter
+      document.getElementById("model-search").addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        document.querySelectorAll(".gallery-item").forEach((item) => {
+          const name = item.textContent.toLowerCase();
+          item.style.display = name.includes(query) ? "" : "none";
+        });
+        // Show all categories when searching
+        if (query) {
+          document
+            .querySelectorAll(".category-header")
+            .forEach((h) => h.classList.add("active"));
+        }
+      });
+
+      // Show object properties when object selected
+      window.showObjectProperties = () => {
+        document.getElementById("object-properties-section").style.display =
+          "block";
+        document
+          .querySelector('[data-section="properties"]')
+          .classList.add("active");
+      };
+
+      window.hideObjectProperties = () => {
+        document.getElementById("object-properties-section").style.display =
+          "none";
+      };
+
+      // Toggle sidebars
+      const toggleLeft = document.getElementById("toggle-left");
+      const toggleRight = document.getElementById("toggle-right");
+      const sidebarLeft = document.querySelector(".sidebar-left");
+      const sidebarRight = document.querySelector(".sidebar-right");
+      const canvasContainer = document.getElementById("canvas-container");
+
+      toggleLeft.addEventListener("click", () => {
+        sidebarLeft.classList.toggle("collapsed");
+        toggleLeft.classList.toggle("collapsed");
+        canvasContainer.classList.toggle("left-collapsed");
+      });
+
+      toggleRight.addEventListener("click", () => {
+        sidebarRight.classList.toggle("collapsed");
+        toggleRight.classList.toggle("collapsed");
+        canvasContainer.classList.toggle("right-collapsed");
+      });
+    </script>
+
+    <script type="module" src="./src/editor.js"></script>
+  </body>
+</html>

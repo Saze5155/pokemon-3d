@@ -1,0 +1,540 @@
+{
+  "pokeballs": {
+    "pokeball": {
+      "nom": "Poké Ball",
+      "nomEN": "Poké Ball",
+      "prix": 200,
+      "prixVente": 100,
+      "tauxCapture": 1,
+      "description": "Une Ball ordinaire pour capturer des Pokémon."
+    },
+    "superball": {
+      "nom": "Super Ball",
+      "nomEN": "Great Ball",
+      "prix": 600,
+      "prixVente": 300,
+      "tauxCapture": 1.5,
+      "description": "Une Ball plus efficace que la Poké Ball standard."
+    },
+    "hyperball": {
+      "nom": "Hyper Ball",
+      "nomEN": "Ultra Ball",
+      "prix": 1200,
+      "prixVente": 600,
+      "tauxCapture": 2,
+      "description": "Une Ball très performante avec un excellent taux de capture."
+    },
+    "masterball": {
+      "nom": "Master Ball",
+      "nomEN": "Master Ball",
+      "prix": 0,
+      "prixVente": 0,
+      "tauxCapture": 255,
+      "description": "La Ball ultime. Capture à coup sûr n'importe quel Pokémon."
+    },
+    "safariball": {
+      "nom": "Safari Ball",
+      "nomEN": "Safari Ball",
+      "prix": 0,
+      "prixVente": 0,
+      "tauxCapture": 1.5,
+      "description": "Une Ball spéciale utilisée uniquement dans le Parc Safari."
+    }
+  },
+
+  "soins": {
+    "potion": {
+      "nom": "Potion",
+      "nomEN": "Potion",
+      "prix": 300,
+      "prixVente": 150,
+      "effet": "heal_hp",
+      "valeur": 20,
+      "description": "Restaure 20 PV d'un Pokémon."
+    },
+    "super_potion": {
+      "nom": "Super Potion",
+      "nomEN": "Super Potion",
+      "prix": 700,
+      "prixVente": 350,
+      "effet": "heal_hp",
+      "valeur": 50,
+      "description": "Restaure 50 PV d'un Pokémon."
+    },
+    "hyper_potion": {
+      "nom": "Hyper Potion",
+      "nomEN": "Hyper Potion",
+      "prix": 1200,
+      "prixVente": 600,
+      "effet": "heal_hp",
+      "valeur": 200,
+      "description": "Restaure 200 PV d'un Pokémon."
+    },
+    "potion_max": {
+      "nom": "Potion Max",
+      "nomEN": "Max Potion",
+      "prix": 2500,
+      "prixVente": 1250,
+      "effet": "heal_hp",
+      "valeur": 9999,
+      "description": "Restaure tous les PV d'un Pokémon."
+    },
+    "guerison": {
+      "nom": "Guérison",
+      "nomEN": "Full Restore",
+      "prix": 3000,
+      "prixVente": 1500,
+      "effet": "full_restore",
+      "valeur": 9999,
+      "description": "Restaure tous les PV et soigne tous les statuts."
+    },
+    "rappel": {
+      "nom": "Rappel",
+      "nomEN": "Revive",
+      "prix": 1500,
+      "prixVente": 750,
+      "effet": "revive",
+      "valeur": 0.5,
+      "description": "Réanime un Pokémon K.O. avec 50% de ses PV."
+    },
+    "rappel_max": {
+      "nom": "Rappel Max",
+      "nomEN": "Max Revive",
+      "prix": 0,
+      "prixVente": 2000,
+      "effet": "revive",
+      "valeur": 1,
+      "description": "Réanime un Pokémon K.O. avec tous ses PV."
+    },
+    "antidote": {
+      "nom": "Antidote",
+      "nomEN": "Antidote",
+      "prix": 100,
+      "prixVente": 50,
+      "effet": "cure_status",
+      "statut": "poison",
+      "description": "Soigne un Pokémon empoisonné."
+    },
+    "anti_brule": {
+      "nom": "Anti-Brûle",
+      "nomEN": "Burn Heal",
+      "prix": 250,
+      "prixVente": 125,
+      "effet": "cure_status",
+      "statut": "burn",
+      "description": "Soigne un Pokémon brûlé."
+    },
+    "antigel": {
+      "nom": "Antigel",
+      "nomEN": "Ice Heal",
+      "prix": 250,
+      "prixVente": 125,
+      "effet": "cure_status",
+      "statut": "gel",
+      "description": "Soigne un Pokémon gelé."
+    },
+    "reveil": {
+      "nom": "Réveil",
+      "nomEN": "Awakening",
+      "prix": 250,
+      "prixVente": 125,
+      "effet": "cure_status",
+      "statut": "sleep",
+      "description": "Réveille un Pokémon endormi."
+    },
+    "anti_para": {
+      "nom": "Anti-Para",
+      "nomEN": "Paralyze Heal",
+      "prix": 200,
+      "prixVente": 100,
+      "effet": "cure_status",
+      "statut": "paralysie",
+      "description": "Soigne un Pokémon paralysé."
+    },
+    "total_soin": {
+      "nom": "Total Soin",
+      "nomEN": "Full Heal",
+      "prix": 600,
+      "prixVente": 300,
+      "effet": "cure_all_status",
+      "statut": "all",
+      "description": "Soigne tous les problèmes de statut."
+    },
+    "huile": {
+      "nom": "Huile",
+      "nomEN": "Ether",
+      "prix": 0,
+      "prixVente": 600,
+      "effet": "restore_pp",
+      "valeur": 10,
+      "description": "Restaure 10 PP d'une attaque."
+    },
+    "huile_max": {
+      "nom": "Huile Max",
+      "nomEN": "Max Ether",
+      "prix": 0,
+      "prixVente": 1000,
+      "effet": "restore_pp",
+      "valeur": 9999,
+      "description": "Restaure tous les PP d'une attaque."
+    },
+    "elixir": {
+      "nom": "Élixir",
+      "nomEN": "Elixir",
+      "prix": 0,
+      "prixVente": 1500,
+      "effet": "restore_all_pp",
+      "valeur": 10,
+      "description": "Restaure 10 PP de toutes les attaques."
+    },
+    "elixir_max": {
+      "nom": "Élixir Max",
+      "nomEN": "Max Elixir",
+      "prix": 0,
+      "prixVente": 2250,
+      "effet": "restore_all_pp",
+      "valeur": 9999,
+      "description": "Restaure tous les PP de toutes les attaques."
+    },
+    "lait_meumeu": {
+      "nom": "Lait Meumeu",
+      "nomEN": "Moomoo Milk",
+      "prix": 500,
+      "prixVente": 250,
+      "effet": "heal_hp",
+      "valeur": 100,
+      "description": "Restaure 100 PV d'un Pokémon."
+    },
+    "limonade": {
+      "nom": "Limonade",
+      "nomEN": "Lemonade",
+      "prix": 350,
+      "prixVente": 175,
+      "effet": "heal_hp",
+      "valeur": 80,
+      "description": "Restaure 80 PV d'un Pokémon."
+    },
+    "soda_cool": {
+      "nom": "Soda Cool",
+      "nomEN": "Soda Pop",
+      "prix": 300,
+      "prixVente": 150,
+      "effet": "heal_hp",
+      "valeur": 60,
+      "description": "Restaure 60 PV d'un Pokémon."
+    },
+    "eau_fraiche": {
+      "nom": "Eau Fraîche",
+      "nomEN": "Fresh Water",
+      "prix": 200,
+      "prixVente": 100,
+      "effet": "heal_hp",
+      "valeur": 50,
+      "description": "Restaure 50 PV d'un Pokémon."
+    }
+  },
+
+  "pierres": {
+    "pierre_feu": {
+      "nom": "Pierre Feu",
+      "nomEN": "Fire Stone",
+      "prix": 2100,
+      "prixVente": 1050,
+      "effet": "evolution",
+      "pokemonsCibles": [37, 58, 133],
+      "description": "Fait évoluer certains Pokémon de type Feu."
+    },
+    "pierre_eau": {
+      "nom": "Pierre Eau",
+      "nomEN": "Water Stone",
+      "prix": 2100,
+      "prixVente": 1050,
+      "effet": "evolution",
+      "pokemonsCibles": [61, 90, 120, 133],
+      "description": "Fait évoluer certains Pokémon de type Eau."
+    },
+    "pierre_foudre": {
+      "nom": "Pierre Foudre",
+      "nomEN": "Thunder Stone",
+      "prix": 2100,
+      "prixVente": 1050,
+      "effet": "evolution",
+      "pokemonsCibles": [25, 133],
+      "description": "Fait évoluer certains Pokémon de type Électrik."
+    },
+    "pierre_plante": {
+      "nom": "Pierre Plante",
+      "nomEN": "Leaf Stone",
+      "prix": 2100,
+      "prixVente": 1050,
+      "effet": "evolution",
+      "pokemonsCibles": [44, 70, 102],
+      "description": "Fait évoluer certains Pokémon de type Plante."
+    },
+    "pierre_lune": {
+      "nom": "Pierre Lune",
+      "nomEN": "Moon Stone",
+      "prix": 0,
+      "prixVente": 0,
+      "effet": "evolution",
+      "pokemonsCibles": [30, 33, 35, 39],
+      "description": "Fait évoluer certains Pokémon."
+    }
+  },
+
+  "boosts_combat": {
+    "attaque_plus": {
+      "nom": "Attaque +",
+      "nomEN": "X Attack",
+      "prix": 500,
+      "prixVente": 250,
+      "effet": "boost_stat",
+      "stat": "attack",
+      "valeur": 1,
+      "description": "Augmente l'Attaque pendant un combat."
+    },
+    "defense_plus": {
+      "nom": "Défense +",
+      "nomEN": "X Defend",
+      "prix": 550,
+      "prixVente": 275,
+      "effet": "boost_stat",
+      "stat": "defense",
+      "valeur": 1,
+      "description": "Augmente la Défense pendant un combat."
+    },
+    "vitesse_plus": {
+      "nom": "Vitesse +",
+      "nomEN": "X Speed",
+      "prix": 350,
+      "prixVente": 175,
+      "effet": "boost_stat",
+      "stat": "speed",
+      "valeur": 1,
+      "description": "Augmente la Vitesse pendant un combat."
+    },
+    "special_plus": {
+      "nom": "Spécial +",
+      "nomEN": "X Special",
+      "prix": 350,
+      "prixVente": 175,
+      "effet": "boost_stat",
+      "stat": "special",
+      "valeur": 1,
+      "description": "Augmente le Spécial pendant un combat."
+    },
+    "precision_plus": {
+      "nom": "Précision +",
+      "nomEN": "X Accuracy",
+      "prix": 950,
+      "prixVente": 475,
+      "effet": "boost_stat",
+      "stat": "precision",
+      "valeur": 1,
+      "description": "Augmente la Précision pendant un combat."
+    },
+    "muscle_plus": {
+      "nom": "Muscle +",
+      "nomEN": "Dire Hit",
+      "prix": 650,
+      "prixVente": 325,
+      "effet": "boost_crit",
+      "valeur": 1,
+      "description": "Augmente le taux de critique pendant un combat."
+    },
+    "garde_specs": {
+      "nom": "Garde-Specs",
+      "nomEN": "Guard Spec.",
+      "prix": 700,
+      "prixVente": 350,
+      "effet": "protect_stats",
+      "valeur": 5,
+      "description": "Empêche la baisse de stats pendant 5 tours."
+    }
+  },
+
+  "vitamines": {
+    "pv_plus": {
+      "nom": "PV Plus",
+      "nomEN": "HP Up",
+      "prix": 9800,
+      "prixVente": 4900,
+      "effet": "ev_boost",
+      "stat": "hp",
+      "valeur": 2560,
+      "description": "Augmente les EV de PV."
+    },
+    "proteine": {
+      "nom": "Protéine",
+      "nomEN": "Protein",
+      "prix": 9800,
+      "prixVente": 4900,
+      "effet": "ev_boost",
+      "stat": "attack",
+      "valeur": 2560,
+      "description": "Augmente les EV d'Attaque."
+    },
+    "fer": {
+      "nom": "Fer",
+      "nomEN": "Iron",
+      "prix": 9800,
+      "prixVente": 4900,
+      "effet": "ev_boost",
+      "stat": "defense",
+      "valeur": 2560,
+      "description": "Augmente les EV de Défense."
+    },
+    "calcium": {
+      "nom": "Calcium",
+      "nomEN": "Calcium",
+      "prix": 9800,
+      "prixVente": 4900,
+      "effet": "ev_boost",
+      "stat": "special",
+      "valeur": 2560,
+      "description": "Augmente les EV de Spécial."
+    },
+    "carbone": {
+      "nom": "Carbone",
+      "nomEN": "Carbos",
+      "prix": 9800,
+      "prixVente": 4900,
+      "effet": "ev_boost",
+      "stat": "speed",
+      "valeur": 2560,
+      "description": "Augmente les EV de Vitesse."
+    },
+    "super_bonbon": {
+      "nom": "Super Bonbon",
+      "nomEN": "Rare Candy",
+      "prix": 0,
+      "prixVente": 2400,
+      "effet": "level_up",
+      "valeur": 1,
+      "description": "Monte le Pokémon d'un niveau."
+    },
+    "pp_plus": {
+      "nom": "PP Plus",
+      "nomEN": "PP Up",
+      "prix": 0,
+      "prixVente": 4900,
+      "effet": "pp_boost",
+      "valeur": 0.2,
+      "description": "Augmente les PP max d'une attaque de 20%."
+    },
+    "pp_max": {
+      "nom": "PP Max",
+      "nomEN": "PP Max",
+      "prix": 0,
+      "prixVente": 4900,
+      "effet": "pp_boost_max",
+      "valeur": 0.6,
+      "description": "Monte les PP max d'une attaque au maximum."
+    }
+  },
+
+  "repousses": {
+    "repousse": {
+      "nom": "Repousse",
+      "nomEN": "Repel",
+      "prix": 350,
+      "prixVente": 175,
+      "effet": "repel",
+      "valeur": 100,
+      "description": "Éloigne les Pokémon faibles pendant 100 pas."
+    },
+    "super_repousse": {
+      "nom": "Super Repousse",
+      "nomEN": "Super Repel",
+      "prix": 500,
+      "prixVente": 250,
+      "effet": "repel",
+      "valeur": 200,
+      "description": "Éloigne les Pokémon faibles pendant 200 pas."
+    },
+    "repousse_max": {
+      "nom": "Max Repousse",
+      "nomEN": "Max Repel",
+      "prix": 700,
+      "prixVente": 350,
+      "effet": "repel",
+      "valeur": 250,
+      "description": "Éloigne les Pokémon faibles pendant 250 pas."
+    }
+  },
+
+  "peche": {
+    "canne": {
+      "nom": "Canne",
+      "nomEN": "Old Rod",
+      "prix": 0,
+      "prixVente": 0,
+      "effet": "fishing",
+      "valeur": 1,
+      "description": "Une vieille canne. Attrape des Pokémon basiques."
+    },
+    "super_canne": {
+      "nom": "Super Canne",
+      "nomEN": "Good Rod",
+      "prix": 0,
+      "prixVente": 0,
+      "effet": "fishing",
+      "valeur": 2,
+      "description": "Une bonne canne. Attrape plus de variétés."
+    },
+    "mega_canne": {
+      "nom": "Méga Canne",
+      "nomEN": "Super Rod",
+      "prix": 0,
+      "prixVente": 0,
+      "effet": "fishing",
+      "valeur": 3,
+      "description": "La meilleure canne. Attrape tous les Pokémon aquatiques."
+    }
+  },
+
+  "divers": {
+    "corde_sortie": {
+      "nom": "Corde Sortie",
+      "nomEN": "Escape Rope",
+      "prix": 550,
+      "prixVente": 275,
+      "effet": "escape",
+      "description": "Permet de sortir instantanément d'une grotte."
+    },
+    "poke_poupee": {
+      "nom": "Poké Poupée",
+      "nomEN": "Poké Doll",
+      "prix": 1000,
+      "prixVente": 500,
+      "effet": "flee",
+      "description": "Permet de fuir à coup sûr un combat sauvage."
+    },
+    "bicyclette": {
+      "nom": "Bicyclette",
+      "nomEN": "Bicycle",
+      "prix": 1000000,
+      "prixVente": 0,
+      "effet": "speed_boost",
+      "valeur": 2,
+      "description": "Permet de se déplacer deux fois plus vite."
+    },
+    "piece_rune": {
+      "nom": "Pièce Rune",
+      "nomEN": "Amulet Coin",
+      "prix": 0,
+      "prixVente": 50,
+      "effet": "money_boost",
+      "valeur": 2,
+      "description": "Double l'argent gagné en combat si tenu."
+    },
+    "encens_fleur": {
+      "nom": "Encens Fleur",
+      "nomEN": "Exp. Share",
+      "prix": 0,
+      "prixVente": 0,
+      "effet": "exp_share",
+      "description": "Partage l'XP avec tous les Pokémon de l'équipe."
+    }
+  }
+}

@@ -1,0 +1,2489 @@
+{
+  "1": {
+    "nom": "Bulbizarre",
+    "nomEN": "Bulbasaur",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 45,
+      "attack": 49,
+      "defense": 49,
+      "special": 65,
+      "speed": 45
+    },
+    "evolution": {
+      "vers": 2,
+      "niveau": 16
+    },
+    "moves": [
+        { "niveau": 7, "capacite": "vampigraine" },
+        { "niveau": 13, "capacite": "fouet_lianes" }
+    ],
+    "tauxCapture": 45,
+    "xpBase": 64
+  },
+  "2": {
+    "nom": "Herbizarre",
+    "nomEN": "Ivysaur",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 60,
+      "attack": 62,
+      "defense": 63,
+      "special": 80,
+      "speed": 60
+    },
+    "evolution": {
+      "vers": 3,
+      "niveau": 32
+    },
+    "tauxCapture": 45,
+    "xpBase": 142
+  },
+  "3": {
+    "nom": "Florizarre",
+    "nomEN": "Venusaur",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 80,
+      "attack": 82,
+      "defense": 83,
+      "special": 100,
+      "speed": 80
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 236
+  },
+  "4": {
+    "nom": "Salamèche",
+    "nomEN": "Charmander",
+    "types": ["feu"],
+    "stats": {
+      "hp": 39,
+      "attack": 52,
+      "defense": 43,
+      "special": 60,
+      "speed": 65
+    },
+    "evolution": {
+      "vers": 5,
+      "niveau": 16
+    },
+    "moves": [
+        { "niveau": 7, "capacite": "griffe" },
+        { "niveau": 13, "capacite": "flameche" }
+    ],
+    "tauxCapture": 45,
+    "xpBase": 62
+  },
+  "5": {
+    "nom": "Reptincel",
+    "nomEN": "Charmeleon",
+    "types": ["feu"],
+    "stats": {
+      "hp": 58,
+      "attack": 64,
+      "defense": 58,
+      "special": 80,
+      "speed": 80
+    },
+    "evolution": {
+      "vers": 6,
+      "niveau": 36
+    },
+    "tauxCapture": 45,
+    "xpBase": 142
+  },
+  "6": {
+    "nom": "Dracaufeu",
+    "nomEN": "Charizard",
+    "types": ["feu", "vol"],
+    "stats": {
+      "hp": 78,
+      "attack": 84,
+      "defense": 78,
+      "special": 109,
+      "speed": 100
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 240
+  },
+  "7": {
+    "nom": "Carapuce",
+    "nomEN": "Squirtle",
+    "types": ["eau"],
+    "stats": {
+      "hp": 44,
+      "attack": 48,
+      "defense": 65,
+      "special": 50,
+      "speed": 43
+    },
+    "evolution": {
+      "vers": 8,
+      "niveau": 16
+    },
+    "moves": [
+        { "niveau": 7, "capacite": "ecume" },
+        { "niveau": 13, "capacite": "pistolet_a_o" }
+    ],
+    "tauxCapture": 45,
+    "xpBase": 63
+  },
+  "8": {
+    "nom": "Carabaffe",
+    "nomEN": "Wartortle",
+    "types": ["eau"],
+    "stats": {
+      "hp": 59,
+      "attack": 63,
+      "defense": 80,
+      "special": 65,
+      "speed": 58
+    },
+    "evolution": {
+      "vers": 9,
+      "niveau": 36
+    },
+    "tauxCapture": 45,
+    "xpBase": 142
+  },
+  "9": {
+    "nom": "Tortank",
+    "nomEN": "Blastoise",
+    "types": ["eau"],
+    "stats": {
+      "hp": 79,
+      "attack": 83,
+      "defense": 100,
+      "special": 85,
+      "speed": 78
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 239
+  },
+  "10": {
+    "nom": "Chenipan",
+    "nomEN": "Caterpie",
+    "types": ["insecte"],
+    "stats": {
+      "hp": 45,
+      "attack": 30,
+      "defense": 35,
+      "special": 20,
+      "speed": 45
+    },
+    "evolution": {
+      "vers": 11,
+      "niveau": 7
+    },
+    "tauxCapture": 255,
+    "xpBase": 53
+  },
+  "11": {
+    "nom": "Chrysacier",
+    "nomEN": "Metapod",
+    "types": ["insecte"],
+    "stats": {
+      "hp": 50,
+      "attack": 20,
+      "defense": 55,
+      "special": 25,
+      "speed": 30
+    },
+    "evolution": {
+      "vers": 12,
+      "niveau": 10
+    },
+    "tauxCapture": 120,
+    "xpBase": 72
+  },
+  "12": {
+    "nom": "Papilusion",
+    "nomEN": "Butterfree",
+    "types": ["insecte", "vol"],
+    "stats": {
+      "hp": 60,
+      "attack": 45,
+      "defense": 50,
+      "special": 90,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 178
+  },
+  "13": {
+    "nom": "Aspicot",
+    "nomEN": "Weedle",
+    "types": ["insecte", "poison"],
+    "stats": {
+      "hp": 40,
+      "attack": 35,
+      "defense": 30,
+      "special": 20,
+      "speed": 50
+    },
+    "evolution": {
+      "vers": 14,
+      "niveau": 7
+    },
+    "tauxCapture": 255,
+    "xpBase": 52
+  },
+  "14": {
+    "nom": "Coconfort",
+    "nomEN": "Kakuna",
+    "types": ["insecte", "poison"],
+    "stats": {
+      "hp": 45,
+      "attack": 25,
+      "defense": 50,
+      "special": 25,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 15,
+      "niveau": 10
+    },
+    "tauxCapture": 120,
+    "xpBase": 71
+  },
+  "15": {
+    "nom": "Dardargnan",
+    "nomEN": "Beedrill",
+    "types": ["insecte", "poison"],
+    "stats": {
+      "hp": 65,
+      "attack": 90,
+      "defense": 40,
+      "special": 45,
+      "speed": 75
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 178
+  },
+  "16": {
+    "nom": "Roucool",
+    "nomEN": "Pidgey",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 40,
+      "attack": 45,
+      "defense": 40,
+      "special": 35,
+      "speed": 56
+    },
+    "evolution": {
+      "vers": 17,
+      "niveau": 18
+    },
+    "tauxCapture": 255,
+    "xpBase": 55
+  },
+  "17": {
+    "nom": "Roucoups",
+    "nomEN": "Pidgeotto",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 63,
+      "attack": 60,
+      "defense": 55,
+      "special": 50,
+      "speed": 71
+    },
+    "evolution": {
+      "vers": 18,
+      "niveau": 36
+    },
+    "tauxCapture": 120,
+    "xpBase": 113
+  },
+  "18": {
+    "nom": "Roucarnage",
+    "nomEN": "Pidgeot",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 83,
+      "attack": 80,
+      "defense": 75,
+      "special": 70,
+      "speed": 101
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 172
+  },
+  "19": {
+    "nom": "Rattata",
+    "nomEN": "Rattata",
+    "types": ["normal"],
+    "stats": {
+      "hp": 30,
+      "attack": 56,
+      "defense": 35,
+      "special": 25,
+      "speed": 72
+    },
+    "evolution": {
+      "vers": 20,
+      "niveau": 20
+    },
+    "tauxCapture": 255,
+    "xpBase": 57
+  },
+  "20": {
+    "nom": "Rattatac",
+    "nomEN": "Raticate",
+    "types": ["normal"],
+    "stats": {
+      "hp": 55,
+      "attack": 81,
+      "defense": 60,
+      "special": 50,
+      "speed": 97
+    },
+    "evolution": null,
+    "tauxCapture": 127,
+    "xpBase": 116
+  },
+  "21": {
+    "nom": "Piafabec",
+    "nomEN": "Spearow",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 40,
+      "attack": 60,
+      "defense": 30,
+      "special": 31,
+      "speed": 70
+    },
+    "evolution": {
+      "vers": 22,
+      "niveau": 20
+    },
+    "tauxCapture": 255,
+    "xpBase": 58
+  },
+  "22": {
+    "nom": "Rapasdepic",
+    "nomEN": "Fearow",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 65,
+      "attack": 90,
+      "defense": 65,
+      "special": 61,
+      "speed": 100
+    },
+    "evolution": null,
+    "tauxCapture": 90,
+    "xpBase": 162
+  },
+  "23": {
+    "nom": "Abo",
+    "nomEN": "Ekans",
+    "types": ["poison"],
+    "stats": {
+      "hp": 35,
+      "attack": 60,
+      "defense": 44,
+      "special": 40,
+      "speed": 55
+    },
+    "evolution": {
+      "vers": 24,
+      "niveau": 22
+    },
+    "tauxCapture": 255,
+    "xpBase": 62
+  },
+  "24": {
+    "nom": "Arbok",
+    "nomEN": "Arbok",
+    "types": ["poison"],
+    "stats": {
+      "hp": 60,
+      "attack": 95,
+      "defense": 69,
+      "special": 65,
+      "speed": 80
+    },
+    "evolution": null,
+    "tauxCapture": 90,
+    "xpBase": 147
+  },
+  "25": {
+    "nom": "Pikachu",
+    "nomEN": "Pikachu",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 35,
+      "attack": 55,
+      "defense": 40,
+      "special": 50,
+      "speed": 90
+    },
+    "evolution": {
+      "vers": 26,
+      "methode": "pierre_foudre"
+    },
+    "tauxCapture": 190,
+    "xpBase": 112
+  },
+  "26": {
+    "nom": "Raichu",
+    "nomEN": "Raichu",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 60,
+      "attack": 90,
+      "defense": 55,
+      "special": 90,
+      "speed": 110
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 218
+  },
+  "27": {
+    "nom": "Sabelette",
+    "nomEN": "Sandshrew",
+    "types": ["sol"],
+    "stats": {
+      "hp": 50,
+      "attack": 75,
+      "defense": 85,
+      "special": 30,
+      "speed": 40
+    },
+    "evolution": {
+      "vers": 28,
+      "niveau": 22
+    },
+    "tauxCapture": 255,
+    "xpBase": 93
+  },
+  "28": {
+    "nom": "Sablaireau",
+    "nomEN": "Sandslash",
+    "types": ["sol"],
+    "stats": {
+      "hp": 75,
+      "attack": 100,
+      "defense": 110,
+      "special": 55,
+      "speed": 65
+    },
+    "evolution": null,
+    "tauxCapture": 90,
+    "xpBase": 163
+  },
+  "29": {
+    "nom": "Nidoran♀",
+    "nomEN": "Nidoran♀",
+    "types": ["poison"],
+    "stats": {
+      "hp": 55,
+      "attack": 47,
+      "defense": 52,
+      "special": 40,
+      "speed": 41
+    },
+    "evolution": {
+      "vers": 30,
+      "niveau": 16
+    },
+    "tauxCapture": 235,
+    "xpBase": 59
+  },
+  "30": {
+    "nom": "Nidorina",
+    "nomEN": "Nidorina",
+    "types": ["poison"],
+    "stats": {
+      "hp": 70,
+      "attack": 62,
+      "defense": 67,
+      "special": 55,
+      "speed": 56
+    },
+    "evolution": {
+      "vers": 31,
+      "methode": "pierre_lune"
+    },
+    "tauxCapture": 120,
+    "xpBase": 117
+  },
+  "31": {
+    "nom": "Nidoqueen",
+    "nomEN": "Nidoqueen",
+    "types": ["poison", "sol"],
+    "stats": {
+      "hp": 90,
+      "attack": 92,
+      "defense": 87,
+      "special": 75,
+      "speed": 76
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 223
+  },
+  "32": {
+    "nom": "Nidoran♂",
+    "nomEN": "Nidoran♂",
+    "types": ["poison"],
+    "stats": {
+      "hp": 46,
+      "attack": 57,
+      "defense": 40,
+      "special": 40,
+      "speed": 50
+    },
+    "evolution": {
+      "vers": 33,
+      "niveau": 16
+    },
+    "tauxCapture": 235,
+    "xpBase": 60
+  },
+  "33": {
+    "nom": "Nidorino",
+    "nomEN": "Nidorino",
+    "types": ["poison"],
+    "stats": {
+      "hp": 61,
+      "attack": 72,
+      "defense": 57,
+      "special": 55,
+      "speed": 65
+    },
+    "evolution": {
+      "vers": 34,
+      "methode": "pierre_lune"
+    },
+    "tauxCapture": 120,
+    "xpBase": 118
+  },
+  "34": {
+    "nom": "Nidoking",
+    "nomEN": "Nidoking",
+    "types": ["poison", "sol"],
+    "stats": {
+      "hp": 81,
+      "attack": 102,
+      "defense": 77,
+      "special": 85,
+      "speed": 85
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 223
+  },
+  "35": {
+    "nom": "Mélofée",
+    "nomEN": "Clefairy",
+    "types": ["normal"],
+    "stats": {
+      "hp": 70,
+      "attack": 45,
+      "defense": 48,
+      "special": 60,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 36,
+      "methode": "pierre_lune"
+    },
+    "tauxCapture": 150,
+    "xpBase": 68
+  },
+  "36": {
+    "nom": "Mélodelfe",
+    "nomEN": "Clefable",
+    "types": ["normal"],
+    "stats": {
+      "hp": 95,
+      "attack": 70,
+      "defense": 73,
+      "special": 95,
+      "speed": 60
+    },
+    "evolution": null,
+    "tauxCapture": 25,
+    "xpBase": 129
+  },
+  "37": {
+    "nom": "Goupix",
+    "nomEN": "Vulpix",
+    "types": ["feu"],
+    "stats": {
+      "hp": 38,
+      "attack": 41,
+      "defense": 40,
+      "special": 65,
+      "speed": 65
+    },
+    "evolution": {
+      "vers": 38,
+      "methode": "pierre_feu"
+    },
+    "tauxCapture": 190,
+    "xpBase": 63
+  },
+  "38": {
+    "nom": "Feunard",
+    "nomEN": "Ninetales",
+    "types": ["feu"],
+    "stats": {
+      "hp": 73,
+      "attack": 76,
+      "defense": 75,
+      "special": 109,
+      "speed": 100
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 178
+  },
+  "39": {
+    "nom": "Rondoudou",
+    "nomEN": "Jigglypuff",
+    "types": ["normal"],
+    "stats": {
+      "hp": 115,
+      "attack": 45,
+      "defense": 20,
+      "special": 45,
+      "speed": 20
+    },
+    "evolution": {
+      "vers": 40,
+      "methode": "pierre_lune"
+    },
+    "tauxCapture": 170,
+    "xpBase": 76
+  },
+  "40": {
+    "nom": "Grodoudou",
+    "nomEN": "Wigglytuff",
+    "types": ["normal"],
+    "stats": {
+      "hp": 140,
+      "attack": 70,
+      "defense": 45,
+      "special": 85,
+      "speed": 45
+    },
+    "evolution": null,
+    "tauxCapture": 50,
+    "xpBase": 109
+  },
+  "41": {
+    "nom": "Nosferapti",
+    "nomEN": "Zubat",
+    "types": ["poison", "vol"],
+    "stats": {
+      "hp": 40,
+      "attack": 45,
+      "defense": 35,
+      "special": 40,
+      "speed": 55
+    },
+    "evolution": {
+      "vers": 42,
+      "niveau": 22
+    },
+    "tauxCapture": 255,
+    "xpBase": 54
+  },
+  "42": {
+    "nom": "Nosferalto",
+    "nomEN": "Golbat",
+    "types": ["poison", "vol"],
+    "stats": {
+      "hp": 75,
+      "attack": 80,
+      "defense": 70,
+      "special": 75,
+      "speed": 90
+    },
+    "evolution": null,
+    "tauxCapture": 90,
+    "xpBase": 171
+  },
+  "43": {
+    "nom": "Mystherbe",
+    "nomEN": "Oddish",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 45,
+      "attack": 50,
+      "defense": 55,
+      "special": 75,
+      "speed": 30
+    },
+    "evolution": {
+      "vers": 44,
+      "niveau": 21
+    },
+    "tauxCapture": 255,
+    "xpBase": 78
+  },
+  "44": {
+    "nom": "Ortide",
+    "nomEN": "Gloom",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 60,
+      "attack": 65,
+      "defense": 70,
+      "special": 85,
+      "speed": 40
+    },
+    "evolution": {
+      "vers": 45,
+      "methode": "pierre_plante"
+    },
+    "tauxCapture": 120,
+    "xpBase": 132
+  },
+  "45": {
+    "nom": "Rafflesia",
+    "nomEN": "Vileplume",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 75,
+      "attack": 80,
+      "defense": 85,
+      "special": 110,
+      "speed": 50
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 184
+  },
+  "46": {
+    "nom": "Paras",
+    "nomEN": "Paras",
+    "types": ["insecte", "plante"],
+    "stats": {
+      "hp": 35,
+      "attack": 70,
+      "defense": 55,
+      "special": 55,
+      "speed": 25
+    },
+    "evolution": {
+      "vers": 47,
+      "niveau": 24
+    },
+    "tauxCapture": 190,
+    "xpBase": 70
+  },
+  "47": {
+    "nom": "Parasect",
+    "nomEN": "Parasect",
+    "types": ["insecte", "plante"],
+    "stats": {
+      "hp": 60,
+      "attack": 95,
+      "defense": 80,
+      "special": 80,
+      "speed": 30
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 128
+  },
+  "48": {
+    "nom": "Mimitoss",
+    "nomEN": "Venonat",
+    "types": ["insecte", "poison"],
+    "stats": {
+      "hp": 60,
+      "attack": 55,
+      "defense": 50,
+      "special": 40,
+      "speed": 45
+    },
+    "evolution": {
+      "vers": 49,
+      "niveau": 31
+    },
+    "tauxCapture": 190,
+    "xpBase": 75
+  },
+  "49": {
+    "nom": "Aéromite",
+    "nomEN": "Venomoth",
+    "types": ["insecte", "poison"],
+    "stats": {
+      "hp": 70,
+      "attack": 65,
+      "defense": 60,
+      "special": 90,
+      "speed": 90
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 138
+  },
+  "50": {
+    "nom": "Taupiqueur",
+    "nomEN": "Diglett",
+    "types": ["sol"],
+    "stats": {
+      "hp": 10,
+      "attack": 55,
+      "defense": 25,
+      "special": 45,
+      "speed": 95
+    },
+    "evolution": {
+      "vers": 51,
+      "niveau": 26
+    },
+    "tauxCapture": 255,
+    "xpBase": 81
+  },
+  "51": {
+    "nom": "Triopikeur",
+    "nomEN": "Dugtrio",
+    "types": ["sol"],
+    "stats": {
+      "hp": 35,
+      "attack": 100,
+      "defense": 50,
+      "special": 70,
+      "speed": 120
+    },
+    "evolution": null,
+    "tauxCapture": 50,
+    "xpBase": 153
+  },
+  "52": {
+    "nom": "Miaouss",
+    "nomEN": "Meowth",
+    "types": ["normal"],
+    "stats": {
+      "hp": 40,
+      "attack": 45,
+      "defense": 35,
+      "special": 40,
+      "speed": 90
+    },
+    "evolution": {
+      "vers": 53,
+      "niveau": 28
+    },
+    "tauxCapture": 255,
+    "xpBase": 69
+  },
+  "53": {
+    "nom": "Persian",
+    "nomEN": "Persian",
+    "types": ["normal"],
+    "stats": {
+      "hp": 65,
+      "attack": 70,
+      "defense": 60,
+      "special": 65,
+      "speed": 115
+    },
+    "evolution": null,
+    "tauxCapture": 90,
+    "xpBase": 148
+  },
+  "54": {
+    "nom": "Psykokwak",
+    "nomEN": "Psyduck",
+    "types": ["eau"],
+    "stats": {
+      "hp": 50,
+      "attack": 52,
+      "defense": 48,
+      "special": 65,
+      "speed": 55
+    },
+    "evolution": {
+      "vers": 55,
+      "niveau": 33
+    },
+    "tauxCapture": 190,
+    "xpBase": 80
+  },
+  "55": {
+    "nom": "Akwakwak",
+    "nomEN": "Golduck",
+    "types": ["eau"],
+    "stats": {
+      "hp": 80,
+      "attack": 82,
+      "defense": 78,
+      "special": 95,
+      "speed": 85
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 174
+  },
+  "56": {
+    "nom": "Férosinge",
+    "nomEN": "Mankey",
+    "types": ["combat"],
+    "stats": {
+      "hp": 40,
+      "attack": 80,
+      "defense": 35,
+      "special": 35,
+      "speed": 70
+    },
+    "evolution": {
+      "vers": 57,
+      "niveau": 28
+    },
+    "tauxCapture": 190,
+    "xpBase": 74
+  },
+  "57": {
+    "nom": "Colossinge",
+    "nomEN": "Primeape",
+    "types": ["combat"],
+    "stats": {
+      "hp": 65,
+      "attack": 105,
+      "defense": 60,
+      "special": 60,
+      "speed": 95
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 149
+  },
+  "58": {
+    "nom": "Caninos",
+    "nomEN": "Growlithe",
+    "types": ["feu"],
+    "stats": {
+      "hp": 55,
+      "attack": 70,
+      "defense": 45,
+      "special": 70,
+      "speed": 60
+    },
+    "evolution": {
+      "vers": 59,
+      "methode": "pierre_feu"
+    },
+    "tauxCapture": 190,
+    "xpBase": 91
+  },
+  "59": {
+    "nom": "Arcanin",
+    "nomEN": "Arcanine",
+    "types": ["feu"],
+    "stats": {
+      "hp": 90,
+      "attack": 110,
+      "defense": 80,
+      "special": 100,
+      "speed": 95
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 213
+  },
+  "60": {
+    "nom": "Ptitard",
+    "nomEN": "Poliwag",
+    "types": ["eau"],
+    "stats": {
+      "hp": 40,
+      "attack": 50,
+      "defense": 40,
+      "special": 40,
+      "speed": 90
+    },
+    "evolution": {
+      "vers": 61,
+      "niveau": 25
+    },
+    "tauxCapture": 255,
+    "xpBase": 77
+  },
+  "61": {
+    "nom": "Têtarte",
+    "nomEN": "Poliwhirl",
+    "types": ["eau"],
+    "stats": {
+      "hp": 65,
+      "attack": 65,
+      "defense": 65,
+      "special": 50,
+      "speed": 90
+    },
+    "evolution": {
+      "vers": 62,
+      "methode": "pierre_eau"
+    },
+    "tauxCapture": 120,
+    "xpBase": 131
+  },
+  "62": {
+    "nom": "Tartard",
+    "nomEN": "Poliwrath",
+    "types": ["eau", "combat"],
+    "stats": {
+      "hp": 90,
+      "attack": 95,
+      "defense": 95,
+      "special": 70,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 185
+  },
+  "63": {
+    "nom": "Abra",
+    "nomEN": "Abra",
+    "types": ["psy"],
+    "stats": {
+      "hp": 25,
+      "attack": 20,
+      "defense": 15,
+      "special": 105,
+      "speed": 90
+    },
+    "evolution": {
+      "vers": 64,
+      "niveau": 16
+    },
+    "tauxCapture": 200,
+    "xpBase": 73
+  },
+  "64": {
+    "nom": "Kadabra",
+    "nomEN": "Kadabra",
+    "types": ["psy"],
+    "stats": {
+      "hp": 40,
+      "attack": 35,
+      "defense": 30,
+      "special": 120,
+      "speed": 105
+    },
+    "evolution": {
+      "vers": 65,
+      "methode": "echange"
+    },
+    "tauxCapture": 100,
+    "xpBase": 145
+  },
+  "65": {
+    "nom": "Alakazam",
+    "nomEN": "Alakazam",
+    "types": ["psy"],
+    "stats": {
+      "hp": 55,
+      "attack": 50,
+      "defense": 45,
+      "special": 135,
+      "speed": 120
+    },
+    "evolution": null,
+    "tauxCapture": 50,
+    "xpBase": 186
+  },
+  "66": {
+    "nom": "Machoc",
+    "nomEN": "Machop",
+    "types": ["combat"],
+    "stats": {
+      "hp": 70,
+      "attack": 80,
+      "defense": 50,
+      "special": 35,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 67,
+      "niveau": 28
+    },
+    "tauxCapture": 180,
+    "xpBase": 75
+  },
+  "67": {
+    "nom": "Machopeur",
+    "nomEN": "Machoke",
+    "types": ["combat"],
+    "stats": {
+      "hp": 80,
+      "attack": 100,
+      "defense": 70,
+      "special": 50,
+      "speed": 45
+    },
+    "evolution": {
+      "vers": 68,
+      "methode": "echange"
+    },
+    "tauxCapture": 90,
+    "xpBase": 146
+  },
+  "68": {
+    "nom": "Mackogneur",
+    "nomEN": "Machamp",
+    "types": ["combat"],
+    "stats": {
+      "hp": 90,
+      "attack": 130,
+      "defense": 80,
+      "special": 65,
+      "speed": 55
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 193
+  },
+  "69": {
+    "nom": "Chétiflor",
+    "nomEN": "Bellsprout",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 50,
+      "attack": 75,
+      "defense": 35,
+      "special": 70,
+      "speed": 40
+    },
+    "evolution": {
+      "vers": 70,
+      "niveau": 21
+    },
+    "tauxCapture": 255,
+    "xpBase": 84
+  },
+  "70": {
+    "nom": "Boustiflor",
+    "nomEN": "Weepinbell",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 65,
+      "attack": 90,
+      "defense": 50,
+      "special": 85,
+      "speed": 55
+    },
+    "evolution": {
+      "vers": 71,
+      "methode": "pierre_plante"
+    },
+    "tauxCapture": 120,
+    "xpBase": 151
+  },
+  "71": {
+    "nom": "Empiflor",
+    "nomEN": "Victreebel",
+    "types": ["plante", "poison"],
+    "stats": {
+      "hp": 80,
+      "attack": 105,
+      "defense": 65,
+      "special": 100,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 191
+  },
+  "72": {
+    "nom": "Tentacool",
+    "nomEN": "Tentacool",
+    "types": ["eau", "poison"],
+    "stats": {
+      "hp": 40,
+      "attack": 40,
+      "defense": 35,
+      "special": 100,
+      "speed": 70
+    },
+    "evolution": {
+      "vers": 73,
+      "niveau": 30
+    },
+    "tauxCapture": 190,
+    "xpBase": 105
+  },
+  "73": {
+    "nom": "Tentacruel",
+    "nomEN": "Tentacruel",
+    "types": ["eau", "poison"],
+    "stats": {
+      "hp": 80,
+      "attack": 70,
+      "defense": 65,
+      "special": 120,
+      "speed": 100
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 205
+  },
+  "74": {
+    "nom": "Racaillou",
+    "nomEN": "Geodude",
+    "types": ["roche", "sol"],
+    "stats": {
+      "hp": 40,
+      "attack": 80,
+      "defense": 100,
+      "special": 30,
+      "speed": 20
+    },
+    "evolution": {
+      "vers": 75,
+      "niveau": 25
+    },
+    "tauxCapture": 255,
+    "xpBase": 73
+  },
+  "75": {
+    "nom": "Gravalanch",
+    "nomEN": "Graveler",
+    "types": ["roche", "sol"],
+    "stats": {
+      "hp": 55,
+      "attack": 95,
+      "defense": 115,
+      "special": 45,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 76,
+      "methode": "echange"
+    },
+    "tauxCapture": 120,
+    "xpBase": 134
+  },
+  "76": {
+    "nom": "Grolem",
+    "nomEN": "Golem",
+    "types": ["roche", "sol"],
+    "stats": {
+      "hp": 80,
+      "attack": 120,
+      "defense": 130,
+      "special": 55,
+      "speed": 45
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 177
+  },
+  "77": {
+    "nom": "Ponyta",
+    "nomEN": "Ponyta",
+    "types": ["feu"],
+    "stats": {
+      "hp": 50,
+      "attack": 85,
+      "defense": 55,
+      "special": 65,
+      "speed": 90
+    },
+    "evolution": {
+      "vers": 78,
+      "niveau": 40
+    },
+    "tauxCapture": 190,
+    "xpBase": 152
+  },
+  "78": {
+    "nom": "Galopa",
+    "nomEN": "Rapidash",
+    "types": ["feu"],
+    "stats": {
+      "hp": 65,
+      "attack": 100,
+      "defense": 70,
+      "special": 80,
+      "speed": 105
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 192
+  },
+  "79": {
+    "nom": "Ramoloss",
+    "nomEN": "Slowpoke",
+    "types": ["eau", "psy"],
+    "stats": {
+      "hp": 90,
+      "attack": 65,
+      "defense": 65,
+      "special": 40,
+      "speed": 15
+    },
+    "evolution": {
+      "vers": 80,
+      "niveau": 37
+    },
+    "tauxCapture": 190,
+    "xpBase": 99
+  },
+  "80": {
+    "nom": "Flagadoss",
+    "nomEN": "Slowbro",
+    "types": ["eau", "psy"],
+    "stats": {
+      "hp": 95,
+      "attack": 75,
+      "defense": 110,
+      "special": 100,
+      "speed": 30
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 164
+  },
+  "81": {
+    "nom": "Magnéti",
+    "nomEN": "Magnemite",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 25,
+      "attack": 35,
+      "defense": 70,
+      "special": 95,
+      "speed": 45
+    },
+    "evolution": {
+      "vers": 82,
+      "niveau": 30
+    },
+    "tauxCapture": 190,
+    "xpBase": 89
+  },
+  "82": {
+    "nom": "Magnéton",
+    "nomEN": "Magneton",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 50,
+      "attack": 60,
+      "defense": 95,
+      "special": 120,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 161
+  },
+  "83": {
+    "nom": "Canarticho",
+    "nomEN": "Farfetch'd",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 52,
+      "attack": 90,
+      "defense": 55,
+      "special": 58,
+      "speed": 60
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 94
+  },
+  "84": {
+    "nom": "Doduo",
+    "nomEN": "Doduo",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 35,
+      "attack": 85,
+      "defense": 45,
+      "special": 35,
+      "speed": 75
+    },
+    "evolution": {
+      "vers": 85,
+      "niveau": 31
+    },
+    "tauxCapture": 190,
+    "xpBase": 96
+  },
+  "85": {
+    "nom": "Dodrio",
+    "nomEN": "Dodrio",
+    "types": ["normal", "vol"],
+    "stats": {
+      "hp": 60,
+      "attack": 110,
+      "defense": 70,
+      "special": 60,
+      "speed": 110
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 158
+  },
+  "86": {
+    "nom": "Otaria",
+    "nomEN": "Seel",
+    "types": ["eau"],
+    "stats": {
+      "hp": 65,
+      "attack": 45,
+      "defense": 55,
+      "special": 70,
+      "speed": 45
+    },
+    "evolution": {
+      "vers": 87,
+      "niveau": 34
+    },
+    "tauxCapture": 190,
+    "xpBase": 100
+  },
+  "87": {
+    "nom": "Lamantine",
+    "nomEN": "Dewgong",
+    "types": ["eau", "glace"],
+    "stats": {
+      "hp": 90,
+      "attack": 70,
+      "defense": 80,
+      "special": 95,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 176
+  },
+  "88": {
+    "nom": "Tadmorv",
+    "nomEN": "Grimer",
+    "types": ["poison"],
+    "stats": {
+      "hp": 80,
+      "attack": 80,
+      "defense": 50,
+      "special": 40,
+      "speed": 25
+    },
+    "evolution": {
+      "vers": 89,
+      "niveau": 38
+    },
+    "tauxCapture": 190,
+    "xpBase": 90
+  },
+  "89": {
+    "nom": "Grotadmorv",
+    "nomEN": "Muk",
+    "types": ["poison"],
+    "stats": {
+      "hp": 105,
+      "attack": 105,
+      "defense": 75,
+      "special": 65,
+      "speed": 50
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 157
+  },
+  "90": {
+    "nom": "Kokiyas",
+    "nomEN": "Shellder",
+    "types": ["eau"],
+    "stats": {
+      "hp": 30,
+      "attack": 65,
+      "defense": 100,
+      "special": 45,
+      "speed": 40
+    },
+    "evolution": {
+      "vers": 91,
+      "methode": "pierre_eau"
+    },
+    "tauxCapture": 190,
+    "xpBase": 97
+  },
+  "91": {
+    "nom": "Crustabri",
+    "nomEN": "Cloyster",
+    "types": ["eau", "glace"],
+    "stats": {
+      "hp": 50,
+      "attack": 95,
+      "defense": 180,
+      "special": 85,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 203
+  },
+  "92": {
+    "nom": "Fantominus",
+    "nomEN": "Gastly",
+    "types": ["spectre", "poison"],
+    "stats": {
+      "hp": 30,
+      "attack": 35,
+      "defense": 30,
+      "special": 100,
+      "speed": 80
+    },
+    "evolution": {
+      "vers": 93,
+      "niveau": 25
+    },
+    "tauxCapture": 190,
+    "xpBase": 95
+  },
+  "93": {
+    "nom": "Spectrum",
+    "nomEN": "Haunter",
+    "types": ["spectre", "poison"],
+    "stats": {
+      "hp": 45,
+      "attack": 50,
+      "defense": 45,
+      "special": 115,
+      "speed": 95
+    },
+    "evolution": {
+      "vers": 94,
+      "methode": "echange"
+    },
+    "tauxCapture": 90,
+    "xpBase": 126
+  },
+  "94": {
+    "nom": "Ectoplasma",
+    "nomEN": "Gengar",
+    "types": ["spectre", "poison"],
+    "stats": {
+      "hp": 60,
+      "attack": 65,
+      "defense": 60,
+      "special": 130,
+      "speed": 110
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 190
+  },
+  "95": {
+    "nom": "Onix",
+    "nomEN": "Onix",
+    "types": ["roche", "sol"],
+    "stats": {
+      "hp": 35,
+      "attack": 45,
+      "defense": 160,
+      "special": 30,
+      "speed": 70
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 108
+  },
+  "96": {
+    "nom": "Soporifik",
+    "nomEN": "Drowzee",
+    "types": ["psy"],
+    "stats": {
+      "hp": 60,
+      "attack": 48,
+      "defense": 45,
+      "special": 90,
+      "speed": 42
+    },
+    "evolution": {
+      "vers": 97,
+      "niveau": 26
+    },
+    "tauxCapture": 190,
+    "xpBase": 102
+  },
+  "97": {
+    "nom": "Hypnomade",
+    "nomEN": "Hypno",
+    "types": ["psy"],
+    "stats": {
+      "hp": 85,
+      "attack": 73,
+      "defense": 70,
+      "special": 115,
+      "speed": 67
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 165
+  },
+  "98": {
+    "nom": "Krabby",
+    "nomEN": "Krabby",
+    "types": ["eau"],
+    "stats": {
+      "hp": 30,
+      "attack": 105,
+      "defense": 90,
+      "special": 25,
+      "speed": 50
+    },
+    "evolution": {
+      "vers": 99,
+      "niveau": 28
+    },
+    "tauxCapture": 225,
+    "xpBase": 115
+  },
+  "99": {
+    "nom": "Krabboss",
+    "nomEN": "Kingler",
+    "types": ["eau"],
+    "stats": {
+      "hp": 55,
+      "attack": 130,
+      "defense": 115,
+      "special": 50,
+      "speed": 75
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 206
+  },
+  "100": {
+    "nom": "Voltorbe",
+    "nomEN": "Voltorb",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 40,
+      "attack": 30,
+      "defense": 50,
+      "special": 55,
+      "speed": 100
+    },
+    "evolution": {
+      "vers": 101,
+      "niveau": 30
+    },
+    "tauxCapture": 190,
+    "xpBase": 103
+  },
+  "101": {
+    "nom": "Électrode",
+    "nomEN": "Electrode",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 60,
+      "attack": 50,
+      "defense": 70,
+      "special": 80,
+      "speed": 150
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 150
+  },
+  "102": {
+    "nom": "Noeunoeuf",
+    "nomEN": "Exeggcute",
+    "types": ["plante", "psy"],
+    "stats": {
+      "hp": 60,
+      "attack": 40,
+      "defense": 80,
+      "special": 60,
+      "speed": 40
+    },
+    "evolution": {
+      "vers": 103,
+      "methode": "pierre_plante"
+    },
+    "tauxCapture": 90,
+    "xpBase": 98
+  },
+  "103": {
+    "nom": "Noadkoko",
+    "nomEN": "Exeggutor",
+    "types": ["plante", "psy"],
+    "stats": {
+      "hp": 95,
+      "attack": 95,
+      "defense": 85,
+      "special": 125,
+      "speed": 55
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 212
+  },
+  "104": {
+    "nom": "Osselait",
+    "nomEN": "Cubone",
+    "types": ["sol"],
+    "stats": {
+      "hp": 50,
+      "attack": 50,
+      "defense": 95,
+      "special": 40,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 105,
+      "niveau": 28
+    },
+    "tauxCapture": 190,
+    "xpBase": 87
+  },
+  "105": {
+    "nom": "Ossatueur",
+    "nomEN": "Marowak",
+    "types": ["sol"],
+    "stats": {
+      "hp": 60,
+      "attack": 80,
+      "defense": 110,
+      "special": 50,
+      "speed": 45
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 124
+  },
+  "106": {
+    "nom": "Kicklee",
+    "nomEN": "Hitmonlee",
+    "types": ["combat"],
+    "stats": {
+      "hp": 50,
+      "attack": 120,
+      "defense": 53,
+      "special": 35,
+      "speed": 87
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 139
+  },
+  "107": {
+    "nom": "Tygnon",
+    "nomEN": "Hitmonchan",
+    "types": ["combat"],
+    "stats": {
+      "hp": 50,
+      "attack": 105,
+      "defense": 79,
+      "special": 35,
+      "speed": 76
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 140
+  },
+  "108": {
+    "nom": "Excelangue",
+    "nomEN": "Lickitung",
+    "types": ["normal"],
+    "stats": {
+      "hp": 90,
+      "attack": 55,
+      "defense": 75,
+      "special": 60,
+      "speed": 30
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 127
+  },
+  "109": {
+    "nom": "Smogo",
+    "nomEN": "Koffing",
+    "types": ["poison"],
+    "stats": {
+      "hp": 40,
+      "attack": 65,
+      "defense": 95,
+      "special": 60,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 110,
+      "niveau": 35
+    },
+    "tauxCapture": 190,
+    "xpBase": 114
+  },
+  "110": {
+    "nom": "Smogogo",
+    "nomEN": "Weezing",
+    "types": ["poison"],
+    "stats": {
+      "hp": 65,
+      "attack": 90,
+      "defense": 120,
+      "special": 85,
+      "speed": 60
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 173
+  },
+  "111": {
+    "nom": "Rhinocorne",
+    "nomEN": "Rhyhorn",
+    "types": ["sol", "roche"],
+    "stats": {
+      "hp": 80,
+      "attack": 85,
+      "defense": 95,
+      "special": 30,
+      "speed": 25
+    },
+    "evolution": {
+      "vers": 112,
+      "niveau": 42
+    },
+    "tauxCapture": 120,
+    "xpBase": 135
+  },
+  "112": {
+    "nom": "Rhinoféros",
+    "nomEN": "Rhydon",
+    "types": ["sol", "roche"],
+    "stats": {
+      "hp": 105,
+      "attack": 130,
+      "defense": 120,
+      "special": 45,
+      "speed": 40
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 204
+  },
+  "113": {
+    "nom": "Leveinard",
+    "nomEN": "Chansey",
+    "types": ["normal"],
+    "stats": {
+      "hp": 250,
+      "attack": 5,
+      "defense": 5,
+      "special": 105,
+      "speed": 50
+    },
+    "evolution": null,
+    "tauxCapture": 30,
+    "xpBase": 255
+  },
+  "114": {
+    "nom": "Saquedeneu",
+    "nomEN": "Tangela",
+    "types": ["plante"],
+    "stats": {
+      "hp": 65,
+      "attack": 55,
+      "defense": 115,
+      "special": 100,
+      "speed": 60
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 166
+  },
+  "115": {
+    "nom": "Kangourex",
+    "nomEN": "Kangaskhan",
+    "types": ["normal"],
+    "stats": {
+      "hp": 105,
+      "attack": 95,
+      "defense": 80,
+      "special": 40,
+      "speed": 90
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 175
+  },
+  "116": {
+    "nom": "Hypotrempe",
+    "nomEN": "Horsea",
+    "types": ["eau"],
+    "stats": {
+      "hp": 30,
+      "attack": 40,
+      "defense": 70,
+      "special": 70,
+      "speed": 60
+    },
+    "evolution": {
+      "vers": 117,
+      "niveau": 32
+    },
+    "tauxCapture": 225,
+    "xpBase": 83
+  },
+  "117": {
+    "nom": "Hypocéan",
+    "nomEN": "Seadra",
+    "types": ["eau"],
+    "stats": {
+      "hp": 55,
+      "attack": 65,
+      "defense": 95,
+      "special": 95,
+      "speed": 85
+    },
+    "evolution": null,
+    "tauxCapture": 75,
+    "xpBase": 155
+  },
+  "118": {
+    "nom": "Poissirène",
+    "nomEN": "Goldeen",
+    "types": ["eau"],
+    "stats": {
+      "hp": 45,
+      "attack": 67,
+      "defense": 60,
+      "special": 50,
+      "speed": 63
+    },
+    "evolution": {
+      "vers": 119,
+      "niveau": 33
+    },
+    "tauxCapture": 225,
+    "xpBase": 111
+  },
+  "119": {
+    "nom": "Poissoroy",
+    "nomEN": "Seaking",
+    "types": ["eau"],
+    "stats": {
+      "hp": 80,
+      "attack": 92,
+      "defense": 65,
+      "special": 80,
+      "speed": 68
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 170
+  },
+  "120": {
+    "nom": "Stari",
+    "nomEN": "Staryu",
+    "types": ["eau"],
+    "stats": {
+      "hp": 30,
+      "attack": 45,
+      "defense": 55,
+      "special": 70,
+      "speed": 85
+    },
+    "evolution": {
+      "vers": 121,
+      "methode": "pierre_eau"
+    },
+    "tauxCapture": 225,
+    "xpBase": 106
+  },
+  "121": {
+    "nom": "Staross",
+    "nomEN": "Starmie",
+    "types": ["eau", "psy"],
+    "stats": {
+      "hp": 60,
+      "attack": 75,
+      "defense": 85,
+      "special": 100,
+      "speed": 115
+    },
+    "evolution": null,
+    "tauxCapture": 60,
+    "xpBase": 207
+  },
+  "122": {
+    "nom": "M. Mime",
+    "nomEN": "Mr. Mime",
+    "types": ["psy"],
+    "stats": {
+      "hp": 40,
+      "attack": 45,
+      "defense": 65,
+      "special": 100,
+      "speed": 90
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 136
+  },
+  "123": {
+    "nom": "Insécateur",
+    "nomEN": "Scyther",
+    "types": ["insecte", "vol"],
+    "stats": {
+      "hp": 70,
+      "attack": 110,
+      "defense": 80,
+      "special": 55,
+      "speed": 105
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 187
+  },
+  "124": {
+    "nom": "Lippoutou",
+    "nomEN": "Jynx",
+    "types": ["glace", "psy"],
+    "stats": {
+      "hp": 65,
+      "attack": 50,
+      "defense": 35,
+      "special": 115,
+      "speed": 95
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 137
+  },
+  "125": {
+    "nom": "Élektek",
+    "nomEN": "Electabuzz",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 65,
+      "attack": 83,
+      "defense": 57,
+      "special": 95,
+      "speed": 105
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 156
+  },
+  "126": {
+    "nom": "Magmar",
+    "nomEN": "Magmar",
+    "types": ["feu"],
+    "stats": {
+      "hp": 65,
+      "attack": 95,
+      "defense": 57,
+      "special": 100,
+      "speed": 93
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 167
+  },
+  "127": {
+    "nom": "Scarabrute",
+    "nomEN": "Pinsir",
+    "types": ["insecte"],
+    "stats": {
+      "hp": 65,
+      "attack": 125,
+      "defense": 100,
+      "special": 55,
+      "speed": 85
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 200
+  },
+  "128": {
+    "nom": "Tauros",
+    "nomEN": "Tauros",
+    "types": ["normal"],
+    "stats": {
+      "hp": 75,
+      "attack": 100,
+      "defense": 95,
+      "special": 70,
+      "speed": 110
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 211
+  },
+  "129": {
+    "nom": "Magicarpe",
+    "nomEN": "Magikarp",
+    "types": ["eau"],
+    "stats": {
+      "hp": 20,
+      "attack": 10,
+      "defense": 55,
+      "special": 15,
+      "speed": 80
+    },
+    "evolution": {
+      "vers": 130,
+      "niveau": 20
+    },
+    "tauxCapture": 255,
+    "xpBase": 20
+  },
+  "130": {
+    "nom": "Léviator",
+    "nomEN": "Gyarados",
+    "types": ["eau", "vol"],
+    "stats": {
+      "hp": 95,
+      "attack": 125,
+      "defense": 79,
+      "special": 100,
+      "speed": 81
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 214
+  },
+  "131": {
+    "nom": "Lokhlass",
+    "nomEN": "Lapras",
+    "types": ["eau", "glace"],
+    "stats": {
+      "hp": 130,
+      "attack": 85,
+      "defense": 80,
+      "special": 95,
+      "speed": 60
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 219
+  },
+  "132": {
+    "nom": "Métamorph",
+    "nomEN": "Ditto",
+    "types": ["normal"],
+    "stats": {
+      "hp": 48,
+      "attack": 48,
+      "defense": 48,
+      "special": 48,
+      "speed": 48
+    },
+    "evolution": null,
+    "tauxCapture": 35,
+    "xpBase": 61
+  },
+  "133": {
+    "nom": "Évoli",
+    "nomEN": "Eevee",
+    "types": ["normal"],
+    "stats": {
+      "hp": 55,
+      "attack": 55,
+      "defense": 50,
+      "special": 65,
+      "speed": 55
+    },
+    "evolution": {
+      "vers": [134, 135, 136],
+      "methode": ["pierre_eau", "pierre_foudre", "pierre_feu"]
+    },
+    "tauxCapture": 45,
+    "xpBase": 92
+  },
+  "134": {
+    "nom": "Aquali",
+    "nomEN": "Vaporeon",
+    "types": ["eau"],
+    "stats": {
+      "hp": 130,
+      "attack": 65,
+      "defense": 60,
+      "special": 110,
+      "speed": 65
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 196
+  },
+  "135": {
+    "nom": "Voltali",
+    "nomEN": "Jolteon",
+    "types": ["electrik"],
+    "stats": {
+      "hp": 65,
+      "attack": 65,
+      "defense": 60,
+      "special": 110,
+      "speed": 130
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 197
+  },
+  "136": {
+    "nom": "Pyroli",
+    "nomEN": "Flareon",
+    "types": ["feu"],
+    "stats": {
+      "hp": 65,
+      "attack": 130,
+      "defense": 60,
+      "special": 110,
+      "speed": 65
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 198
+  },
+  "137": {
+    "nom": "Porygon",
+    "nomEN": "Porygon",
+    "types": ["normal"],
+    "stats": {
+      "hp": 65,
+      "attack": 60,
+      "defense": 70,
+      "special": 85,
+      "speed": 40
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 130
+  },
+  "138": {
+    "nom": "Amonita",
+    "nomEN": "Omanyte",
+    "types": ["roche", "eau"],
+    "stats": {
+      "hp": 35,
+      "attack": 40,
+      "defense": 100,
+      "special": 90,
+      "speed": 35
+    },
+    "evolution": {
+      "vers": 139,
+      "niveau": 40
+    },
+    "tauxCapture": 45,
+    "xpBase": 120
+  },
+  "139": {
+    "nom": "Amonistar",
+    "nomEN": "Omastar",
+    "types": ["roche", "eau"],
+    "stats": {
+      "hp": 70,
+      "attack": 60,
+      "defense": 125,
+      "special": 115,
+      "speed": 55
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 199
+  },
+  "140": {
+    "nom": "Kabuto",
+    "nomEN": "Kabuto",
+    "types": ["roche", "eau"],
+    "stats": {
+      "hp": 30,
+      "attack": 80,
+      "defense": 90,
+      "special": 55,
+      "speed": 55
+    },
+    "evolution": {
+      "vers": 141,
+      "niveau": 40
+    },
+    "tauxCapture": 45,
+    "xpBase": 119
+  },
+  "141": {
+    "nom": "Kabutops",
+    "nomEN": "Kabutops",
+    "types": ["roche", "eau"],
+    "stats": {
+      "hp": 60,
+      "attack": 115,
+      "defense": 105,
+      "special": 70,
+      "speed": 80
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 201
+  },
+  "142": {
+    "nom": "Ptéra",
+    "nomEN": "Aerodactyl",
+    "types": ["roche", "vol"],
+    "stats": {
+      "hp": 80,
+      "attack": 105,
+      "defense": 65,
+      "special": 60,
+      "speed": 130
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 202
+  },
+  "143": {
+    "nom": "Ronflex",
+    "nomEN": "Snorlax",
+    "types": ["normal"],
+    "stats": {
+      "hp": 160,
+      "attack": 110,
+      "defense": 65,
+      "special": 65,
+      "speed": 30
+    },
+    "evolution": null,
+    "tauxCapture": 25,
+    "xpBase": 154
+  },
+  "144": {
+    "nom": "Artikodin",
+    "nomEN": "Articuno",
+    "types": ["glace", "vol"],
+    "stats": {
+      "hp": 90,
+      "attack": 85,
+      "defense": 100,
+      "special": 125,
+      "speed": 85
+    },
+    "evolution": null,
+    "tauxCapture": 3,
+    "xpBase": 215
+  },
+  "145": {
+    "nom": "Électhor",
+    "nomEN": "Zapdos",
+    "types": ["electrik", "vol"],
+    "stats": {
+      "hp": 90,
+      "attack": 90,
+      "defense": 85,
+      "special": 125,
+      "speed": 100
+    },
+    "evolution": null,
+    "tauxCapture": 3,
+    "xpBase": 216
+  },
+  "146": {
+    "nom": "Sulfura",
+    "nomEN": "Moltres",
+    "types": ["feu", "vol"],
+    "stats": {
+      "hp": 90,
+      "attack": 100,
+      "defense": 90,
+      "special": 125,
+      "speed": 90
+    },
+    "evolution": null,
+    "tauxCapture": 3,
+    "xpBase": 217
+  },
+  "147": {
+    "nom": "Minidraco",
+    "nomEN": "Dratini",
+    "types": ["dragon"],
+    "stats": {
+      "hp": 41,
+      "attack": 64,
+      "defense": 45,
+      "special": 50,
+      "speed": 50
+    },
+    "evolution": {
+      "vers": 148,
+      "niveau": 30
+    },
+    "tauxCapture": 45,
+    "xpBase": 67
+  },
+  "148": {
+    "nom": "Draco",
+    "nomEN": "Dragonair",
+    "types": ["dragon"],
+    "stats": {
+      "hp": 61,
+      "attack": 84,
+      "defense": 65,
+      "special": 70,
+      "speed": 70
+    },
+    "evolution": {
+      "vers": 149,
+      "niveau": 55
+    },
+    "tauxCapture": 45,
+    "xpBase": 144
+  },
+  "149": {
+    "nom": "Dracolosse",
+    "nomEN": "Dragonite",
+    "types": ["dragon", "vol"],
+    "stats": {
+      "hp": 91,
+      "attack": 134,
+      "defense": 95,
+      "special": 100,
+      "speed": 80
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 218
+  },
+  "150": {
+    "nom": "Mewtwo",
+    "nomEN": "Mewtwo",
+    "types": ["psy"],
+    "stats": {
+      "hp": 106,
+      "attack": 110,
+      "defense": 90,
+      "special": 154,
+      "speed": 130
+    },
+    "evolution": null,
+    "tauxCapture": 3,
+    "xpBase": 220
+  },
+  "151": {
+    "nom": "Mew",
+    "nomEN": "Mew",
+    "types": ["psy"],
+    "stats": {
+      "hp": 100,
+      "attack": 100,
+      "defense": 100,
+      "special": 100,
+      "speed": 100
+    },
+    "evolution": null,
+    "tauxCapture": 45,
+    "xpBase": 64
+  }
+}

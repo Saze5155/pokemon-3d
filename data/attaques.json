@@ -1,0 +1,1810 @@
+{
+  "normal": {
+    "charge": {
+      "nom": "Charge",
+      "nomEN": "Tackle",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Une charge de tout le corps."
+    },
+    "griffe": {
+      "nom": "Griffe",
+      "nomEN": "Scratch",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Griffe l'ennemi avec des griffes acérées."
+    },
+    "ecras_face": {
+      "nom": "Écras'Face",
+      "nomEN": "Pound",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Frappe avec les pattes avant ou la queue."
+    },
+    "torgnoles": {
+      "nom": "Torgnoles",
+      "nomEN": "Double Slap",
+      "puissance": 15,
+      "precision": 85,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "multi_hit",
+      "chanceEffet": 100,
+      "description": "Gifle l'ennemi 2 à 5 fois de suite."
+    },
+    "poing_comete": {
+      "nom": "Poing Comète",
+      "nomEN": "Comet Punch",
+      "puissance": 18,
+      "precision": 85,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "multi_hit",
+      "chanceEffet": 100,
+      "description": "Frappe 2 à 5 fois de suite."
+    },
+    "mega_poing": {
+      "nom": "Méga Poing",
+      "nomEN": "Mega Punch",
+      "puissance": 80,
+      "precision": 85,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un coup de poing puissant."
+    },
+    "jackpot": {
+      "nom": "Jackpot",
+      "nomEN": "Pay Day",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "argent",
+      "chanceEffet": 100,
+      "description": "Lance des pièces. Rapporte de l'argent."
+    },
+    "griffe_acier": {
+      "nom": "Griffe Acier",
+      "nomEN": "Metal Claw",
+      "puissance": 50,
+      "precision": 95,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": "attack_up",
+      "chanceEffet": 10,
+      "description": "Griffe avec des griffes d'acier."
+    },
+    "vive_attaque": {
+      "nom": "Vive-Attaque",
+      "nomEN": "Quick Attack",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "physique",
+      "effet": "priorite",
+      "chanceEffet": 100,
+      "priorite": 1,
+      "description": "Une attaque éclair qui frappe toujours en premier."
+    },
+    "rugissement": {
+      "nom": "Rugissement",
+      "nomEN": "Growl",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": "attack_down",
+      "chanceEffet": 100,
+      "description": "Rugit pour baisser l'Attaque ennemie."
+    },
+    "mimi_queue": {
+      "nom": "Mimi-Queue",
+      "nomEN": "Tail Whip",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "defense_down",
+      "chanceEffet": 100,
+      "description": "Remue la queue pour baisser la Défense ennemie."
+    },
+    "groz_yeux": {
+      "nom": "Groz'Yeux",
+      "nomEN": "Leer",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "defense_down",
+      "chanceEffet": 100,
+      "description": "Un regard menaçant qui baisse la Défense."
+    },
+    "coup_d_boule": {
+      "nom": "Coup d'Boule",
+      "nomEN": "Headbutt",
+      "puissance": 70,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 30,
+      "description": "Un coup de tête qui peut apeurer."
+    },
+    "koud_korne": {
+      "nom": "Koud'Korne",
+      "nomEN": "Horn Attack",
+      "puissance": 65,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Attaque avec une corne pointue."
+    },
+    "furie": {
+      "nom": "Furie",
+      "nomEN": "Fury Attack",
+      "puissance": 15,
+      "precision": 85,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "multi_hit",
+      "chanceEffet": 100,
+      "description": "Frappe 2 à 5 fois de suite."
+    },
+    "empal_korne": {
+      "nom": "Empal'Korne",
+      "nomEN": "Horn Drill",
+      "puissance": 0,
+      "precision": 30,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": "ohko",
+      "chanceEffet": 100,
+      "description": "Une attaque qui met K.O. en un coup si elle touche."
+    },
+    "plaquage": {
+      "nom": "Plaquage",
+      "nomEN": "Body Slam",
+      "puissance": 85,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "paralysie",
+      "chanceEffet": 30,
+      "description": "Un plaquage puissant qui peut paralyser."
+    },
+    "ligotage": {
+      "nom": "Ligotage",
+      "nomEN": "Wrap",
+      "puissance": 15,
+      "precision": 90,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "piege",
+      "chanceEffet": 100,
+      "description": "Enserre l'ennemi pendant 2 à 5 tours."
+    },
+    "damocles": {
+      "nom": "Damoclès",
+      "nomEN": "Double-Edge",
+      "puissance": 120,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "recul",
+      "chanceEffet": 100,
+      "recul": 0.33,
+      "description": "Une attaque puissante avec dégâts de recul."
+    },
+    "frenesie": {
+      "nom": "Frénésie",
+      "nomEN": "Rage",
+      "puissance": 20,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "rage",
+      "chanceEffet": 100,
+      "description": "L'Attaque augmente à chaque coup reçu."
+    },
+    "mania": {
+      "nom": "Mania",
+      "nomEN": "Thrash",
+      "puissance": 120,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "confusion_self",
+      "chanceEffet": 100,
+      "description": "Attaque 2-3 tours puis devient confus."
+    },
+    "belier": {
+      "nom": "Bélier",
+      "nomEN": "Take Down",
+      "puissance": 90,
+      "precision": 85,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "recul",
+      "chanceEffet": 100,
+      "recul": 0.25,
+      "description": "Une charge violente avec dégâts de recul."
+    },
+    "ecrasement": {
+      "nom": "Écrasement",
+      "nomEN": "Stomp",
+      "puissance": 65,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 30,
+      "description": "Piétine l'ennemi. Peut apeurer."
+    },
+    "double_pied": {
+      "nom": "Double Pied",
+      "nomEN": "Double Kick",
+      "puissance": 30,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "physique",
+      "effet": "double_hit",
+      "chanceEffet": 100,
+      "description": "Frappe deux fois de suite."
+    },
+    "mega_kick": {
+      "nom": "Méga Kick",
+      "nomEN": "Mega Kick",
+      "puissance": 120,
+      "precision": 75,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un coup de pied dévastateur."
+    },
+    "pied_voltige": {
+      "nom": "Pied Voltige",
+      "nomEN": "Jump Kick",
+      "puissance": 100,
+      "precision": 95,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "crash",
+      "chanceEffet": 100,
+      "description": "Un coup sauté. Se blesse si raté."
+    },
+    "mawashi_geri": {
+      "nom": "Mawashi Geri",
+      "nomEN": "Rolling Kick",
+      "puissance": 60,
+      "precision": 85,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 30,
+      "description": "Un coup de pied tournoyant."
+    },
+    "combo_griffe": {
+      "nom": "Combo-Griffe",
+      "nomEN": "Fury Swipes",
+      "puissance": 18,
+      "precision": 80,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "multi_hit",
+      "chanceEffet": 100,
+      "description": "Griffe 2 à 5 fois de suite."
+    },
+    "tranche": {
+      "nom": "Tranche",
+      "nomEN": "Slash",
+      "puissance": 70,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "high_crit",
+      "chanceEffet": 100,
+      "description": "Une attaque tranchante avec taux critique élevé."
+    },
+    "meteores": {
+      "nom": "Météores",
+      "nomEN": "Swift",
+      "puissance": 60,
+      "precision": 0,
+      "pp": 20,
+      "categorie": "special",
+      "effet": "always_hit",
+      "chanceEffet": 100,
+      "description": "Lance des étoiles qui touchent toujours."
+    },
+    "croc_de_mort": {
+      "nom": "Croc de Mort",
+      "nomEN": "Hyper Fang",
+      "puissance": 80,
+      "precision": 90,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 10,
+      "description": "Mord avec des crocs acérés."
+    },
+    "trempette": {
+      "nom": "Trempette",
+      "nomEN": "Splash",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Ne fait absolument rien..."
+    },
+    "ultralaser": {
+      "nom": "Ultralaser",
+      "nomEN": "Hyper Beam",
+      "puissance": 150,
+      "precision": 90,
+      "pp": 5,
+      "categorie": "special",
+      "effet": "recharge",
+      "chanceEffet": 100,
+      "description": "Un rayon destructeur. Doit recharger au tour suivant."
+    },
+    "berceuse": {
+      "nom": "Berceuse",
+      "nomEN": "Sing",
+      "puissance": 0,
+      "precision": 55,
+      "pp": 15,
+      "categorie": "statut",
+      "effet": "sleep",
+      "chanceEffet": 100,
+      "description": "Une berceuse qui endort l'ennemi."
+    },
+    "ultrason": {
+      "nom": "Ultrason",
+      "nomEN": "Supersonic",
+      "puissance": 0,
+      "precision": 55,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "confusion",
+      "chanceEffet": 100,
+      "description": "Des ondes sonores qui rendent confus."
+    },
+    "sonicboom": {
+      "nom": "Sonicboom",
+      "nomEN": "Sonic Boom",
+      "puissance": 0,
+      "precision": 90,
+      "pp": 20,
+      "categorie": "special",
+      "effet": "fixed_20",
+      "chanceEffet": 100,
+      "description": "Inflige toujours 20 points de dégâts."
+    },
+    "grincement": {
+      "nom": "Grincement",
+      "nomEN": "Screech",
+      "puissance": 0,
+      "precision": 85,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": "defense_down_2",
+      "chanceEffet": 100,
+      "description": "Un cri strident qui baisse fortement la Défense."
+    },
+    "entrave": {
+      "nom": "Entrave",
+      "nomEN": "Disable",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "disable",
+      "chanceEffet": 100,
+      "description": "Empêche l'ennemi d'utiliser sa dernière attaque."
+    },
+    "lilliput": {
+      "nom": "Lilliput",
+      "nomEN": "Minimize",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "evasion_up_2",
+      "chanceEffet": 100,
+      "description": "Rétrécit pour augmenter fortement l'Esquive."
+    },
+    "boul_armure": {
+      "nom": "Boul'Armure",
+      "nomEN": "Defense Curl",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": "defense_up",
+      "chanceEffet": 100,
+      "description": "Se met en boule pour augmenter la Défense."
+    },
+    "armure": {
+      "nom": "Armure",
+      "nomEN": "Harden",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "defense_up",
+      "chanceEffet": 100,
+      "description": "Durcit le corps pour augmenter la Défense."
+    },
+    "reflet": {
+      "nom": "Reflet",
+      "nomEN": "Double Team",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "statut",
+      "effet": "evasion_up",
+      "chanceEffet": 100,
+      "description": "Crée des copies pour augmenter l'Esquive."
+    },
+    "hate": {
+      "nom": "Hâte",
+      "nomEN": "Agility",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "speed_up_2",
+      "chanceEffet": 100,
+      "description": "Se relaxe pour augmenter fortement la Vitesse."
+    },
+    "puissance": {
+      "nom": "Puissance",
+      "nomEN": "Focus Energy",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "focus",
+      "chanceEffet": 100,
+      "description": "Se concentre pour augmenter le taux critique."
+    },
+    "morphing": {
+      "nom": "Morphing",
+      "nomEN": "Transform",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "transform",
+      "chanceEffet": 100,
+      "description": "Se transforme en une copie de l'ennemi."
+    },
+    "adaptation": {
+      "nom": "Adaptation",
+      "nomEN": "Conversion",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "conversion",
+      "chanceEffet": 100,
+      "description": "Change de type pour correspondre à sa première attaque."
+    },
+    "substitut": {
+      "nom": "Substitut",
+      "nomEN": "Substitute",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "substitute",
+      "chanceEffet": 100,
+      "description": "Crée une copie qui absorbe les dégâts."
+    },
+    "copie": {
+      "nom": "Copie",
+      "nomEN": "Mimic",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "mimic",
+      "chanceEffet": 100,
+      "description": "Copie une des attaques de l'ennemi."
+    },
+    "metronome": {
+      "nom": "Métronome",
+      "nomEN": "Metronome",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "random_move",
+      "chanceEffet": 100,
+      "description": "Utilise une attaque aléatoire."
+    },
+    "miroir_move": {
+      "nom": "Miroir Move",
+      "nomEN": "Mirror Move",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "mirror",
+      "chanceEffet": 100,
+      "description": "Contre-attaque avec la dernière attaque reçue."
+    },
+    "destruction": {
+      "nom": "Destruction",
+      "nomEN": "Self-Destruct",
+      "puissance": 200,
+      "precision": 100,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": "self_ko",
+      "chanceEffet": 100,
+      "description": "Explose et met K.O. l'utilisateur."
+    },
+    "explosion": {
+      "nom": "Explosion",
+      "nomEN": "Explosion",
+      "puissance": 250,
+      "precision": 100,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": "self_ko",
+      "chanceEffet": 100,
+      "description": "Une explosion massive qui met K.O. l'utilisateur."
+    },
+    "repos": {
+      "nom": "Repos",
+      "nomEN": "Rest",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "rest",
+      "chanceEffet": 100,
+      "description": "Dort 2 tours pour récupérer tous ses PV."
+    },
+    "soin": {
+      "nom": "Soin",
+      "nomEN": "Recover",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "heal_50",
+      "chanceEffet": 100,
+      "description": "Récupère 50% de ses PV max."
+    },
+    "e_coque": {
+      "nom": "E-Coque",
+      "nomEN": "Soft-Boiled",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "heal_50",
+      "chanceEffet": 100,
+      "description": "Récupère 50% de ses PV max."
+    },
+    "secretion": {
+      "nom": "Sécrétion",
+      "nomEN": "String Shot",
+      "puissance": 0,
+      "precision": 95,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": "speed_down",
+      "chanceEffet": 100,
+      "description": "Crache de la soie pour baisser la Vitesse."
+    },
+    "intimidation": {
+      "nom": "Intimidation",
+      "nomEN": "Glare",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "paralysie",
+      "chanceEffet": 100,
+      "description": "Paralyse l'ennemi avec un regard effrayant."
+    },
+    "pilonnage": {
+      "nom": "Pilonnage",
+      "nomEN": "Barrage",
+      "puissance": 15,
+      "precision": 85,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "multi_hit",
+      "chanceEffet": 100,
+      "description": "Lance des projectiles 2 à 5 fois."
+    },
+    "etreinte": {
+      "nom": "Étreinte",
+      "nomEN": "Bind",
+      "puissance": 15,
+      "precision": 85,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "piege",
+      "chanceEffet": 100,
+      "description": "Enserre l'ennemi pendant 2 à 5 tours."
+    },
+    "massd_os": {
+      "nom": "Mass'D'Os",
+      "nomEN": "Bone Club",
+      "puissance": 65,
+      "precision": 85,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 10,
+      "description": "Frappe avec un os. Peut apeurer."
+    },
+    "osmerang": {
+      "nom": "Osmerang",
+      "nomEN": "Bonemerang",
+      "puissance": 50,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "double_hit",
+      "chanceEffet": 100,
+      "description": "Lance un os qui frappe deux fois."
+    },
+    "croc_fatal": {
+      "nom": "Croc Fatal",
+      "nomEN": "Super Fang",
+      "puissance": 0,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "half_hp",
+      "chanceEffet": 100,
+      "description": "Inflige des dégâts égaux à 50% des PV actuels."
+    },
+    "triplattaque": {
+      "nom": "Triplattaque",
+      "nomEN": "Tri Attack",
+      "puissance": 80,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "tri_status",
+      "chanceEffet": 20,
+      "description": "Peut brûler, paralyser ou geler."
+    },
+    "guillotine": {
+      "nom": "Guillotine",
+      "nomEN": "Guillotine",
+      "puissance": 0,
+      "precision": 30,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": "ohko",
+      "chanceEffet": 100,
+      "description": "Une attaque qui met K.O. en un coup si elle touche."
+    },
+    "force": {
+      "nom": "Force Poigne",
+      "nomEN": "Vice Grip",
+      "puissance": 55,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Saisit l'ennemi avec de puissantes pinces."
+    },
+    "pince_masse": {
+      "nom": "Pince-Masse",
+      "nomEN": "Crabhammer",
+      "puissance": 100,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "high_crit",
+      "chanceEffet": 100,
+      "description": "Frappe avec une pince. Taux critique élevé."
+    },
+    "danse_lames": {
+      "nom": "Danse-Lames",
+      "nomEN": "Swords Dance",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "attack_up_2",
+      "chanceEffet": 100,
+      "description": "Une danse qui augmente fortement l'Attaque."
+    },
+    "riposte": {
+      "nom": "Riposte",
+      "nomEN": "Counter",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "counter",
+      "chanceEffet": 100,
+      "priorite": -5,
+      "description": "Renvoie le double des dégâts physiques subis."
+    },
+    "patience": {
+      "nom": "Patience",
+      "nomEN": "Bide",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "bide",
+      "chanceEffet": 100,
+      "description": "Encaisse 2 tours puis renvoie le double des dégâts."
+    },
+    "uppercut": {
+      "nom": "Uppercut",
+      "nomEN": "Sky Uppercut",
+      "puissance": 85,
+      "precision": 90,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un uppercut puissant."
+    },
+    "morsure": {
+      "nom": "Morsure",
+      "nomEN": "Bite",
+      "puissance": 60,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 10,
+      "description": "Mord avec des crocs acérés. Peut apeurer."
+    },
+    "coup_de_crane": {
+      "nom": "Coup de Crâne",
+      "nomEN": "Skull Bash",
+      "puissance": 130,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "charge",
+      "chanceEffet": 100,
+      "description": "Rentre la tête au 1er tour, attaque au 2ème."
+    }
+  },
+
+  "feu": {
+    "flammeche": {
+      "nom": "Flammèche",
+      "nomEN": "Ember",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "special",
+      "effet": "burn",
+      "chanceEffet": 10,
+      "description": "Une attaque de flammes qui peut brûler l'ennemi."
+    },
+    "lance_flammes": {
+      "nom": "Lance-Flammes",
+      "nomEN": "Flamethrower",
+      "puissance": 90,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "burn",
+      "chanceEffet": 10,
+      "description": "Un souffle de flammes qui peut brûler l'ennemi."
+    },
+    "deflagration": {
+      "nom": "Déflagration",
+      "nomEN": "Fire Blast",
+      "puissance": 110,
+      "precision": 85,
+      "pp": 5,
+      "categorie": "special",
+      "effet": "burn",
+      "chanceEffet": 10,
+      "description": "Une explosion de feu dévastatrice."
+    },
+    "danse_flammes": {
+      "nom": "Danse Flammes",
+      "nomEN": "Fire Spin",
+      "puissance": 35,
+      "precision": 85,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "piege",
+      "chanceEffet": 100,
+      "description": "Piège l'ennemi dans un tourbillon de feu pendant 2-5 tours."
+    },
+    "poing_feu": {
+      "nom": "Poing Feu",
+      "nomEN": "Fire Punch",
+      "puissance": 75,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "burn",
+      "chanceEffet": 10,
+      "description": "Un coup de poing enflammé qui peut brûler."
+    }
+  },
+
+  "eau": {
+    "pistolet_a_o": {
+      "nom": "Pistolet à O",
+      "nomEN": "Water Gun",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "special",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un jet d'eau projeté sur l'ennemi."
+    },
+    "bulles_d_o": {
+      "nom": "Bulles d'O",
+      "nomEN": "Bubble",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "special",
+      "effet": "speed_down",
+      "chanceEffet": 10,
+      "description": "Des bulles qui peuvent ralentir l'ennemi."
+    },
+    "ecume": {
+      "nom": "Écume",
+      "nomEN": "Bubble Beam",
+      "puissance": 65,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "special",
+      "effet": "speed_down",
+      "chanceEffet": 10,
+      "description": "Un jet de bulles qui peut ralentir l'ennemi."
+    },
+    "hydrocanon": {
+      "nom": "Hydrocanon",
+      "nomEN": "Hydro Pump",
+      "puissance": 110,
+      "precision": 80,
+      "pp": 5,
+      "categorie": "special",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un puissant jet d'eau à haute pression."
+    },
+    "surf": {
+      "nom": "Surf",
+      "nomEN": "Surf",
+      "puissance": 90,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "special",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Une vague géante qui submerge l'ennemi."
+    },
+    "cascade": {
+      "nom": "Cascade",
+      "nomEN": "Waterfall",
+      "puissance": 80,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 20,
+      "description": "Une charge aquatique puissante."
+    },
+    "repli": {
+      "nom": "Repli",
+      "nomEN": "Withdraw",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": "defense_up",
+      "chanceEffet": 100,
+      "description": "Se replie dans sa carapace pour augmenter la Défense."
+    },
+    "claquoir": {
+      "nom": "Claquoir",
+      "nomEN": "Clamp",
+      "puissance": 35,
+      "precision": 85,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "piege",
+      "chanceEffet": 100,
+      "description": "Enserre l'ennemi dans sa coquille."
+    },
+    "brouillard": {
+      "nom": "Brouillard",
+      "nomEN": "Smokescreen",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "precision_down",
+      "chanceEffet": 100,
+      "description": "Crache de la fumée pour baisser la Précision."
+    }
+  },
+
+  "plante": {
+    "fouet_lianes": {
+      "nom": "Fouet Lianes",
+      "nomEN": "Vine Whip",
+      "puissance": 45,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Frappe l'ennemi avec des lianes."
+    },
+    "tranch_herbe": {
+      "nom": "Tranch'Herbe",
+      "nomEN": "Razor Leaf",
+      "puissance": 55,
+      "precision": 95,
+      "pp": 25,
+      "categorie": "physique",
+      "effet": "high_crit",
+      "chanceEffet": 100,
+      "description": "Des feuilles tranchantes avec taux critique élevé."
+    },
+    "lance_soleil": {
+      "nom": "Lance-Soleil",
+      "nomEN": "Solar Beam",
+      "puissance": 120,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "charge",
+      "chanceEffet": 100,
+      "description": "Absorbe la lumière au 1er tour, attaque au 2ème."
+    },
+    "vampigraine": {
+      "nom": "Vampigraine",
+      "nomEN": "Leech Seed",
+      "puissance": 0,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "drain",
+      "chanceEffet": 100,
+      "description": "Plante une graine qui draine les PV chaque tour."
+    },
+    "poudre_dodo": {
+      "nom": "Poudre Dodo",
+      "nomEN": "Sleep Powder",
+      "puissance": 0,
+      "precision": 75,
+      "pp": 15,
+      "categorie": "statut",
+      "effet": "sleep",
+      "chanceEffet": 100,
+      "description": "Répand une poudre qui endort l'ennemi."
+    },
+    "poudre_toxik": {
+      "nom": "Poudre Toxik",
+      "nomEN": "Poison Powder",
+      "puissance": 0,
+      "precision": 75,
+      "pp": 35,
+      "categorie": "statut",
+      "effet": "poison",
+      "chanceEffet": 100,
+      "description": "Répand une poudre qui empoisonne l'ennemi."
+    },
+    "para_spore": {
+      "nom": "Para-Spore",
+      "nomEN": "Stun Spore",
+      "puissance": 0,
+      "precision": 75,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "paralysie",
+      "chanceEffet": 100,
+      "description": "Répand des spores qui paralysent."
+    },
+    "croissance": {
+      "nom": "Croissance",
+      "nomEN": "Growth",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "special_up",
+      "chanceEffet": 100,
+      "description": "Augmente l'Attaque Spéciale."
+    },
+    "mega_sangsue": {
+      "nom": "Méga-Sangsue",
+      "nomEN": "Mega Drain",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "drain_hp",
+      "chanceEffet": 100,
+      "description": "Absorbe la moitié des dégâts infligés."
+    },
+    "danse_fleurs": {
+      "nom": "Danse-Fleur",
+      "nomEN": "Petal Dance",
+      "puissance": 120,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "confusion_self",
+      "chanceEffet": 100,
+      "description": "Attaque 2-3 tours puis devient confus."
+    },
+    "spore": {
+      "nom": "Spore",
+      "nomEN": "Spore",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "statut",
+      "effet": "sleep",
+      "chanceEffet": 100,
+      "description": "Répand des spores qui endorment à coup sûr."
+    }
+  },
+
+  "electrik": {
+    "eclair": {
+      "nom": "Éclair",
+      "nomEN": "Thunder Shock",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "special",
+      "effet": "paralysie",
+      "chanceEffet": 10,
+      "description": "Une décharge électrique qui peut paralyser."
+    },
+    "tonnerre": {
+      "nom": "Tonnerre",
+      "nomEN": "Thunderbolt",
+      "puissance": 90,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "paralysie",
+      "chanceEffet": 10,
+      "description": "Une puissante décharge électrique."
+    },
+    "fatal_foudre": {
+      "nom": "Fatal-Foudre",
+      "nomEN": "Thunder",
+      "puissance": 110,
+      "precision": 70,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "paralysie",
+      "chanceEffet": 30,
+      "description": "Un éclair dévastateur qui peut paralyser."
+    },
+    "cage_eclair": {
+      "nom": "Cage-Éclair",
+      "nomEN": "Thunder Wave",
+      "puissance": 0,
+      "precision": 90,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "paralysie",
+      "chanceEffet": 100,
+      "description": "Une onde qui paralyse l'ennemi."
+    },
+    "poing_eclair": {
+      "nom": "Poing-Éclair",
+      "nomEN": "Thunder Punch",
+      "puissance": 75,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "paralysie",
+      "chanceEffet": 10,
+      "description": "Un coup de poing électrifié qui peut paralyser."
+    }
+  },
+
+  "glace": {
+    "poudreuse": {
+      "nom": "Poudreuse",
+      "nomEN": "Powder Snow",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "special",
+      "effet": "gel",
+      "chanceEffet": 10,
+      "description": "Souffle de la neige glaciale."
+    },
+    "laser_glace": {
+      "nom": "Laser Glace",
+      "nomEN": "Ice Beam",
+      "puissance": 90,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "gel",
+      "chanceEffet": 10,
+      "description": "Un rayon glacial qui peut geler."
+    },
+    "blizzard": {
+      "nom": "Blizzard",
+      "nomEN": "Blizzard",
+      "puissance": 110,
+      "precision": 70,
+      "pp": 5,
+      "categorie": "special",
+      "effet": "gel",
+      "chanceEffet": 10,
+      "description": "Une tempête de neige dévastatrice."
+    },
+    "poing_glace": {
+      "nom": "Poinglace",
+      "nomEN": "Ice Punch",
+      "puissance": 75,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "gel",
+      "chanceEffet": 10,
+      "description": "Un coup de poing gelé."
+    },
+    "vent_glace": {
+      "nom": "Vent Glace",
+      "nomEN": "Icy Wind",
+      "puissance": 55,
+      "precision": 95,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "speed_down",
+      "chanceEffet": 100,
+      "description": "Un souffle glacé qui ralentit l'ennemi."
+    },
+    "brume": {
+      "nom": "Brume",
+      "nomEN": "Mist",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "mist",
+      "chanceEffet": 100,
+      "description": "Empêche l'ennemi de baisser vos stats."
+    },
+    "onde_boreale": {
+      "nom": "Onde Boréale",
+      "nomEN": "Aurora Beam",
+      "puissance": 65,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "special",
+      "effet": "attack_down",
+      "chanceEffet": 10,
+      "description": "Un rayon coloré qui peut baisser l'Attaque."
+    },
+    "buee_noire": {
+      "nom": "Buée Noire",
+      "nomEN": "Haze",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "reset_stats",
+      "chanceEffet": 100,
+      "description": "Réinitialise toutes les modifications de stats."
+    }
+  },
+
+  "combat": {
+    "poing_karate": {
+      "nom": "Poing-Karaté",
+      "nomEN": "Karate Chop",
+      "puissance": 50,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "physique",
+      "effet": "high_crit",
+      "chanceEffet": 100,
+      "description": "Un coup de karaté avec taux critique élevé."
+    },
+    "balayage": {
+      "nom": "Balayage",
+      "nomEN": "Low Kick",
+      "puissance": 50,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 30,
+      "description": "Un coup de pied bas qui peut apeurer."
+    },
+    "sacrifice": {
+      "nom": "Sacrifice",
+      "nomEN": "Submission",
+      "puissance": 80,
+      "precision": 80,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "recul",
+      "chanceEffet": 100,
+      "recul": 0.25,
+      "description": "Une attaque désespérée avec recul."
+    },
+    "frappe_atlas": {
+      "nom": "Frappe Atlas",
+      "nomEN": "Seismic Toss",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "level_damage",
+      "chanceEffet": 100,
+      "description": "Inflige des dégâts égaux au niveau du lanceur."
+    },
+    "surpuissance": {
+      "nom": "Surpuissance",
+      "nomEN": "High Jump Kick",
+      "puissance": 130,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "crash",
+      "chanceEffet": 100,
+      "description": "Un coup dévastateur. Se blesse si raté."
+    },
+    "casse_brique": {
+      "nom": "Casse-Brique",
+      "nomEN": "Brick Break",
+      "puissance": 75,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un coup de poing qui brise les barrières."
+    },
+    "yoga": {
+      "nom": "Yoga",
+      "nomEN": "Meditate",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 40,
+      "categorie": "statut",
+      "effet": "attack_up",
+      "chanceEffet": 100,
+      "description": "Médite pour augmenter l'Attaque."
+    }
+  },
+  "poison": {
+    "dard_venin": {
+      "nom": "Dard-Venin",
+      "nomEN": "Poison Sting",
+      "puissance": 15,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": "poison",
+      "chanceEffet": 30,
+      "description": "Un dard empoisonné qui peut empoisonner."
+    },
+    "acide": {
+      "nom": "Acide",
+      "nomEN": "Acid",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "special",
+      "effet": "defense_down",
+      "chanceEffet": 10,
+      "description": "Projette de l'acide. Peut baisser la Défense."
+    },
+    "detritus": {
+      "nom": "Détritus",
+      "nomEN": "Sludge",
+      "puissance": 65,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "special",
+      "effet": "poison",
+      "chanceEffet": 30,
+      "description": "Projette des déchets toxiques."
+    },
+    "toxik": {
+      "nom": "Toxik",
+      "nomEN": "Toxic",
+      "puissance": 0,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "bad_poison",
+      "chanceEffet": 100,
+      "description": "Empoisonne gravement. Les dégâts augmentent chaque tour."
+    },
+    "bombe_acide": {
+      "nom": "Bombe Acide",
+      "nomEN": "Acid Armor",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "defense_up_2",
+      "chanceEffet": 100,
+      "description": "Liquéfie le corps pour augmenter fortement la Défense."
+    },
+    "direct_toxik": {
+      "nom": "Direct Toxik",
+      "nomEN": "Poison Jab",
+      "puissance": 80,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "poison",
+      "chanceEffet": 30,
+      "description": "Un coup empoisonné."
+    }
+  },
+
+  "sol": {
+    "seisme": {
+      "nom": "Séisme",
+      "nomEN": "Earthquake",
+      "puissance": 100,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Un violent tremblement de terre."
+    },
+    "tunnel": {
+      "nom": "Tunnel",
+      "nomEN": "Dig",
+      "puissance": 80,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "semi_invulnerable",
+      "chanceEffet": 100,
+      "description": "Creuse au 1er tour, attaque au 2ème."
+    },
+    "jet_de_sable": {
+      "nom": "Jet de Sable",
+      "nomEN": "Sand Attack",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "statut",
+      "effet": "precision_down",
+      "chanceEffet": 100,
+      "description": "Jette du sable pour baisser la Précision."
+    },
+    "abime": {
+      "nom": "Abîme",
+      "nomEN": "Fissure",
+      "puissance": 0,
+      "precision": 30,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": "ohko",
+      "chanceEffet": 100,
+      "description": "Ouvre une fissure. K.O. en un coup si touche."
+    },
+    "telluriforce": {
+      "nom": "Telluriforce",
+      "nomEN": "Earth Power",
+      "puissance": 90,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "special_down",
+      "chanceEffet": 10,
+      "description": "Fait jaillir l'énergie de la terre."
+    }
+  },
+
+  "vol": {
+    "picpic": {
+      "nom": "Picpic",
+      "nomEN": "Peck",
+      "puissance": 35,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Attaque avec un bec pointu."
+    },
+    "cru_aile": {
+      "nom": "Cru-Aile",
+      "nomEN": "Wing Attack",
+      "puissance": 60,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Frappe avec les ailes déployées."
+    },
+    "vol": {
+      "nom": "Vol",
+      "nomEN": "Fly",
+      "puissance": 90,
+      "precision": 95,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "semi_invulnerable",
+      "chanceEffet": 100,
+      "description": "S'envole au 1er tour, attaque au 2ème."
+    },
+    "bec_vrille": {
+      "nom": "Bec Vrille",
+      "nomEN": "Drill Peck",
+      "puissance": 80,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Attaque en vrille avec le bec."
+    },
+    "tornade": {
+      "nom": "Tornade",
+      "nomEN": "Gust",
+      "puissance": 40,
+      "precision": 100,
+      "pp": 35,
+      "categorie": "special",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Crée une tornade avec les ailes."
+    },
+    "pique": {
+      "nom": "Piqué",
+      "nomEN": "Sky Attack",
+      "puissance": 140,
+      "precision": 90,
+      "pp": 5,
+      "categorie": "physique",
+      "effet": "charge",
+      "chanceEffet": 100,
+      "description": "Brille au 1er tour, attaque au 2ème."
+    },
+    "ouragan": {
+      "nom": "Ouragan",
+      "nomEN": "Whirlwind",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "switch_out",
+      "chanceEffet": 100,
+      "description": "Souffle l'ennemi hors du combat."
+    }
+  },
+
+  "psy": {
+    "choc_mental": {
+      "nom": "Choc Mental",
+      "nomEN": "Confusion",
+      "puissance": 50,
+      "precision": 100,
+      "pp": 25,
+      "categorie": "special",
+      "effet": "confusion",
+      "chanceEffet": 10,
+      "description": "Une attaque psychique qui peut confondre."
+    },
+    "psyko": {
+      "nom": "Psyko",
+      "nomEN": "Psychic",
+      "puissance": 90,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "special_down",
+      "chanceEffet": 10,
+      "description": "Une puissante vague psychique."
+    },
+    "hypnose": {
+      "nom": "Hypnose",
+      "nomEN": "Hypnosis",
+      "puissance": 0,
+      "precision": 60,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "sleep",
+      "chanceEffet": 100,
+      "description": "Endort l'ennemi par hypnose."
+    },
+    "devoreve": {
+      "nom": "Dévorêve",
+      "nomEN": "Dream Eater",
+      "puissance": 100,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "drain_sleep",
+      "chanceEffet": 100,
+      "description": "Dévore les rêves d'un ennemi endormi. Restaure les PV."
+    },
+    "barriere": {
+      "nom": "Barrière",
+      "nomEN": "Barrier",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "defense_up_2",
+      "chanceEffet": 100,
+      "description": "Crée une barrière qui augmente fortement la Défense."
+    },
+    "amnesie": {
+      "nom": "Amnésie",
+      "nomEN": "Amnesia",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "special_up_2",
+      "chanceEffet": 100,
+      "description": "Augmente fortement la Défense Spéciale."
+    },
+    "mur_lumiere": {
+      "nom": "Mur Lumière",
+      "nomEN": "Light Screen",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "statut",
+      "effet": "light_screen",
+      "chanceEffet": 100,
+      "description": "Réduit les dégâts spéciaux pendant 5 tours."
+    },
+    "protection": {
+      "nom": "Protection",
+      "nomEN": "Reflect",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "reflect",
+      "chanceEffet": 100,
+      "description": "Réduit les dégâts physiques pendant 5 tours."
+    },
+    "teleport": {
+      "nom": "Téléport",
+      "nomEN": "Teleport",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "statut",
+      "effet": "flee",
+      "chanceEffet": 100,
+      "description": "Permet de fuir un combat sauvage."
+    },
+    "rafale_psy": {
+      "nom": "Rafale Psy",
+      "nomEN": "Psybeam",
+      "puissance": 65,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "special",
+      "effet": "confusion",
+      "chanceEffet": 10,
+      "description": "Un rayon psychédélique qui peut confondre."
+    },
+    "prescience": {
+      "nom": "Préscience",
+      "nomEN": "Future Sight",
+      "puissance": 120,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "delayed",
+      "chanceEffet": 100,
+      "description": "Attaque qui touche 2 tours plus tard."
+    },
+    "kinesis": {
+      "nom": "Kinésis",
+      "nomEN": "Kinesis",
+      "puissance": 0,
+      "precision": 80,
+      "pp": 15,
+      "categorie": "statut",
+      "effet": "precision_down",
+      "chanceEffet": 100,
+      "description": "Distrait l'ennemi pour baisser sa Précision."
+    },
+    "onde_folie": {
+      "nom": "Onde Folie",
+      "nomEN": "Confuse Ray",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "confusion",
+      "chanceEffet": 100,
+      "description": "Une lumière étrange qui rend confus."
+    },
+    "grobisou": {
+      "nom": "GroBisou",
+      "nomEN": "Sweet Kiss",
+      "puissance": 0,
+      "precision": 75,
+      "pp": 10,
+      "categorie": "statut",
+      "effet": "confusion",
+      "chanceEffet": 100,
+      "description": "Un baiser qui rend confus."
+    },
+    "rayon_lune": {
+      "nom": "Rayon Lune",
+      "nomEN": "Moonlight",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 5,
+      "categorie": "statut",
+      "effet": "heal_weather",
+      "chanceEffet": 100,
+      "description": "Récupère des PV selon la météo."
+    }
+  },
+
+  "insecte": {
+    "vampirisme": {
+      "nom": "Vampirisme",
+      "nomEN": "Leech Life",
+      "puissance": 80,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "drain_hp",
+      "chanceEffet": 100,
+      "description": "Absorbe la moitié des dégâts infligés."
+    },
+    "piqure": {
+      "nom": "Piqure",
+      "nomEN": "Bug Bite",
+      "puissance": 60,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Mord l'ennemi."
+    },
+    "double_dard": {
+      "nom": "Double-Dard",
+      "nomEN": "Twineedle",
+      "puissance": 25,
+      "precision": 100,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "double_hit_poison",
+      "chanceEffet": 20,
+      "description": "Frappe deux fois. Peut empoisonner."
+    },
+    "dard_mortel": {
+      "nom": "Dard Mortel",
+      "nomEN": "Pin Missile",
+      "puissance": 25,
+      "precision": 95,
+      "pp": 20,
+      "categorie": "physique",
+      "effet": "multi_hit",
+      "chanceEffet": 100,
+      "description": "Lance des aiguilles 2 à 5 fois."
+    }
+  },
+
+  "roche": {
+    "jet_pierres": {
+      "nom": "Jet-Pierres",
+      "nomEN": "Rock Throw",
+      "puissance": 50,
+      "precision": 90,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": null,
+      "chanceEffet": 0,
+      "description": "Lance des rochers sur l'ennemi."
+    },
+    "eboulement": {
+      "nom": "Éboulement",
+      "nomEN": "Rock Slide",
+      "puissance": 75,
+      "precision": 90,
+      "pp": 10,
+      "categorie": "physique",
+      "effet": "flinch",
+      "chanceEffet": 30,
+      "description": "Fait tomber des rochers. Peut apeurer."
+    },
+    "tomberoche": {
+      "nom": "Tomberoche",
+      "nomEN": "Rock Tomb",
+      "puissance": 60,
+      "precision": 95,
+      "pp": 15,
+      "categorie": "physique",
+      "effet": "speed_down",
+      "chanceEffet": 100,
+      "description": "Emprisonne sous des rochers. Baisse la Vitesse."
+    }
+  },
+
+  "spectre": {
+    "lechouille": {
+      "nom": "Léchouille",
+      "nomEN": "Lick",
+      "puissance": 30,
+      "precision": 100,
+      "pp": 30,
+      "categorie": "physique",
+      "effet": "paralysie",
+      "chanceEffet": 30,
+      "description": "Lèche l'ennemi. Peut paralyser."
+    },
+    "ombre_nocturne": {
+      "nom": "Ombre Nocturne",
+      "nomEN": "Night Shade",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 15,
+      "categorie": "special",
+      "effet": "level_damage",
+      "chanceEffet": 100,
+      "description": "Inflige des dégâts égaux au niveau du lanceur."
+    }
+  },
+
+  "dragon": {
+    "draco_rage": {
+      "nom": "Draco-Rage",
+      "nomEN": "Dragon Rage",
+      "puissance": 0,
+      "precision": 100,
+      "pp": 10,
+      "categorie": "special",
+      "effet": "fixed_40",
+      "chanceEffet": 100,
+      "description": "Inflige toujours 40 points de dégâts."
+    }
+  }
+}

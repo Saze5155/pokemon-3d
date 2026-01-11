@@ -1,0 +1,41 @@
+{
+  "version": 3,
+  "zones": [
+    {
+      "scene": "bourg-palette",
+      "worldX": -17,
+      "worldZ": -12,
+      "rotation": 0
+    },
+    {
+      "scene": "jadielle",
+      "worldX": 20.408656473537405,
+      "worldZ": -96.8431495339061,
+      "rotation": 0
+    },
+    {
+      "scene": "argenta",
+      "worldX": -1.1050387661984455,
+      "worldZ": -346.33227371236495,
+      "rotation": 0
+    },
+    {
+      "scene": "route1",
+      "worldX": -16.96761459999575,
+      "worldZ": -11.794950844226094,
+      "rotation": 0
+    },
+    {
+      "scene": "route2",
+      "worldX": 8.156474751583964,
+      "worldZ": -176.04509141826796,
+      "rotation": 0
+    },
+    {
+      "scene": "route2nord",
+      "worldX": 8.068170715766337,
+      "worldZ": -277.77134675078236,
+      "rotation": 0
+    }
+  ]
+}

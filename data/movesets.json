@@ -1,0 +1,1604 @@
+{
+  "1": {
+    "nom": "Bulbizarre",
+    "attaquesParNiveau": {
+      "1": ["charge", "rugissement"],
+      "7": ["vampigraine"],
+      "13": ["fouet_lianes"],
+      "20": ["poudre_toxik"],
+      "27": ["tranch_herbe"],
+      "34": ["croissance"],
+      "41": ["poudre_dodo"],
+      "48": ["lance_soleil"]
+    }
+  },
+  "2": {
+    "nom": "Herbizarre",
+    "attaquesParNiveau": {
+      "1": ["charge", "rugissement", "vampigraine"],
+      "7": ["vampigraine"],
+      "13": ["fouet_lianes"],
+      "22": ["poudre_toxik"],
+      "30": ["tranch_herbe"],
+      "38": ["croissance"],
+      "46": ["poudre_dodo"],
+      "54": ["lance_soleil"]
+    }
+  },
+  "3": {
+    "nom": "Florizarre",
+    "attaquesParNiveau": {
+      "1": ["charge", "rugissement", "vampigraine", "fouet_lianes"],
+      "7": ["vampigraine"],
+      "13": ["fouet_lianes"],
+      "22": ["poudre_toxik"],
+      "30": ["tranch_herbe"],
+      "43": ["croissance"],
+      "55": ["poudre_dodo"],
+      "65": ["lance_soleil"]
+    }
+  },
+  "4": {
+    "nom": "Salamèche",
+    "attaquesParNiveau": {
+      "1": ["griffe", "rugissement"],
+      "9": ["flammeche"],
+      "15": ["griffe_acier"],
+      "22": ["furie"],
+      "30": ["tranche"],
+      "38": ["lance_flammes"],
+      "46": ["danse_flammes"]
+    }
+  },
+  "5": {
+    "nom": "Reptincel",
+    "attaquesParNiveau": {
+      "1": ["griffe", "rugissement", "flammeche"],
+      "9": ["flammeche"],
+      "15": ["griffe_acier"],
+      "24": ["furie"],
+      "33": ["tranche"],
+      "42": ["lance_flammes"],
+      "56": ["danse_flammes"]
+    }
+  },
+  "6": {
+    "nom": "Dracaufeu",
+    "attaquesParNiveau": {
+      "1": ["griffe", "rugissement", "flammeche", "griffe_acier"],
+      "9": ["flammeche"],
+      "15": ["griffe_acier"],
+      "24": ["furie"],
+      "36": ["tranche"],
+      "46": ["lance_flammes"],
+      "55": ["danse_flammes"]
+    }
+  },
+  "7": {
+    "nom": "Carapuce",
+    "attaquesParNiveau": {
+      "1": ["charge", "mimi_queue"],
+      "8": ["bulles_d_o"],
+      "15": ["pistolet_a_o"],
+      "22": ["morsure"],
+      "28": ["repli"],
+      "35": ["coup_de_crane"],
+      "42": ["hydrocanon"]
+    }
+  },
+  "8": {
+    "nom": "Carabaffe",
+    "attaquesParNiveau": {
+      "1": ["charge", "mimi_queue", "bulles_d_o"],
+      "8": ["bulles_d_o"],
+      "15": ["pistolet_a_o"],
+      "24": ["morsure"],
+      "31": ["repli"],
+      "39": ["coup_de_crane"],
+      "47": ["hydrocanon"]
+    }
+  },
+  "9": {
+    "nom": "Tortank",
+    "attaquesParNiveau": {
+      "1": ["charge", "mimi_queue", "bulles_d_o", "pistolet_a_o"],
+      "8": ["bulles_d_o"],
+      "15": ["pistolet_a_o"],
+      "24": ["morsure"],
+      "31": ["repli"],
+      "42": ["coup_de_crane"],
+      "52": ["hydrocanon"]
+    }
+  },
+  "10": {
+    "nom": "Chenipan",
+    "attaquesParNiveau": {
+      "1": ["charge", "secretion"]
+    }
+  },
+  "11": {
+    "nom": "Chrysacier",
+    "attaquesParNiveau": {
+      "1": ["armure"]
+    }
+  },
+  "12": {
+    "nom": "Papilusion",
+    "attaquesParNiveau": {
+      "1": ["choc_mental"],
+      "12": ["poudre_toxik"],
+      "15": ["para_spore"],
+      "16": ["poudre_dodo"],
+      "21": ["ultrason"],
+      "26": ["tornade"],
+      "32": ["psyko"]
+    }
+  },
+  "13": {
+    "nom": "Aspicot",
+    "attaquesParNiveau": {
+      "1": ["dard_venin", "secretion"]
+    }
+  },
+  "14": {
+    "nom": "Coconfort",
+    "attaquesParNiveau": {
+      "1": ["armure"]
+    }
+  },
+  "15": {
+    "nom": "Dardargnan",
+    "attaquesParNiveau": {
+      "1": ["furie"],
+      "12": ["dard_mortel"],
+      "16": ["double_dard"],
+      "20": ["furie"],
+      "25": ["dard_venin"],
+      "30": ["hate"],
+      "35": ["direct_toxik"]
+    }
+  },
+  "16": {
+    "nom": "Roucool",
+    "attaquesParNiveau": {
+      "1": ["charge"],
+      "5": ["jet_de_sable"],
+      "12": ["vive_attaque"],
+      "19": ["tornade"],
+      "28": ["cru_aile"],
+      "36": ["hate"],
+      "44": ["miroir_move"]
+    }
+  },
+  "17": {
+    "nom": "Roucoups",
+    "attaquesParNiveau": {
+      "1": ["charge", "jet_de_sable"],
+      "5": ["jet_de_sable"],
+      "12": ["vive_attaque"],
+      "21": ["tornade"],
+      "31": ["cru_aile"],
+      "40": ["hate"],
+      "49": ["miroir_move"]
+    }
+  },
+  "18": {
+    "nom": "Roucarnage",
+    "attaquesParNiveau": {
+      "1": ["charge", "jet_de_sable", "vive_attaque"],
+      "5": ["jet_de_sable"],
+      "12": ["vive_attaque"],
+      "21": ["tornade"],
+      "31": ["cru_aile"],
+      "44": ["hate"],
+      "54": ["miroir_move"]
+    }
+  },
+  "19": {
+    "nom": "Rattata",
+    "attaquesParNiveau": {
+      "1": ["charge", "mimi_queue"],
+      "7": ["vive_attaque"],
+      "14": ["croc_de_mort"],
+      "23": ["puissance"],
+      "34": ["croc_fatal"]
+    }
+  },
+  "20": {
+    "nom": "Rattatac",
+    "attaquesParNiveau": {
+      "1": ["charge", "mimi_queue", "vive_attaque"],
+      "7": ["vive_attaque"],
+      "14": ["croc_de_mort"],
+      "27": ["puissance"],
+      "41": ["croc_fatal"]
+    }
+  },
+  "21": {
+    "nom": "Piafabec",
+    "attaquesParNiveau": {
+      "1": ["picpic", "rugissement"],
+      "9": ["groz_yeux"],
+      "15": ["furie"],
+      "22": ["miroir_move"],
+      "29": ["bec_vrille"],
+      "36": ["hate"]
+    }
+  },
+  "22": {
+    "nom": "Rapasdepic",
+    "attaquesParNiveau": {
+      "1": ["picpic", "rugissement", "groz_yeux"],
+      "9": ["groz_yeux"],
+      "15": ["furie"],
+      "25": ["miroir_move"],
+      "34": ["bec_vrille"],
+      "43": ["hate"]
+    }
+  },
+  "23": {
+    "nom": "Abo",
+    "attaquesParNiveau": {
+      "1": ["ligotage", "groz_yeux"],
+      "10": ["dard_venin"],
+      "17": ["morsure"],
+      "24": ["intimidation"],
+      "31": ["grincement"],
+      "38": ["acide"]
+    }
+  },
+  "24": {
+    "nom": "Arbok",
+    "attaquesParNiveau": {
+      "1": ["ligotage", "groz_yeux", "dard_venin"],
+      "10": ["dard_venin"],
+      "17": ["morsure"],
+      "27": ["intimidation"],
+      "36": ["grincement"],
+      "47": ["acide"]
+    }
+  },
+  "25": {
+    "nom": "Pikachu",
+    "attaquesParNiveau": {
+      "1": ["eclair", "rugissement"],
+      "9": ["cage_eclair"],
+      "16": ["vive_attaque"],
+      "26": ["meteores"],
+      "33": ["hate"],
+      "43": ["tonnerre"]
+    }
+  },
+  "26": {
+    "nom": "Raichu",
+    "attaquesParNiveau": {
+      "1": ["eclair", "rugissement", "cage_eclair"]
+    }
+  },
+  "27": {
+    "nom": "Sabelette",
+    "attaquesParNiveau": {
+      "1": ["griffe"],
+      "10": ["jet_de_sable"],
+      "17": ["tranche"],
+      "24": ["dard_venin"],
+      "31": ["meteores"],
+      "38": ["combo_griffe"]
+    }
+  },
+  "28": {
+    "nom": "Sablaireau",
+    "attaquesParNiveau": {
+      "1": ["griffe", "jet_de_sable"],
+      "10": ["jet_de_sable"],
+      "17": ["tranche"],
+      "27": ["dard_venin"],
+      "36": ["meteores"],
+      "47": ["combo_griffe"]
+    }
+  },
+  "29": {
+    "nom": "Nidoran♀",
+    "attaquesParNiveau": {
+      "1": ["rugissement", "charge"],
+      "8": ["griffe"],
+      "14": ["dard_venin"],
+      "21": ["mimi_queue"],
+      "29": ["morsure"],
+      "36": ["furie"],
+      "43": ["double_pied"]
+    }
+  },
+  "30": {
+    "nom": "Nidorina",
+    "attaquesParNiveau": {
+      "1": ["rugissement", "charge", "griffe"],
+      "8": ["griffe"],
+      "14": ["dard_venin"],
+      "23": ["mimi_queue"],
+      "32": ["morsure"],
+      "41": ["furie"],
+      "50": ["double_pied"]
+    }
+  },
+  "31": {
+    "nom": "Nidoqueen",
+    "attaquesParNiveau": {
+      "1": ["charge", "griffe", "dard_venin", "plaquage"]
+    }
+  },
+  "32": {
+    "nom": "Nidoran♂",
+    "attaquesParNiveau": {
+      "1": ["groz_yeux", "charge"],
+      "8": ["corne_empoisonnee"],
+      "14": ["dard_venin"],
+      "21": ["puissance"],
+      "29": ["furie"],
+      "36": ["koud_korne"],
+      "43": ["double_pied"]
+    }
+  },
+  "33": {
+    "nom": "Nidorino",
+    "attaquesParNiveau": {
+      "1": ["groz_yeux", "charge", "corne_empoisonnee"],
+      "8": ["corne_empoisonnee"],
+      "14": ["dard_venin"],
+      "23": ["puissance"],
+      "32": ["furie"],
+      "41": ["koud_korne"],
+      "50": ["double_pied"]
+    }
+  },
+  "34": {
+    "nom": "Nidoking",
+    "attaquesParNiveau": {
+      "1": ["charge", "corne_empoisonnee", "dard_venin", "empal_korne"]
+    }
+  },
+  "35": {
+    "nom": "Mélofée",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "rugissement"],
+      "13": ["berceuse"],
+      "18": ["boul_armure"],
+      "24": ["lilliput"],
+      "31": ["metronome"],
+      "39": ["barriere"],
+      "48": ["rayon_lune"]
+    }
+  },
+  "36": {
+    "nom": "Mélodelfe",
+    "attaquesParNiveau": {
+      "1": ["berceuse", "boul_armure", "lilliput", "metronome"]
+    }
+  },
+  "37": {
+    "nom": "Goupix",
+    "attaquesParNiveau": {
+      "1": ["flammeche", "mimi_queue"],
+      "16": ["vive_attaque"],
+      "21": ["rugissement"],
+      "28": ["onde_folie"],
+      "35": ["danse_flammes"],
+      "42": ["lance_flammes"]
+    }
+  },
+  "38": {
+    "nom": "Feunard",
+    "attaquesParNiveau": {
+      "1": ["flammeche", "mimi_queue", "vive_attaque", "rugissement"]
+    }
+  },
+  "39": {
+    "nom": "Rondoudou",
+    "attaquesParNiveau": {
+      "1": ["berceuse"],
+      "9": ["ecras_face"],
+      "14": ["boul_armure"],
+      "19": ["torgnoles"],
+      "24": ["repos"],
+      "29": ["plaquage"],
+      "34": ["damocles"]
+    }
+  },
+  "40": {
+    "nom": "Grodoudou",
+    "attaquesParNiveau": {
+      "1": ["berceuse", "boul_armure", "torgnoles", "damocles"]
+    }
+  },
+  "41": {
+    "nom": "Nosferapti",
+    "attaquesParNiveau": {
+      "1": ["vampirisme"],
+      "10": ["ultrason"],
+      "15": ["morsure"],
+      "21": ["onde_folie"],
+      "28": ["cru_aile"],
+      "36": ["buee_noire"]
+    }
+  },
+  "42": {
+    "nom": "Nosferalto",
+    "attaquesParNiveau": {
+      "1": ["vampirisme", "grincement", "morsure"],
+      "10": ["ultrason"],
+      "15": ["morsure"],
+      "21": ["onde_folie"],
+      "32": ["cru_aile"],
+      "43": ["buee_noire"]
+    }
+  },
+  "43": {
+    "nom": "Mystherbe",
+    "attaquesParNiveau": {
+      "1": ["para_spore"],
+      "15": ["poudre_toxik"],
+      "17": ["para_spore"],
+      "19": ["poudre_dodo"],
+      "24": ["acide"],
+      "33": ["danse_fleurs"],
+      "46": ["lance_soleil"]
+    }
+  },
+  "44": {
+    "nom": "Ortide",
+    "attaquesParNiveau": {
+      "1": ["para_spore", "poudre_toxik", "poudre_dodo"],
+      "15": ["poudre_toxik"],
+      "17": ["para_spore"],
+      "19": ["poudre_dodo"],
+      "28": ["acide"],
+      "38": ["danse_fleurs"],
+      "52": ["lance_soleil"]
+    }
+  },
+  "45": {
+    "nom": "Rafflesia",
+    "attaquesParNiveau": {
+      "1": ["para_spore", "poudre_toxik", "mega_sangsue", "danse_fleurs"]
+    }
+  },
+  "46": {
+    "nom": "Paras",
+    "attaquesParNiveau": {
+      "1": ["griffe"],
+      "13": ["para_spore"],
+      "20": ["vampigraine"],
+      "27": ["tranche"],
+      "34": ["croissance"],
+      "41": ["mega_sangsue"]
+    }
+  },
+  "47": {
+    "nom": "Parasect",
+    "attaquesParNiveau": {
+      "1": ["griffe", "para_spore", "vampigraine"],
+      "13": ["para_spore"],
+      "20": ["vampigraine"],
+      "30": ["tranche"],
+      "39": ["croissance"],
+      "48": ["mega_sangsue"]
+    }
+  },
+  "48": {
+    "nom": "Mimitoss",
+    "attaquesParNiveau": {
+      "1": ["charge", "entrave"],
+      "24": ["poudre_toxik"],
+      "27": ["vampigraine"],
+      "30": ["para_spore"],
+      "35": ["psyko"],
+      "38": ["poudre_dodo"]
+    }
+  },
+  "49": {
+    "nom": "Aéromite",
+    "attaquesParNiveau": {
+      "1": ["charge", "entrave", "poudre_toxik", "vampigraine"],
+      "24": ["poudre_toxik"],
+      "27": ["vampigraine"],
+      "30": ["para_spore"],
+      "38": ["psyko"],
+      "43": ["poudre_dodo"]
+    }
+  },
+  "50": {
+    "nom": "Taupiqueur",
+    "attaquesParNiveau": {
+      "1": ["griffe"],
+      "15": ["rugissement"],
+      "19": ["tunnel"],
+      "24": ["jet_de_sable"],
+      "31": ["tranche"],
+      "40": ["seisme"]
+    }
+  },
+  "51": {
+    "nom": "Triopikeur",
+    "attaquesParNiveau": {
+      "1": ["griffe", "rugissement", "tunnel"],
+      "15": ["rugissement"],
+      "19": ["tunnel"],
+      "24": ["jet_de_sable"],
+      "35": ["tranche"],
+      "47": ["seisme"]
+    }
+  },
+  "52": {
+    "nom": "Miaouss",
+    "attaquesParNiveau": {
+      "1": ["griffe", "rugissement"],
+      "12": ["morsure"],
+      "17": ["jackpot"],
+      "24": ["grincement"],
+      "33": ["combo_griffe"],
+      "44": ["tranche"]
+    }
+  },
+  "53": {
+    "nom": "Persian",
+    "attaquesParNiveau": {
+      "1": ["griffe", "rugissement", "morsure", "grincement"],
+      "12": ["morsure"],
+      "17": ["jackpot"],
+      "24": ["grincement"],
+      "37": ["combo_griffe"],
+      "51": ["tranche"]
+    }
+  },
+  "54": {
+    "nom": "Psykokwak",
+    "attaquesParNiveau": {
+      "1": ["griffe"],
+      "28": ["mimi_queue"],
+      "31": ["entrave"],
+      "36": ["choc_mental"],
+      "43": ["furie"],
+      "52": ["hydrocanon"]
+    }
+  },
+  "55": {
+    "nom": "Akwakwak",
+    "attaquesParNiveau": {
+      "1": ["griffe", "mimi_queue", "entrave"],
+      "28": ["mimi_queue"],
+      "31": ["entrave"],
+      "39": ["choc_mental"],
+      "48": ["furie"],
+      "59": ["hydrocanon"]
+    }
+  },
+  "56": {
+    "nom": "Férosinge",
+    "attaquesParNiveau": {
+      "1": ["griffe", "groz_yeux"],
+      "15": ["poing_karate"],
+      "21": ["furie"],
+      "27": ["puissance"],
+      "33": ["frappe_atlas"],
+      "39": ["mania"]
+    }
+  },
+  "57": {
+    "nom": "Colossinge",
+    "attaquesParNiveau": {
+      "1": ["griffe", "groz_yeux", "poing_karate", "furie"],
+      "15": ["poing_karate"],
+      "21": ["furie"],
+      "27": ["puissance"],
+      "37": ["frappe_atlas"],
+      "46": ["mania"]
+    }
+  },
+  "58": {
+    "nom": "Caninos",
+    "attaquesParNiveau": {
+      "1": ["morsure", "rugissement"],
+      "18": ["flammeche"],
+      "23": ["groz_yeux"],
+      "30": ["damocles"],
+      "39": ["lance_flammes"],
+      "50": ["hate"]
+    }
+  },
+  "59": {
+    "nom": "Arcanin",
+    "attaquesParNiveau": {
+      "1": ["rugissement", "flammeche", "groz_yeux", "damocles"]
+    }
+  },
+  "60": {
+    "nom": "Ptitard",
+    "attaquesParNiveau": {
+      "1": ["bulles_d_o"],
+      "16": ["hypnose"],
+      "19": ["pistolet_a_o"],
+      "25": ["torgnoles"],
+      "31": ["plaquage"],
+      "38": ["amnesie"],
+      "45": ["hydrocanon"]
+    }
+  },
+  "61": {
+    "nom": "Têtarte",
+    "attaquesParNiveau": {
+      "1": ["bulles_d_o", "hypnose", "pistolet_a_o"],
+      "16": ["hypnose"],
+      "19": ["pistolet_a_o"],
+      "26": ["torgnoles"],
+      "33": ["plaquage"],
+      "41": ["amnesie"],
+      "49": ["hydrocanon"]
+    }
+  },
+  "62": {
+    "nom": "Tartard",
+    "attaquesParNiveau": {
+      "1": ["hypnose", "pistolet_a_o", "torgnoles", "plaquage"]
+    }
+  },
+  "63": {
+    "nom": "Abra",
+    "attaquesParNiveau": {
+      "1": ["teleport"]
+    }
+  },
+  "64": {
+    "nom": "Kadabra",
+    "attaquesParNiveau": {
+      "1": ["teleport", "choc_mental", "entrave"],
+      "16": ["choc_mental"],
+      "20": ["entrave"],
+      "27": ["psyko"],
+      "31": ["soin"],
+      "38": ["barriere"],
+      "42": ["voyance"]
+    }
+  },
+  "65": {
+    "nom": "Alakazam",
+    "attaquesParNiveau": {
+      "1": ["teleport", "choc_mental", "entrave"],
+      "16": ["choc_mental"],
+      "20": ["entrave"],
+      "27": ["psyko"],
+      "31": ["soin"],
+      "38": ["barriere"],
+      "42": ["voyance"]
+    }
+  },
+  "66": {
+    "nom": "Machoc",
+    "attaquesParNiveau": {
+      "1": ["poing_karate"],
+      "20": ["balayage"],
+      "25": ["groz_yeux"],
+      "32": ["puissance"],
+      "39": ["frappe_atlas"],
+      "46": ["sacrifice"]
+    }
+  },
+  "67": {
+    "nom": "Machopeur",
+    "attaquesParNiveau": {
+      "1": ["poing_karate", "balayage", "groz_yeux"],
+      "20": ["balayage"],
+      "25": ["groz_yeux"],
+      "36": ["puissance"],
+      "44": ["frappe_atlas"],
+      "52": ["sacrifice"]
+    }
+  },
+  "68": {
+    "nom": "Mackogneur",
+    "attaquesParNiveau": {
+      "1": ["poing_karate", "balayage", "groz_yeux"],
+      "20": ["balayage"],
+      "25": ["groz_yeux"],
+      "36": ["puissance"],
+      "44": ["frappe_atlas"],
+      "52": ["sacrifice"]
+    }
+  },
+  "69": {
+    "nom": "Chétiflor",
+    "attaquesParNiveau": {
+      "1": ["fouet_lianes", "croissance"],
+      "13": ["ligotage"],
+      "15": ["poudre_toxik"],
+      "18": ["poudre_dodo"],
+      "21": ["para_spore"],
+      "26": ["acide"],
+      "33": ["tranch_herbe"],
+      "42": ["sacrifice"]
+    }
+  },
+  "70": {
+    "nom": "Boustiflor",
+    "attaquesParNiveau": {
+      "1": ["fouet_lianes", "croissance", "ligotage"],
+      "13": ["ligotage"],
+      "15": ["poudre_toxik"],
+      "18": ["poudre_dodo"],
+      "23": ["para_spore"],
+      "29": ["acide"],
+      "38": ["tranch_herbe"],
+      "49": ["sacrifice"]
+    }
+  },
+  "71": {
+    "nom": "Empiflor",
+    "attaquesParNiveau": {
+      "1": ["poudre_dodo", "para_spore", "acide", "tranch_herbe"]
+    }
+  },
+  "72": {
+    "nom": "Tentacool",
+    "attaquesParNiveau": {
+      "1": ["acide"],
+      "7": ["ultrason"],
+      "13": ["ligotage"],
+      "18": ["dard_venin"],
+      "22": ["pistolet_a_o"],
+      "27": ["etreinte"],
+      "33": ["barriere"],
+      "40": ["grincement"],
+      "48": ["hydrocanon"]
+    }
+  },
+  "73": {
+    "nom": "Tentacruel",
+    "attaquesParNiveau": {
+      "1": ["acide", "ultrason", "ligotage"],
+      "7": ["ultrason"],
+      "13": ["ligotage"],
+      "18": ["dard_venin"],
+      "22": ["pistolet_a_o"],
+      "27": ["etreinte"],
+      "35": ["barriere"],
+      "43": ["grincement"],
+      "50": ["hydrocanon"]
+    }
+  },
+  "74": {
+    "nom": "Racaillou",
+    "attaquesParNiveau": {
+      "1": ["charge"],
+      "11": ["boul_armure"],
+      "16": ["jet_pierres"],
+      "21": ["destruction"],
+      "26": ["armure"],
+      "31": ["seisme"],
+      "36": ["explosion"]
+    }
+  },
+  "75": {
+    "nom": "Gravalanch",
+    "attaquesParNiveau": {
+      "1": ["charge", "boul_armure"],
+      "11": ["boul_armure"],
+      "16": ["jet_pierres"],
+      "21": ["destruction"],
+      "29": ["armure"],
+      "36": ["seisme"],
+      "43": ["explosion"]
+    }
+  },
+  "76": {
+    "nom": "Grolem",
+    "attaquesParNiveau": {
+      "1": ["charge", "boul_armure", "jet_pierres"],
+      "11": ["boul_armure"],
+      "16": ["jet_pierres"],
+      "21": ["destruction"],
+      "29": ["armure"],
+      "36": ["seisme"],
+      "43": ["explosion"]
+    }
+  },
+  "77": {
+    "nom": "Ponyta",
+    "attaquesParNiveau": {
+      "1": ["flammeche"],
+      "30": ["mimi_queue"],
+      "32": ["ecrasement"],
+      "35": ["rugissement"],
+      "39": ["danse_flammes"],
+      "43": ["damocles"],
+      "48": ["hate"]
+    }
+  },
+  "78": {
+    "nom": "Galopa",
+    "attaquesParNiveau": {
+      "1": ["flammeche", "mimi_queue", "ecrasement", "rugissement"],
+      "30": ["mimi_queue"],
+      "32": ["ecrasement"],
+      "35": ["rugissement"],
+      "39": ["danse_flammes"],
+      "47": ["damocles"],
+      "55": ["hate"]
+    }
+  },
+  "79": {
+    "nom": "Ramoloss",
+    "attaquesParNiveau": {
+      "1": ["choc_mental"],
+      "18": ["entrave"],
+      "22": ["coup_d_boule"],
+      "27": ["rugissement"],
+      "33": ["pistolet_a_o"],
+      "40": ["amnesie"],
+      "48": ["psyko"]
+    }
+  },
+  "80": {
+    "nom": "Flagadoss",
+    "attaquesParNiveau": {
+      "1": ["choc_mental", "entrave", "coup_d_boule"],
+      "18": ["entrave"],
+      "22": ["coup_d_boule"],
+      "27": ["rugissement"],
+      "33": ["pistolet_a_o"],
+      "37": ["repli"],
+      "44": ["amnesie"],
+      "55": ["psyko"]
+    }
+  },
+  "81": {
+    "nom": "Magnéti",
+    "attaquesParNiveau": {
+      "1": ["charge"],
+      "21": ["sonicboom"],
+      "25": ["cage_eclair"],
+      "29": ["ultrason"],
+      "35": ["eclair"],
+      "41": ["meteores"],
+      "47": ["grincement"]
+    }
+  },
+  "82": {
+    "nom": "Magnéton",
+    "attaquesParNiveau": {
+      "1": ["charge", "sonicboom", "cage_eclair"],
+      "21": ["sonicboom"],
+      "25": ["cage_eclair"],
+      "29": ["ultrason"],
+      "38": ["eclair"],
+      "46": ["meteores"],
+      "54": ["grincement"]
+    }
+  },
+  "83": {
+    "nom": "Canarticho",
+    "attaquesParNiveau": {
+      "1": ["picpic", "jet_de_sable"],
+      "7": ["groz_yeux"],
+      "15": ["furie"],
+      "23": ["tranche"],
+      "31": ["danse_lames"],
+      "39": ["hate"]
+    }
+  },
+  "84": {
+    "nom": "Doduo",
+    "attaquesParNiveau": {
+      "1": ["picpic"],
+      "20": ["rugissement"],
+      "24": ["furie"],
+      "30": ["bec_vrille"],
+      "36": ["mania"],
+      "40": ["hate"]
+    }
+  },
+  "85": {
+    "nom": "Dodrio",
+    "attaquesParNiveau": {
+      "1": ["picpic", "rugissement", "furie"],
+      "20": ["rugissement"],
+      "24": ["furie"],
+      "30": ["bec_vrille"],
+      "39": ["mania"],
+      "45": ["hate"]
+    }
+  },
+  "86": {
+    "nom": "Otaria",
+    "attaquesParNiveau": {
+      "1": ["coup_d_boule"],
+      "30": ["rugissement"],
+      "35": ["onde_boreale"],
+      "40": ["repos"],
+      "45": ["damocles"],
+      "50": ["laser_glace"]
+    }
+  },
+  "87": {
+    "nom": "Lamantine",
+    "attaquesParNiveau": {
+      "1": ["coup_d_boule", "rugissement", "onde_boreale"],
+      "30": ["rugissement"],
+      "35": ["onde_boreale"],
+      "44": ["repos"],
+      "50": ["damocles"],
+      "56": ["laser_glace"]
+    }
+  },
+  "88": {
+    "nom": "Tadmorv",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "entrave"],
+      "30": ["dard_venin"],
+      "33": ["lilliput"],
+      "37": ["detritus"],
+      "42": ["armure"],
+      "48": ["grincement"],
+      "55": ["bombe_acide"]
+    }
+  },
+  "89": {
+    "nom": "Grotadmorv",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "entrave", "dard_venin"],
+      "30": ["dard_venin"],
+      "33": ["lilliput"],
+      "37": ["detritus"],
+      "45": ["armure"],
+      "53": ["grincement"],
+      "60": ["bombe_acide"]
+    }
+  },
+  "90": {
+    "nom": "Kokiyas",
+    "attaquesParNiveau": {
+      "1": ["charge", "repli"],
+      "18": ["ultrason"],
+      "23": ["pince_masse"],
+      "30": ["onde_boreale"],
+      "39": ["groz_yeux"],
+      "50": ["laser_glace"]
+    }
+  },
+  "91": {
+    "nom": "Crustabri",
+    "attaquesParNiveau": {
+      "1": ["repli", "ultrason", "pince_masse", "onde_boreale"]
+    }
+  },
+  "92": {
+    "nom": "Fantominus",
+    "attaquesParNiveau": {
+      "1": ["lechouille", "onde_folie", "ombre_nocturne"],
+      "27": ["hypnose"],
+      "35": ["devoreve"]
+    }
+  },
+  "93": {
+    "nom": "Spectrum",
+    "attaquesParNiveau": {
+      "1": ["lechouille", "onde_folie", "ombre_nocturne"],
+      "29": ["hypnose"],
+      "38": ["devoreve"]
+    }
+  },
+  "94": {
+    "nom": "Ectoplasma",
+    "attaquesParNiveau": {
+      "1": ["lechouille", "onde_folie", "ombre_nocturne"],
+      "29": ["hypnose"],
+      "38": ["devoreve"]
+    }
+  },
+  "95": {
+    "nom": "Onix",
+    "attaquesParNiveau": {
+      "1": ["charge", "grincement"],
+      "15": ["etreinte"],
+      "19": ["jet_pierres"],
+      "25": ["mania"],
+      "33": ["armure"],
+      "43": ["sacrifice"]
+    }
+  },
+  "96": {
+    "nom": "Soporifik",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "hypnose"],
+      "12": ["entrave"],
+      "17": ["choc_mental"],
+      "24": ["coup_d_boule"],
+      "29": ["dard_venin"],
+      "32": ["psyko"],
+      "37": ["devoreve"]
+    }
+  },
+  "97": {
+    "nom": "Hypnomade",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "hypnose", "entrave", "choc_mental"],
+      "12": ["entrave"],
+      "17": ["choc_mental"],
+      "24": ["coup_d_boule"],
+      "33": ["dard_venin"],
+      "37": ["psyko"],
+      "43": ["devoreve"]
+    }
+  },
+  "98": {
+    "nom": "Krabby",
+    "attaquesParNiveau": {
+      "1": ["bulles_d_o"],
+      "20": ["force_poigne"],
+      "25": ["guillotine"],
+      "30": ["ecrasement"],
+      "35": ["pince_masse"],
+      "40": ["armure"]
+    }
+  },
+  "99": {
+    "nom": "Krabboss",
+    "attaquesParNiveau": {
+      "1": ["bulles_d_o", "force_poigne", "guillotine"],
+      "20": ["force_poigne"],
+      "25": ["guillotine"],
+      "34": ["ecrasement"],
+      "42": ["pince_masse"],
+      "49": ["armure"]
+    }
+  },
+  "100": {
+    "nom": "Voltorbe",
+    "attaquesParNiveau": {
+      "1": ["charge", "grincement"],
+      "17": ["sonicboom"],
+      "22": ["destruction"],
+      "29": ["rafale_psy"],
+      "36": ["meteores"],
+      "43": ["explosion"]
+    }
+  },
+  "101": {
+    "nom": "Électrode",
+    "attaquesParNiveau": {
+      "1": ["charge", "grincement", "sonicboom"],
+      "17": ["sonicboom"],
+      "22": ["destruction"],
+      "29": ["rafale_psy"],
+      "40": ["meteores"],
+      "50": ["explosion"]
+    }
+  },
+  "102": {
+    "nom": "Noeunoeuf",
+    "attaquesParNiveau": {
+      "1": ["pilonnage", "hypnose"],
+      "25": ["reflet"],
+      "28": ["vampigraine"],
+      "32": ["para_spore"],
+      "37": ["dard_venin"],
+      "42": ["poudre_dodo"],
+      "48": ["lance_soleil"]
+    }
+  },
+  "103": {
+    "nom": "Noadkoko",
+    "attaquesParNiveau": {
+      "1": ["pilonnage", "hypnose"]
+    }
+  },
+  "104": {
+    "nom": "Osselait",
+    "attaquesParNiveau": {
+      "1": ["massd_os", "rugissement"],
+      "25": ["groz_yeux"],
+      "31": ["puissance"],
+      "38": ["osmerang"],
+      "43": ["mania"],
+      "46": ["fury_attack"]
+    }
+  },
+  "105": {
+    "nom": "Ossatueur",
+    "attaquesParNiveau": {
+      "1": ["massd_os", "rugissement", "groz_yeux", "puissance"],
+      "25": ["groz_yeux"],
+      "33": ["puissance"],
+      "41": ["osmerang"],
+      "48": ["mania"],
+      "55": ["fury_attack"]
+    }
+  },
+  "106": {
+    "nom": "Kicklee",
+    "attaquesParNiveau": {
+      "1": ["double_pied", "yoga"],
+      "33": ["pied_voltige"],
+      "38": ["surpuissance"],
+      "43": ["puissance"],
+      "48": ["mega_kick"],
+      "53": ["jump_kick"]
+    }
+  },
+  "107": {
+    "nom": "Tygnon",
+    "attaquesParNiveau": {
+      "1": ["poing_comete", "hate"],
+      "33": ["poing_feu"],
+      "38": ["poing_glace"],
+      "43": ["poing_eclair"],
+      "48": ["mega_poing"],
+      "53": ["riposte"]
+    }
+  },
+  "108": {
+    "nom": "Excelangue",
+    "attaquesParNiveau": {
+      "1": ["ligotage", "ultrason"],
+      "7": ["ecrasement"],
+      "15": ["entrave"],
+      "23": ["boul_armure"],
+      "31": ["sacrifice"],
+      "39": ["grincement"]
+    }
+  },
+  "109": {
+    "nom": "Smogo",
+    "attaquesParNiveau": {
+      "1": ["charge", "brouillard"],
+      "32": ["detritus"],
+      "37": ["brume"],
+      "40": ["destruction"],
+      "45": ["buee_noire"],
+      "48": ["explosion"]
+    }
+  },
+  "110": {
+    "nom": "Smogogo",
+    "attaquesParNiveau": {
+      "1": ["charge", "brouillard", "detritus"],
+      "32": ["detritus"],
+      "39": ["brume"],
+      "43": ["destruction"],
+      "49": ["buee_noire"],
+      "53": ["explosion"]
+    }
+  },
+  "111": {
+    "nom": "Rhinocorne",
+    "attaquesParNiveau": {
+      "1": ["corne_empoisonnee"],
+      "30": ["ecrasement"],
+      "35": ["mimi_queue"],
+      "40": ["furie"],
+      "45": ["koud_korne"],
+      "50": ["groz_yeux"],
+      "55": ["damocles"]
+    }
+  },
+  "112": {
+    "nom": "Rhinoféros",
+    "attaquesParNiveau": {
+      "1": ["corne_empoisonnee", "ecrasement", "mimi_queue"],
+      "30": ["ecrasement"],
+      "35": ["mimi_queue"],
+      "40": ["furie"],
+      "48": ["koud_korne"],
+      "55": ["groz_yeux"],
+      "64": ["damocles"]
+    }
+  },
+  "113": {
+    "nom": "Leveinard",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "torgnoles"],
+      "24": ["berceuse"],
+      "30": ["rugissement"],
+      "38": ["lilliput"],
+      "44": ["boul_armure"],
+      "48": ["rafale_psy"],
+      "54": ["damocles"]
+    }
+  },
+  "114": {
+    "nom": "Saquedeneu",
+    "attaquesParNiveau": {
+      "1": ["etreinte", "etreinte"],
+      "29": ["para_spore"],
+      "32": ["fouet_lianes"],
+      "36": ["mega_sangsue"],
+      "45": ["croissance"],
+      "49": ["sacrifice"]
+    }
+  },
+  "115": {
+    "nom": "Kangourex",
+    "attaquesParNiveau": {
+      "1": ["poing_comete", "mania"],
+      "26": ["morsure"],
+      "31": ["mimi_queue"],
+      "36": ["mega_poing"],
+      "41": ["groz_yeux"],
+      "46": ["uppercut"]
+    }
+  },
+  "116": {
+    "nom": "Hypotrempe",
+    "attaquesParNiveau": {
+      "1": ["bulles_d_o"],
+      "19": ["brouillard"],
+      "24": ["groz_yeux"],
+      "30": ["pistolet_a_o"],
+      "37": ["hate"],
+      "45": ["hydrocanon"]
+    }
+  },
+  "117": {
+    "nom": "Hypocéan",
+    "attaquesParNiveau": {
+      "1": ["bulles_d_o", "brouillard", "groz_yeux"],
+      "19": ["brouillard"],
+      "24": ["groz_yeux"],
+      "30": ["pistolet_a_o"],
+      "41": ["hate"],
+      "52": ["hydrocanon"]
+    }
+  },
+  "118": {
+    "nom": "Poissirène",
+    "attaquesParNiveau": {
+      "1": ["picpic", "mimi_queue"],
+      "19": ["ultrason"],
+      "24": ["koud_korne"],
+      "30": ["combo_griffe"],
+      "37": ["cascade"],
+      "45": ["hate"]
+    }
+  },
+  "119": {
+    "nom": "Poissoroy",
+    "attaquesParNiveau": {
+      "1": ["picpic", "mimi_queue", "ultrason"],
+      "19": ["ultrason"],
+      "24": ["koud_korne"],
+      "30": ["combo_griffe"],
+      "39": ["cascade"],
+      "48": ["hate"]
+    }
+  },
+  "120": {
+    "nom": "Stari",
+    "attaquesParNiveau": {
+      "1": ["charge"],
+      "17": ["pistolet_a_o"],
+      "22": ["armure"],
+      "27": ["soin"],
+      "32": ["meteores"],
+      "37": ["lilliput"],
+      "42": ["rafale_psy"],
+      "47": ["hydrocanon"]
+    }
+  },
+  "121": {
+    "nom": "Staross",
+    "attaquesParNiveau": {
+      "1": ["charge", "pistolet_a_o", "armure"]
+    }
+  },
+  "122": {
+    "nom": "M. Mime",
+    "attaquesParNiveau": {
+      "1": ["choc_mental", "barriere"],
+      "15": ["choc_mental"],
+      "23": ["rafale_psy"],
+      "31": ["yoga"],
+      "39": ["torgnoles"],
+      "47": ["substitut"]
+    }
+  },
+  "123": {
+    "nom": "Insécateur",
+    "attaquesParNiveau": {
+      "1": ["vive_attaque"],
+      "17": ["groz_yeux"],
+      "20": ["puissance"],
+      "24": ["reflet"],
+      "29": ["tranche"],
+      "35": ["danse_lames"],
+      "42": ["hate"]
+    }
+  },
+  "124": {
+    "nom": "Lippoutou",
+    "attaquesParNiveau": {
+      "1": ["ecras_face", "groz_yeux"],
+      "18": ["berceuse"],
+      "23": ["torgnoles"],
+      "31": ["grobisou"],
+      "39": ["vent_glace"],
+      "47": ["plaquage"],
+      "58": ["blizzard"]
+    }
+  },
+  "125": {
+    "nom": "Élektek",
+    "attaquesParNiveau": {
+      "1": ["vive_attaque", "groz_yeux"],
+      "34": ["eclair"],
+      "37": ["grincement"],
+      "42": ["poing_eclair"],
+      "49": ["rafale_psy"],
+      "54": ["tonnerre"]
+    }
+  },
+  "126": {
+    "nom": "Magmar",
+    "attaquesParNiveau": {
+      "1": ["flammeche"],
+      "36": ["groz_yeux"],
+      "39": ["onde_folie"],
+      "43": ["poing_feu"],
+      "48": ["brouillard"],
+      "52": ["lance_flammes"]
+    }
+  },
+  "127": {
+    "nom": "Scarabrute",
+    "attaquesParNiveau": {
+      "1": ["force_poigne"],
+      "25": ["frappe_atlas"],
+      "30": ["guillotine"],
+      "36": ["puissance"],
+      "43": ["armure"],
+      "49": ["danse_lames"]
+    }
+  },
+  "128": {
+    "nom": "Tauros",
+    "attaquesParNiveau": {
+      "1": ["charge"],
+      "21": ["ecrasement"],
+      "28": ["mimi_queue"],
+      "35": ["groz_yeux"],
+      "44": ["mania"],
+      "51": ["damocles"]
+    }
+  },
+  "129": {
+    "nom": "Magicarpe",
+    "attaquesParNiveau": {
+      "1": ["trempette"],
+      "15": ["charge"]
+    }
+  },
+  "130": {
+    "nom": "Léviator",
+    "attaquesParNiveau": {
+      "1": ["morsure", "draco_rage", "groz_yeux", "hydrocanon"]
+    }
+  },
+  "131": {
+    "nom": "Lokhlass",
+    "attaquesParNiveau": {
+      "1": ["pistolet_a_o", "rugissement"],
+      "16": ["berceuse"],
+      "20": ["brume"],
+      "25": ["plaquage"],
+      "31": ["onde_folie"],
+      "38": ["laser_glace"],
+      "46": ["hydrocanon"]
+    }
+  },
+  "132": {
+    "nom": "Métamorph",
+    "attaquesParNiveau": {
+      "1": ["morphing"]
+    }
+  },
+  "133": {
+    "nom": "Évoli",
+    "attaquesParNiveau": {
+      "1": ["charge", "jet_de_sable"],
+      "27": ["vive_attaque"],
+      "31": ["mimi_queue"],
+      "37": ["morsure"],
+      "45": ["damocles"]
+    }
+  },
+  "134": {
+    "nom": "Aquali",
+    "attaquesParNiveau": {
+      "1": ["charge", "jet_de_sable", "vive_attaque", "pistolet_a_o"],
+      "27": ["vive_attaque"],
+      "31": ["pistolet_a_o"],
+      "37": ["mimi_queue"],
+      "40": ["morsure"],
+      "42": ["reflet"],
+      "44": ["buee_noire"],
+      "48": ["brume"],
+      "54": ["hydrocanon"]
+    }
+  },
+  "135": {
+    "nom": "Voltali",
+    "attaquesParNiveau": {
+      "1": ["charge", "jet_de_sable", "vive_attaque", "eclair"],
+      "27": ["vive_attaque"],
+      "31": ["eclair"],
+      "37": ["mimi_queue"],
+      "40": ["cage_eclair"],
+      "42": ["double_pied"],
+      "44": ["hate"],
+      "48": ["dard_venin"],
+      "54": ["tonnerre"]
+    }
+  },
+  "136": {
+    "nom": "Pyroli",
+    "attaquesParNiveau": {
+      "1": ["charge", "jet_de_sable", "vive_attaque", "flammeche"],
+      "27": ["vive_attaque"],
+      "31": ["flammeche"],
+      "37": ["mimi_queue"],
+      "40": ["morsure"],
+      "42": ["groz_yeux"],
+      "44": ["danse_flammes"],
+      "48": ["mania"],
+      "54": ["lance_flammes"]
+    }
+  },
+  "137": {
+    "nom": "Porygon",
+    "attaquesParNiveau": {
+      "1": ["charge", "morphing", "adaptation"],
+      "23": ["psyko"],
+      "28": ["soin"],
+      "35": ["hate"],
+      "42": ["triplattaque"]
+    }
+  },
+  "138": {
+    "nom": "Amonita",
+    "attaquesParNiveau": {
+      "1": ["pistolet_a_o", "repli"],
+      "34": ["koud_korne"],
+      "39": ["groz_yeux"],
+      "46": ["piqure"],
+      "53": ["hydrocanon"]
+    }
+  },
+  "139": {
+    "nom": "Amonistar",
+    "attaquesParNiveau": {
+      "1": ["pistolet_a_o", "repli", "koud_korne"],
+      "34": ["koud_korne"],
+      "39": ["groz_yeux"],
+      "44": ["piqure"],
+      "49": ["hydrocanon"]
+    }
+  },
+  "140": {
+    "nom": "Kabuto",
+    "attaquesParNiveau": {
+      "1": ["griffe", "armure"],
+      "34": ["para_spore"],
+      "39": ["tranche"],
+      "44": ["vampigraine"],
+      "49": ["hydrocanon"]
+    }
+  },
+  "141": {
+    "nom": "Kabutops",
+    "attaquesParNiveau": {
+      "1": ["griffe", "armure", "para_spore"],
+      "34": ["para_spore"],
+      "39": ["tranche"],
+      "46": ["vampigraine"],
+      "53": ["hydrocanon"]
+    }
+  },
+  "142": {
+    "nom": "Ptéra",
+    "attaquesParNiveau": {
+      "1": ["cru_aile", "hate"],
+      "33": ["ultrason"],
+      "38": ["morsure"],
+      "45": ["damocles"],
+      "54": ["ultralaser"]
+    }
+  },
+  "143": {
+    "nom": "Ronflex",
+    "attaquesParNiveau": {
+      "1": ["coup_d_boule", "amnesie", "repos"],
+      "35": ["plaquage"],
+      "41": ["armure"],
+      "48": ["damocles"],
+      "56": ["ultralaser"]
+    }
+  },
+  "144": {
+    "nom": "Artikodin",
+    "attaquesParNiveau": {
+      "1": ["picpic", "laser_glace"],
+      "51": ["blizzard"],
+      "55": ["hate"],
+      "60": ["brume"]
+    }
+  },
+  "145": {
+    "nom": "Électhor",
+    "attaquesParNiveau": {
+      "1": ["eclair", "bec_vrille"],
+      "51": ["tonnerre"],
+      "55": ["hate"],
+      "60": ["rafale_psy"]
+    }
+  },
+  "146": {
+    "nom": "Sulfura",
+    "attaquesParNiveau": {
+      "1": ["picpic", "danse_flammes"],
+      "51": ["groz_yeux"],
+      "55": ["hate"],
+      "60": ["pique"]
+    }
+  },
+  "147": {
+    "nom": "Minidraco",
+    "attaquesParNiveau": {
+      "1": ["ligotage", "groz_yeux"],
+      "10": ["cage_eclair"],
+      "20": ["hate"],
+      "30": ["sacrifice"],
+      "40": ["draco_rage"],
+      "50": ["ultralaser"]
+    }
+  },
+  "148": {
+    "nom": "Draco",
+    "attaquesParNiveau": {
+      "1": ["ligotage", "groz_yeux", "cage_eclair"],
+      "10": ["cage_eclair"],
+      "20": ["hate"],
+      "35": ["sacrifice"],
+      "45": ["draco_rage"],
+      "55": ["ultralaser"]
+    }
+  },
+  "149": {
+    "nom": "Dracolosse",
+    "attaquesParNiveau": {
+      "1": ["ligotage", "groz_yeux", "cage_eclair", "hate"],
+      "10": ["cage_eclair"],
+      "20": ["hate"],
+      "35": ["sacrifice"],
+      "45": ["draco_rage"],
+      "60": ["ultralaser"]
+    }
+  },
+  "150": {
+    "nom": "Mewtwo",
+    "attaquesParNiveau": {
+      "1": ["choc_mental", "entrave", "meteores", "psyko"],
+      "63": ["barriere"],
+      "66": ["meteores"],
+      "70": ["soin"],
+      "75": ["psyko"],
+      "81": ["amnesie"]
+    }
+  },
+  "151": {
+    "nom": "Mew",
+    "attaquesParNiveau": {
+      "1": ["ecras_face"],
+      "10": ["morphing"],
+      "20": ["mega_poing"],
+      "30": ["metronome"],
+      "40": ["psyko"]
+    }
+  }
+}

@@ -1,0 +1,1326 @@
+{
+  "meta": {
+    "version": "1.0",
+    "description": "Base de données complète des PNJ de Kanto - Génération 1",
+    "notes": "Les niveaux des Pokémon sont à définir via le système de scaling"
+  },
+  "categories": {
+    "professeurs": { "nom": "Professeurs", "color": "#8B5CF6" },
+    "famille": { "nom": "Famille", "color": "#F472B6" },
+    "rivaux": { "nom": "Rivaux", "color": "#3B82F6" },
+    "champions": { "nom": "Champions d'arène", "color": "#F59E0B" },
+    "conseil_4": { "nom": "Conseil des 4", "color": "#DC2626" },
+    "dresseurs_insecte": { "nom": "Chasseurs d'Insectes", "color": "#84CC16" },
+    "dresseurs_shorts": { "nom": "Gamins en Short", "color": "#22C55E" },
+    "montagnards": { "nom": "Montagnards", "color": "#78716C" },
+    "pokemaniacs": { "nom": "Pokémaniacs", "color": "#8B5CF6" },
+    "super_nerds": { "nom": "Super Nerds", "color": "#6366F1" },
+    "beautes": { "nom": "Beautés", "color": "#F472B6" },
+    "gentlemen": { "nom": "Gentlemen", "color": "#0EA5E9" },
+    "scientifiques": { "nom": "Scientifiques", "color": "#14B8A6" },
+    "rockers": { "nom": "Rockers", "color": "#EF4444" },
+    "jongleurs": { "nom": "Jongleurs", "color": "#FBBF24" },
+    "psychics": { "nom": "Médiums", "color": "#A78BFA" },
+    "channelers": { "nom": "Mystimaniacs", "color": "#7C3AED" },
+    "pecheurs": { "nom": "Pêcheurs", "color": "#0284C7" },
+    "nageurs": { "nom": "Nageurs", "color": "#0891B2" },
+    "marins": { "nom": "Marins", "color": "#1E40AF" },
+    "karateka": { "nom": "Karatékas", "color": "#B91C1C" },
+    "ceinture_noire": { "nom": "Ceintures Noires", "color": "#111827" },
+    "team_rocket": { "nom": "Team Rocket", "color": "#1F2937" },
+    "infirmieres": { "nom": "Infirmières", "color": "#EC4899" },
+    "marchands": { "nom": "Marchands", "color": "#10B981" },
+    "villageois": { "nom": "Villageois", "color": "#6B7280" },
+    "gardiens": { "nom": "Gardiens", "color": "#4B5563" },
+    "oiseaux_fous": { "nom": "Ornithologues", "color": "#0EA5E9" },
+    "dompteurs": { "nom": "Dompteurs", "color": "#D97706" },
+    "cooltrainers": { "nom": "Topdresseurs", "color": "#DC2626" }
+  },
+  "pnj": {
+    "chen": {
+      "id": "chen",
+      "nom": "Professeur Chen",
+      "nomEN": "Professor Oak",
+      "categorie": "professeurs",
+      "zone": "bourg_palette",
+      "description": "Le plus grand spécialiste des Pokémon au monde.",
+      "dialogues": {
+        "intro": [
+          "Bonjour ! Bienvenue dans le monde des Pokémon !",
+          "Mon nom est Chen. Mais tout le monde m'appelle le Prof Pokémon.",
+          "Ce monde est peuplé de créatures appelées Pokémon."
+        ],
+        "choix_starter": [
+          "Ah ! {PLAYER} ! J'ai quelque chose pour toi.",
+          "Ce Bulbizarre est de type Plante. Il est docile.",
+          "Ce Salamèche est de type Feu. Il a un caractère fougueux.",
+          "Ce Carapuce est de type Eau. Il est calme mais déterminé."
+        ],
+        "apres_starter": [
+          "Ah, {POKEMON} ! C'est un excellent choix !",
+          "J'aimerais que tu remplisses ce Pokédex pour moi."
+        ],
+        "default": ["Comment avance ta collection de Pokémon ?"],
+        "pokedex_complet": ["C'est incroyable ! Tu as complété le Pokédex !"]
+      },
+      "donne_starter": true,
+      "donne_pokedex": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "mere": {
+      "id": "mere",
+      "nom": "Maman",
+      "nomEN": "Mom",
+      "categorie": "famille",
+      "zone": "bourg_palette",
+      "dialogues": {
+        "debut_jeu": [
+          "Ah, c'est toi {PLAYER} !",
+          "Le Prof Chen voulait te voir !"
+        ],
+        "apres_starter": [
+          "Oh ! Tu as ton propre Pokémon maintenant !",
+          "Fais bien attention à toi !"
+        ],
+        "default": ["{PLAYER} ! Mon chéri ! Repose-toi si tu es fatigué."],
+        "repos": ["...", "Voilà, tes Pokémon sont en pleine forme !"]
+      },
+      "soigne_equipe": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "rival": {
+      "id": "rival",
+      "nom": "Blue",
+      "nomEN": "Blue",
+      "categorie": "rivaux",
+      "description": "Le petit-fils du Professeur Chen. Arrogant mais talentueux.",
+      "dialogues": {
+        "intro": ["Yo ! {PLAYER} ! Papy m'a dit de venir aussi..."],
+        "before_combat_labo": [
+          "Mon Pokémon a l'air plus fort que le tien ! Battons-nous !"
+        ],
+        "after_defeat_labo": [
+          "Quoi ?! J'ai perdu ?! La prochaine fois, je gagnerai !"
+        ],
+        "route_22_1": ["Tu vas à la Ligue ? Tu n'as même pas les badges !"],
+        "tour_pokemon": ["{PLAYER} ?! Je capture des Pokémon Spectre !"],
+        "silph_co": ["Je suis venu voir ce que tramait la Team Rocket."],
+        "champion_intro": [
+          "Je suis déjà le Champion de la Ligue ! Combat final !"
+        ],
+        "after_defeat_champion": [
+          "NON ! Tu es le nouveau Champion... Mais ce n'est pas fini !"
+        ],
+        "default": ["Yo, {PLAYER}. Senteur !"]
+      },
+      "combat": true,
+      "equipe_evolutive": true,
+      "equipes": {
+        "labo": [{ "pokemon": "starter_advantage", "niveau": null }],
+        "route_22_1": [
+          { "pokemon": 16, "niveau": null },
+          { "pokemon": "starter_advantage_stage1", "niveau": null }
+        ],
+        "tour_pokemon": [
+          { "pokemon": 17, "niveau": null },
+          { "pokemon": 20, "niveau": null },
+          { "pokemon": 93, "niveau": null },
+          { "pokemon": "starter_advantage_stage1", "niveau": null }
+        ],
+        "silph_co": [
+          { "pokemon": 18, "niveau": null },
+          { "pokemon": 65, "niveau": null },
+          { "pokemon": 112, "niveau": null },
+          { "pokemon": 130, "niveau": null },
+          { "pokemon": "starter_advantage_stage2", "niveau": null }
+        ],
+        "champion": [
+          { "pokemon": 18, "niveau": null },
+          { "pokemon": 65, "niveau": null },
+          { "pokemon": 112, "niveau": null },
+          { "pokemon": 130, "niveau": null },
+          { "pokemon": 59, "niveau": null },
+          { "pokemon": "starter_advantage_stage2", "niveau": null }
+        ]
+      },
+      "argent_base": 35,
+      "unique": true,
+      "flags": ["story_important", "recurring_battle"]
+    },
+    "pierre": {
+      "id": "pierre",
+      "nom": "Pierre",
+      "nomEN": "Brock",
+      "categorie": "champions",
+      "zone": "argenta",
+      "badge": "roche",
+      "type_specialite": "roche",
+      "description": "Champion d'Argenta. Expert des Pokémon Roche.",
+      "dialogues": {
+        "intro_arene": [
+          "Je suis Pierre ! Champion d'Argenta !",
+          "Je crois en la défense solide comme le roc !"
+        ],
+        "before_combat": ["Mes Pokémon Roche sont comme des forteresses !"],
+        "after_defeat": [
+          "Tu es vraiment fort.",
+          "Voici le Badge Roche !",
+          "Et la CT Tomberoche."
+        ],
+        "after_badge": [
+          "La prochaine Arène est à Azuria. Les types Plante et Électrik seront utiles !"
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 74,
+          "niveau": null,
+          "attaques": ["charge", "armure", "tomberoche"]
+        },
+        {
+          "pokemon": 95,
+          "niveau": null,
+          "attaques": ["charge", "etreinte", "tomberoche", "grincement"]
+        }
+      ],
+      "recompenses": { "badge": "roche", "ct": "tomberoche" },
+      "unique": true
+    },
+    "ondine": {
+      "id": "ondine",
+      "nom": "Ondine",
+      "nomEN": "Misty",
+      "categorie": "champions",
+      "zone": "azuria",
+      "badge": "cascade",
+      "type_specialite": "eau",
+      "description": "Championne d'Azuria. Passionnée de Pokémon Eau.",
+      "dialogues": {
+        "intro_arene": [
+          "Salut ! Tu es ici pour le Badge Cascade ?",
+          "Je suis Ondine ! Ma spécialité : les Pokémon Eau !"
+        ],
+        "before_combat": [
+          "Les Pokémon Eau sont les plus beaux et les plus forts !"
+        ],
+        "after_defeat": [
+          "Wow... Tu m'as eue !",
+          "Voici le Badge Cascade !",
+          "Et la CT Bulles d'O !"
+        ],
+        "after_badge": [
+          "La prochaine Arène est à Carmin sur Mer. Méfie-toi des types Électrik !"
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 120,
+          "niveau": null,
+          "attaques": ["charge", "pistolet_a_o", "armure", "soin"]
+        },
+        {
+          "pokemon": 121,
+          "niveau": null,
+          "attaques": ["pistolet_a_o", "bulles_d_o", "meteores", "soin"]
+        }
+      ],
+      "recompenses": { "badge": "cascade", "ct": "bulles_d_o" },
+      "unique": true
+    },
+    "major_bob": {
+      "id": "major_bob",
+      "nom": "Major Bob",
+      "nomEN": "Lt. Surge",
+      "categorie": "champions",
+      "zone": "carmin_sur_mer",
+      "badge": "foudre",
+      "type_specialite": "electrik",
+      "description": "Champion de Carmin. Ancien militaire aux Pokémon Électrik.",
+      "dialogues": {
+        "intro_arene": [
+          "Hey, gamin ! Je suis le Major Bob !",
+          "J'ai survécu à la guerre grâce à mes Pokémon Électrik !"
+        ],
+        "before_combat": ["En garde, soldat ! Raichu ! Opération Thunder !"],
+        "after_defeat": [
+          "Whoa ! Tu m'as eu, soldat !",
+          "Voici le Badge Foudre !",
+          "Et la CT Cage Éclair !"
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 100,
+          "niveau": null,
+          "attaques": ["eclair", "destruction", "grincement"]
+        },
+        {
+          "pokemon": 25,
+          "niveau": null,
+          "attaques": ["eclair", "vive_attaque", "cage_eclair"]
+        },
+        {
+          "pokemon": 26,
+          "niveau": null,
+          "attaques": ["tonnerre", "cage_eclair", "vive_attaque", "ultralaser"]
+        }
+      ],
+      "recompenses": { "badge": "foudre", "ct": "cage_eclair" },
+      "unique": true
+    },
+    "erika": {
+      "id": "erika",
+      "nom": "Erika",
+      "nomEN": "Erika",
+      "categorie": "champions",
+      "zone": "celadopole",
+      "badge": "prisme",
+      "type_specialite": "plante",
+      "description": "Championne de Céladopole. Experte en Pokémon Plante.",
+      "dialogues": {
+        "intro_arene": [
+          "Oh, bonjour. Je m'appelle Erika.",
+          "Ne sous-estime pas mes adorables Pokémon."
+        ],
+        "before_combat": [
+          "Les Pokémon Plante sont si beaux... Mais très forts."
+        ],
+        "after_defeat": [
+          "Oh ! Je n'aurais jamais cru perdre...",
+          "Voici le Badge Prisme.",
+          "Et la CT Méga-Sangsue."
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 71,
+          "niveau": null,
+          "attaques": [
+            "fouet_lianes",
+            "poudre_toxik",
+            "mega_sangsue",
+            "para_spore"
+          ]
+        },
+        {
+          "pokemon": 114,
+          "niveau": null,
+          "attaques": ["fouet_lianes", "etreinte", "mega_sangsue", "croissance"]
+        },
+        {
+          "pokemon": 45,
+          "niveau": null,
+          "attaques": [
+            "danse_fleur",
+            "mega_sangsue",
+            "poudre_toxik",
+            "lance_soleil"
+          ]
+        }
+      ],
+      "recompenses": { "badge": "prisme", "ct": "mega_sangsue" },
+      "unique": true
+    },
+    "koga": {
+      "id": "koga",
+      "nom": "Koga",
+      "nomEN": "Koga",
+      "categorie": "champions",
+      "zone": "parmanie",
+      "badge": "ame",
+      "type_specialite": "poison",
+      "description": "Champion de Parmanie. Maître ninja expert en poisons.",
+      "dialogues": {
+        "intro_arene": [
+          "Fwahahaha ! Tu as traversé mes murs invisibles !",
+          "Je suis Koga, le maître ninja !"
+        ],
+        "before_combat": [
+          "Le poison s'infiltre lentement... Mais il est mortel !"
+        ],
+        "after_defeat": [
+          "Un ninja sait reconnaître sa défaite.",
+          "Voici le Badge Âme.",
+          "Et la CT Direct Toxik."
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 109,
+          "niveau": null,
+          "attaques": ["smog", "explosion", "charge"]
+        },
+        {
+          "pokemon": 89,
+          "niveau": null,
+          "attaques": ["acide", "detritus", "lilliput", "grincement"]
+        },
+        {
+          "pokemon": 109,
+          "niveau": null,
+          "attaques": ["smog", "explosion", "charge"]
+        },
+        {
+          "pokemon": 110,
+          "niveau": null,
+          "attaques": ["direct_toxik", "bain_de_smog", "explosion"]
+        }
+      ],
+      "recompenses": { "badge": "ame", "ct": "direct_toxik" },
+      "unique": true
+    },
+    "morgane": {
+      "id": "morgane",
+      "nom": "Morgane",
+      "nomEN": "Sabrina",
+      "categorie": "champions",
+      "zone": "safrania",
+      "badge": "marais",
+      "type_specialite": "psy",
+      "description": "Championne de Safrania. Dotée de pouvoirs psychiques.",
+      "dialogues": {
+        "intro_arene": [
+          "... Je savais que tu viendrais.",
+          "Je peux lire dans les pensées... Et mes Pokémon aussi."
+        ],
+        "before_combat": ["Je connais déjà ta prochaine attaque."],
+        "after_defeat": [
+          "Ton esprit est... imprévisible.",
+          "Voici le Badge Marais.",
+          "Et la CT Psyko."
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 64,
+          "niveau": null,
+          "attaques": ["psyko", "teleport", "soin", "onde_folie"]
+        },
+        {
+          "pokemon": 122,
+          "niveau": null,
+          "attaques": ["psyko", "protection", "torgnoles", "yoga"]
+        },
+        {
+          "pokemon": 49,
+          "niveau": null,
+          "attaques": ["poudre_dodo", "psyko", "rayon_signal"]
+        },
+        {
+          "pokemon": 65,
+          "niveau": null,
+          "attaques": ["psyko", "soin", "onde_folie", "metronome"]
+        }
+      ],
+      "recompenses": { "badge": "marais", "ct": "psyko" },
+      "unique": true
+    },
+    "auguste": {
+      "id": "auguste",
+      "nom": "Auguste",
+      "nomEN": "Blaine",
+      "categorie": "champions",
+      "zone": "cramois_ile",
+      "badge": "volcan",
+      "type_specialite": "feu",
+      "description": "Champion de Cramois'Île. Passionné d'énigmes et de Pokémon Feu.",
+      "dialogues": {
+        "intro_arene": [
+          "Hohoho ! Je suis Auguste, le vieux fou du feu !",
+          "Tu as répondu à toutes mes énigmes ?"
+        ],
+        "before_combat": [
+          "Qu'est-ce qui brûle sans se consumer ? La passion d'un dresseur !"
+        ],
+        "after_defeat": [
+          "Hohoho ! Je me suis brûlé !",
+          "Voici le Badge Volcan !",
+          "Et la CT Lance-Flammes !"
+        ]
+      },
+      "combat": true,
+      "champion": true,
+      "equipe": [
+        {
+          "pokemon": 58,
+          "niveau": null,
+          "attaques": ["lance_flammes", "morsure", "hate"]
+        },
+        {
+          "pokemon": 77,
+          "niveau": null,
+          "attaques": ["lance_flammes", "ecrasement", "hate"]
+        },
+        {
+          "pokemon": 78,
+          "niveau": null,
+          "attaques": ["lance_flammes", "morsure", "danse_flammes"]
+        },
+        {
+          "pokemon": 59,
+          "niveau": null,
+          "attaques": ["lance_flammes", "deflagration", "morsure", "hate"]
+        }
+      ],
+      "recompenses": { "badge": "volcan", "ct": "lance_flammes" },
+      "unique": true
+    },
+    "giovanni": {
+      "id": "giovanni",
+      "nom": "Giovanni",
+      "nomEN": "Giovanni",
+      "categorie": "champions",
+      "zone": "jadielle",
+      "badge": "terre",
+      "type_specialite": "sol",
+      "description": "Champion de Jadielle et boss de la Team Rocket.",
+      "dialogues": {
+        "intro_arene": [
+          "Hahahaha ! Alors, on se retrouve !",
+          "Je suis Giovanni, le boss de la Team Rocket !"
+        ],
+        "before_combat": ["Mes Pokémon Sol sont invincibles !"],
+        "after_defeat": [
+          "Je n'arrive pas à y croire...",
+          "Voici le Badge Terre. Tu as tous les badges !",
+          "Et la CT Séisme.",
+          "Je quitte la Team Rocket. Adieu."
+        ],
+        "casino": ["Comment as-tu trouvé notre base ?!"],
+        "silph": ["Je vais t'éliminer personnellement !"]
+      },
+      "combat": true,
+      "champion": true,
+      "team_rocket_boss": true,
+      "equipe": [
+        {
+          "pokemon": 111,
+          "niveau": null,
+          "attaques": ["seisme", "ecrasement", "koud_korne"]
+        },
+        {
+          "pokemon": 51,
+          "niveau": null,
+          "attaques": ["seisme", "tranche", "jet_de_sable"]
+        },
+        {
+          "pokemon": 31,
+          "niveau": null,
+          "attaques": ["seisme", "plaquage", "dard_venin"]
+        },
+        {
+          "pokemon": 34,
+          "niveau": null,
+          "attaques": ["seisme", "megacorne", "ecrasement"]
+        },
+        {
+          "pokemon": 112,
+          "niveau": null,
+          "attaques": ["seisme", "damocles", "koud_korne", "tomberoche"]
+        }
+      ],
+      "recompenses": { "badge": "terre", "ct": "seisme" },
+      "unique": true,
+      "flags": ["villain"]
+    },
+    "olga": {
+      "id": "olga",
+      "nom": "Olga",
+      "nomEN": "Lorelei",
+      "categorie": "conseil_4",
+      "zone": "ligue_pokemon",
+      "type_specialite": "glace",
+      "description": "Premier membre du Conseil des 4. Experte Glace.",
+      "dialogues": {
+        "intro": [
+          "Bienvenue au Plateau Indigo.",
+          "Je suis Olga, la première du Conseil des 4."
+        ],
+        "before_combat": ["Mes Pokémon Glace vont te geler sur place !"],
+        "after_defeat": [
+          "Tu as résisté au blizzard. Les autres sont encore plus forts..."
+        ]
+      },
+      "combat": true,
+      "conseil_4": true,
+      "equipe": [
+        {
+          "pokemon": 87,
+          "niveau": null,
+          "attaques": ["laser_glace", "bulles_d_o", "repos"]
+        },
+        {
+          "pokemon": 91,
+          "niveau": null,
+          "attaques": ["laser_glace", "picanon", "ultrason"]
+        },
+        {
+          "pokemon": 80,
+          "niveau": null,
+          "attaques": ["surf", "psyko", "amnesie"]
+        },
+        {
+          "pokemon": 124,
+          "niveau": null,
+          "attaques": ["laser_glace", "torgnoles", "bisou_doux"]
+        },
+        {
+          "pokemon": 131,
+          "niveau": null,
+          "attaques": ["blizzard", "hydrocanon", "plaquage"]
+        }
+      ],
+      "unique": true
+    },
+    "aldo": {
+      "id": "aldo",
+      "nom": "Aldo",
+      "nomEN": "Bruno",
+      "categorie": "conseil_4",
+      "zone": "ligue_pokemon",
+      "type_specialite": "combat",
+      "description": "Deuxième membre du Conseil des 4. Maître des arts martiaux.",
+      "dialogues": {
+        "intro": ["Je suis Aldo ! Les Pokémon Combat sont les plus forts !"],
+        "before_combat": ["HIYA ! Mes poings et mes Pokémon ne font qu'un !"],
+        "after_defeat": [
+          "Ta force est incroyable ! La prochaine est terrifiante."
+        ]
+      },
+      "combat": true,
+      "conseil_4": true,
+      "equipe": [
+        {
+          "pokemon": 95,
+          "niveau": null,
+          "attaques": ["tomberoche", "etreinte", "grincement"]
+        },
+        {
+          "pokemon": 107,
+          "niveau": null,
+          "attaques": ["mega_poing", "poing_feu", "poing_glace"]
+        },
+        {
+          "pokemon": 106,
+          "niveau": null,
+          "attaques": ["pied_bruleur", "mega_pied", "double_pied"]
+        },
+        {
+          "pokemon": 95,
+          "niveau": null,
+          "attaques": ["tomberoche", "etreinte", "seisme"]
+        },
+        {
+          "pokemon": 68,
+          "niveau": null,
+          "attaques": ["karate", "frappe_atlas", "damocles"]
+        }
+      ],
+      "unique": true
+    },
+    "agatha": {
+      "id": "agatha",
+      "nom": "Agatha",
+      "nomEN": "Agatha",
+      "categorie": "conseil_4",
+      "zone": "ligue_pokemon",
+      "type_specialite": "spectre",
+      "description": "Troisième membre du Conseil des 4. Vieille amie de Chen.",
+      "dialogues": {
+        "intro": ["Hé hé hé... Chen et moi étions rivaux autrefois..."],
+        "before_combat": ["Mes Pokémon Spectre te hanteront !"],
+        "after_defeat": [
+          "Chen a bien choisi son protégé ! Le dernier est invincible !"
+        ]
+      },
+      "combat": true,
+      "conseil_4": true,
+      "equipe": [
+        {
+          "pokemon": 94,
+          "niveau": null,
+          "attaques": ["hypnose", "devoreve", "onde_folie"]
+        },
+        {
+          "pokemon": 42,
+          "niveau": null,
+          "attaques": ["cru_aile", "onde_folie", "morsure"]
+        },
+        {
+          "pokemon": 93,
+          "niveau": null,
+          "attaques": ["hypnose", "devoreve", "ball_ombre"]
+        },
+        {
+          "pokemon": 24,
+          "niveau": null,
+          "attaques": ["acide", "etreinte", "morsure"]
+        },
+        {
+          "pokemon": 94,
+          "niveau": null,
+          "attaques": ["hypnose", "devoreve", "ball_ombre", "psyko"]
+        }
+      ],
+      "unique": true
+    },
+    "peter": {
+      "id": "peter",
+      "nom": "Peter",
+      "nomEN": "Lance",
+      "categorie": "conseil_4",
+      "zone": "ligue_pokemon",
+      "type_specialite": "dragon",
+      "description": "Dernier membre du Conseil des 4. Maître des Dragons.",
+      "dialogues": {
+        "intro": [
+          "Je suis Peter, le dernier du Conseil des 4.",
+          "Je suis le Maître des Dragons !"
+        ],
+        "before_combat": ["Les Dragons sont les plus puissants !"],
+        "after_defeat": [
+          "Tu as battu le Conseil des 4 ! Mais le nouveau Champion t'attend."
+        ]
+      },
+      "combat": true,
+      "conseil_4": true,
+      "equipe": [
+        {
+          "pokemon": 130,
+          "niveau": null,
+          "attaques": ["draco_rage", "hydrocanon", "morsure"]
+        },
+        {
+          "pokemon": 148,
+          "niveau": null,
+          "attaques": ["draco_rage", "cage_eclair", "hate"]
+        },
+        {
+          "pokemon": 148,
+          "niveau": null,
+          "attaques": ["draco_rage", "cage_eclair", "ultralaser"]
+        },
+        {
+          "pokemon": 142,
+          "niveau": null,
+          "attaques": ["cru_aile", "morsure", "ultralaser"]
+        },
+        {
+          "pokemon": 149,
+          "niveau": null,
+          "attaques": ["draco_rage", "ultralaser", "tonnerre", "blizzard"]
+        }
+      ],
+      "unique": true
+    },
+    "infirmiere_joelle": {
+      "id": "infirmiere_joelle",
+      "nom": "Infirmière Joëlle",
+      "nomEN": "Nurse Joy",
+      "categorie": "infirmieres",
+      "dialogues": {
+        "accueil": [
+          "Bienvenue au Centre Pokémon !",
+          "Voulez-vous confier vos Pokémon ?"
+        ],
+        "soin": ["...", "Vos Pokémon sont en pleine forme !"]
+      },
+      "soigne": true,
+      "unique": false,
+      "flags": ["service_npc", "cannot_battle"]
+    },
+    "vendeur_boutique": {
+      "id": "vendeur_boutique",
+      "nom": "Vendeur",
+      "nomEN": "Clerk",
+      "categorie": "marchands",
+      "dialogues": {
+        "accueil": ["Bonjour et bienvenue !"],
+        "merci": ["Merci pour votre achat !"]
+      },
+      "events": {
+        "accueil": "open_shop"
+      },
+      "marchand": true,
+      "inventaire_de_base": [
+        { "item": "pokeball", "prix": 200 },
+        { "item": "potion", "prix": 300 },
+        { "item": "antidote", "prix": 100 },
+        { "item": "repousse", "prix": 350 }
+      ],
+      "unique": false,
+      "flags": ["service_npc", "cannot_battle"]
+    },
+    "mr_fuji": {
+      "id": "mr_fuji",
+      "nom": "M. Fuji",
+      "nomEN": "Mr. Fuji",
+      "categorie": "villageois",
+      "zone": "lavanville",
+      "dialogues": {
+        "tour_captif": ["S'il te plaît, aide-moi !"],
+        "maison": ["Merci ! Tiens, prends cette Poké Flûte."],
+        "default": ["Les Pokémon méritent notre amour."]
+      },
+      "donne_poke_flute": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "bill": {
+      "id": "bill",
+      "nom": "Bill",
+      "nomEN": "Bill",
+      "categorie": "scientifiques",
+      "zone": "azuria",
+      "dialogues": {
+        "accident": ["À l'aide ! Je me suis téléporté avec un Pokémon !"],
+        "apres_aide": ["Merci ! Prends ce ticket pour l'Océane !"]
+      },
+      "donne_ticket_oceane": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "capitaine": {
+      "id": "capitaine",
+      "nom": "Capitaine",
+      "nomEN": "Captain",
+      "categorie": "marins",
+      "zone": "oceane",
+      "dialogues": {
+        "malade": ["Urgh... Le mal de mer... Frotte-moi le dos ?"],
+        "apres_massage": ["Merci ! Prends cette CS Coupe !"]
+      },
+      "donne_cs_coupe": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "gardien_safari": {
+      "id": "gardien_safari",
+      "nom": "Gardien du Safari",
+      "nomEN": "Safari Warden",
+      "categorie": "gardiens",
+      "zone": "parmanie",
+      "dialogues": {
+        "sans_dents": ["Mrmbl... (Il n'a pas de dents...)"],
+        "avec_dents": ["Mes dents ! Merci ! Prends cette CS Force !"]
+      },
+      "donne_cs_force": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "directeur_silph": {
+      "id": "directeur_silph",
+      "nom": "Directeur de Silph",
+      "nomEN": "Silph President",
+      "categorie": "villageois",
+      "zone": "silph_co",
+      "dialogues": {
+        "captif": ["Au secours ! Ils veulent la Master Ball !"],
+        "apres_sauvetage": ["Merci ! Prends cette Master Ball !"]
+      },
+      "donne_master_ball": true,
+      "unique": true,
+      "flags": ["story_important", "cannot_battle"]
+    },
+    "maitre_dojo": {
+      "id": "maitre_dojo",
+      "nom": "Maître Koichi",
+      "nomEN": "Karate Master",
+      "categorie": "ceinture_noire",
+      "zone": "dojo_safrania",
+      "dialogues": {
+        "intro": [
+          "Bienvenue au Dojo ! Si tu me bats, tu auras un Pokémon rare !"
+        ],
+        "before_combat": ["HAAAA !"],
+        "after_defeat": ["Choisis : Kicklee ou Tygnon !"]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 106, "niveau": null },
+        { "pokemon": 107, "niveau": null }
+      ],
+      "donne_pokemon_choix": [106, 107],
+      "unique": true,
+      "flags": ["gives_pokemon"]
+    },
+    "dresseur_insecte_1": {
+      "id": "dresseur_insecte_1",
+      "nom": "Chasseur d'Insectes Michel",
+      "nomEN": "Bug Catcher Rick",
+      "categorie": "dresseurs_insecte",
+      "zone": "foret_jade",
+      "dialogues": {
+        "before_combat": [
+          "Tu aimes les Insectes ? Je vais te montrer leur puissance !"
+        ],
+        "after_defeat": ["Mes insectes... Tu es vraiment fort..."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 10, "niveau": 4 },
+        { "pokemon": 13, "niveau": 5}
+      ],
+      "argent_base": 12,
+      "unique": false
+    },
+    "dresseur_shorts_joey": {
+      "id": "dresseur_shorts_joey",
+      "nom": "Gamin en Short Joey",
+      "nomEN": "Youngster Joey",
+      "categorie": "dresseurs_shorts",
+      "zone": "route_1",
+      "dialogues": {
+        "before_combat": [
+          "J'adore mon short ! Mon Rattata est dans le top 1% !"
+        ],
+        "after_defeat": ["Mon Rattata reste le meilleur quand même !"]
+      },
+      "combat": true,
+      "equipe": [{ "pokemon": 19, "niveau": null }],
+      "argent_base": 16,
+      "unique": true,
+      "flags": ["memorable", "meme"]
+    },
+    "montagnard_1": {
+      "id": "montagnard_1",
+      "nom": "Montagnard Marc",
+      "nomEN": "Hiker Marc",
+      "categorie": "montagnards",
+      "zone": "mont_selenite",
+      "dialogues": {
+        "before_combat": ["Cette montagne est mon territoire !"],
+        "after_defeat": ["Tu m'as fait tomber..."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 74, "niveau": null },
+        { "pokemon": 74, "niveau": null },
+        { "pokemon": 95, "niveau": null }
+      ],
+      "argent_base": 24,
+      "unique": false
+    },
+    "pecheur_magikarp": {
+      "id": "pecheur_magikarp",
+      "nom": "Pêcheur André",
+      "nomEN": "Fisherman Andrew",
+      "categorie": "pecheurs",
+      "zone": "route_12",
+      "dialogues": {
+        "before_combat": [
+          "J'ai pêché toute la journée ! Tu veux voir mes prises ?"
+        ],
+        "after_defeat": ["Zut ! Ils m'ont échappé..."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 129, "niveau": null },
+        { "pokemon": 129, "niveau": null },
+        { "pokemon": 129, "niveau": null },
+        { "pokemon": 129, "niveau": null },
+        { "pokemon": 129, "niveau": null },
+        { "pokemon": 129, "niveau": null }
+      ],
+      "argent_base": 20,
+      "unique": true,
+      "flags": ["meme"]
+    },
+    "beaute_1": {
+      "id": "beaute_1",
+      "nom": "Beauté Brigitte",
+      "nomEN": "Beauty Bridget",
+      "categorie": "beautes",
+      "zone": "celadopole",
+      "dialogues": {
+        "before_combat": ["Mes Pokémon sont bien plus beaux !"],
+        "after_defeat": ["Ma beauté est ternie..."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 37, "niveau": null },
+        { "pokemon": 38, "niveau": null }
+      ],
+      "argent_base": 35,
+      "unique": false
+    },
+    "gentleman_1": {
+      "id": "gentleman_1",
+      "nom": "Gentleman Arthur",
+      "nomEN": "Gentleman Arthur",
+      "categorie": "gentlemen",
+      "zone": "oceane",
+      "dialogues": {
+        "before_combat": ["Permettez-moi de tester vos compétences."],
+        "after_defeat": ["Bravo ! Quelle performance !"]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 58, "niveau": null },
+        { "pokemon": 77, "niveau": null }
+      ],
+      "argent_base": 70,
+      "unique": false,
+      "flags": ["high_reward"]
+    },
+    "medium_1": {
+      "id": "medium_1",
+      "nom": "Médium Marthe",
+      "nomEN": "Psychic Martha",
+      "categorie": "psychics",
+      "zone": "route_8",
+      "dialogues": {
+        "before_combat": ["Je t'attendais... Les étoiles m'avaient prévenue."],
+        "after_defeat": ["L'avenir a changé..."]
+      },
+      "combat": true,
+      "equipe": [{ "pokemon": 64, "niveau": null }],
+      "argent_base": 25,
+      "unique": false
+    },
+    "channeler_1": {
+      "id": "channeler_1",
+      "nom": "Mystimaniac Ruth",
+      "nomEN": "Channeler Ruth",
+      "categorie": "channelers",
+      "zone": "tour_pokemon",
+      "dialogues": {
+        "possessed": ["Ke... ke... ke... Donne-moi ton âme..."],
+        "after_defeat": ["Les esprits s'en vont... Merci de m'avoir libérée..."]
+      },
+      "combat": true,
+      "equipe": [{ "pokemon": 92, "niveau": null }],
+      "argent_base": 25,
+      "unique": false
+    },
+    "rocker_1": {
+      "id": "rocker_1",
+      "nom": "Rocker Luca",
+      "nomEN": "Rocker Luca",
+      "categorie": "rockers",
+      "zone": "route_11",
+      "dialogues": {
+        "before_combat": ["YEAAAH ! ROCK AND ROLL !"],
+        "after_defeat": ["Tu as coupé le courant, mec..."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 100, "niveau": null },
+        { "pokemon": 81, "niveau": null }
+      ],
+      "argent_base": 24,
+      "unique": false
+    },
+    "cooltrainer_m_1": {
+      "id": "cooltrainer_m_1",
+      "nom": "Topdresseur Samuel",
+      "nomEN": "Cooltrainer Samuel",
+      "categorie": "cooltrainers",
+      "zone": "route_victory",
+      "dialogues": {
+        "before_combat": ["Tu vas à la Ligue ? Tu dois d'abord me battre !"],
+        "after_defeat": ["Impressionnant... Tu mérites la Ligue."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 28, "niveau": null },
+        { "pokemon": 78, "niveau": null },
+        { "pokemon": 47, "niveau": null },
+        { "pokemon": 101, "niveau": null }
+      ],
+      "argent_base": 35,
+      "unique": false,
+      "flags": ["elite_trainer"]
+    },
+    "cooltrainer_f_1": {
+      "id": "cooltrainer_f_1",
+      "nom": "Topdresseuse Alexia",
+      "nomEN": "Cooltrainer Alexia",
+      "categorie": "cooltrainers",
+      "zone": "route_victory",
+      "dialogues": {
+        "before_combat": ["Seuls les meilleurs passent ici."],
+        "after_defeat": ["Tu es vraiment exceptionnel."]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 121, "niveau": null },
+        { "pokemon": 131, "niveau": null },
+        { "pokemon": 40, "niveau": null }
+      ],
+      "argent_base": 35,
+      "unique": false,
+      "flags": ["elite_trainer"]
+    },
+    "rocket_grunt_m": {
+      "id": "rocket_grunt_m",
+      "nom": "Sbire Rocket",
+      "nomEN": "Team Rocket Grunt",
+      "categorie": "team_rocket",
+      "dialogues": {
+        "before_combat": ["La Team Rocket conquiert le monde !"],
+        "after_defeat": ["Argh ! La Team Rocket reviendra !"],
+        "mont_selenite": ["On cherche des fossiles ! Dégage !"],
+        "casino": ["Comment as-tu trouvé notre planque ?!"],
+        "silph": ["Silph Co appartient à la Team Rocket !"]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 19, "niveau": null },
+        { "pokemon": 41, "niveau": null }
+      ],
+      "argent_base": 32,
+      "unique": false,
+      "flags": ["villain"]
+    },
+    "pierre": {
+      "id": "pierre",
+      "nom": "Pierre",
+      "categorie": "champions",
+      "combat": true,
+      "champion": true,
+      "badge": "roche",
+      "argent_base": 100,
+      "equipe": [
+        {
+          "id": 74,
+          "nom": "Racaillou",
+          "niveau": 12,
+          "pv": 40,
+          "pvMax": 40
+        },
+        {
+          "id": 95,
+          "nom": "Onix",
+          "niveau": 14,
+          "pv": 50,
+          "pvMax": 50
+        }
+      ],
+      "dialogues": {
+        "default": [
+          "Je suis Pierre, le Champion d'Argenta.",
+          "Ma volonté est dure comme la roche !"
+        ],
+        "before_combat": [
+          "Tu veux me défier ?",
+          "Très bien. Prépare-toi à l'éboulement !"
+        ],
+        "after_badge": [
+          "Tu es fort...",
+          "La défense de mes Pokémon n'a pas suffi."
+        ],
+        "after_defeat": [
+          "Tu iras loin, jeune dresseur."
+        ]
+      },
+      "unique": true
+    },
+    "dresseur_insecte_1": {
+      "id": "dresseur_insecte_1",
+      "nom": "Chasseur d'Insectes Michel",
+      "nomEN": "Bug Catcher Michel",
+      "categorie": "dresseurs_insecte",
+      "zone": "foret_jade",
+      "dialogues": {
+        "before_combat": ["Hé ! Tu as vu mes insectes ? Ils sont cools, non ?"],
+        "after_defeat": ["Mes insectes... Ils sont K.O. !"]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 10, "niveau": null },
+        { "pokemon": 13, "niveau": null }
+      ],
+      "argent_base": 12,
+      "unique": false
+    },
+    "rocket_grunt_f": {
+      "id": "rocket_grunt_f",
+      "nom": "Sbire Rocket",
+      "nomEN": "Team Rocket Grunt",
+      "categorie": "team_rocket",
+      "dialogues": {
+        "before_combat": ["Tu oses défier la Team Rocket ?"],
+        "after_defeat": ["Non ! C'est impossible !"]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 23, "niveau": null },
+        { "pokemon": 109, "niveau": null }
+      ],
+      "argent_base": 32,
+      "unique": false,
+      "flags": ["villain"]
+    },
+    "vieil_homme_jadielle": {
+      "id": "vieil_homme_jadielle",
+      "nom": "Vieil Homme",
+      "nomEN": "Old Man",
+      "categorie": "villageois",
+      "zone": "jadielle",
+      "dialogues": {
+        "pas_cafe": ["Zzz... J'ai besoin de café..."],
+        "tutorial": ["Je vais te montrer comment capturer !"]
+      },
+      "tutorial_capture": true,
+      "unique": true,
+      "flags": ["tutorial", "cannot_battle"]
+    },
+    "pecheur_canne": {
+      "id": "pecheur_canne",
+      "nom": "Gourou Pêche",
+      "nomEN": "Fishing Guru",
+      "categorie": "pecheurs",
+      "zone": "route_12",
+      "dialogues": {
+        "intro": ["Tu aimes pêcher ?"],
+        "donne_canne": ["Tiens, prends cette Canne !"]
+      },
+      "donne_canne": "canne",
+      "unique": true,
+      "flags": ["gives_item", "cannot_battle"]
+    },
+    "pecheur_super_canne": {
+      "id": "pecheur_super_canne",
+      "nom": "Gourou Pêche",
+      "nomEN": "Fishing Guru",
+      "categorie": "pecheurs",
+      "zone": "parmanie",
+      "dialogues": {
+        "intro": ["Tu veux une Super Canne ?"],
+        "donne_canne": ["Elle attrape des Pokémon plus rares !"]
+      },
+      "donne_canne": "super_canne",
+      "unique": true,
+      "flags": ["gives_item", "cannot_battle"]
+    },
+    "pecheur_mega_canne": {
+      "id": "pecheur_mega_canne",
+      "nom": "Gourou Pêche",
+      "nomEN": "Fishing Guru",
+      "categorie": "pecheurs",
+      "zone": "cramois_ile",
+      "dialogues": {
+        "intro": ["Tu mérites la Méga Canne !"],
+        "donne_canne": ["Attrape n'importe quel Pokémon Eau !"]
+      },
+      "donne_canne": "mega_canne",
+      "unique": true,
+      "flags": ["gives_item", "cannot_battle"]
+    },
+    "garde_assoiffe": {
+      "id": "garde_assoiffe",
+      "nom": "Garde",
+      "nomEN": "Guard",
+      "categorie": "gardiens",
+      "zone": "checkpoints_safrania",
+      "dialogues": {
+        "soif": ["J'ai tellement soif... Tu as quelque chose à boire ?"],
+        "apres_boisson": ["Merci ! Tu peux passer !"]
+      },
+      "bloque_passage": true,
+      "requiert_item": "boisson_fraiche",
+      "unique": false,
+      "flags": ["blocker", "cannot_battle"]
+    },
+    "ronflex_route12": {
+      "id": "ronflex_route12",
+      "nom": "Ronflex",
+      "nomEN": "Snorlax",
+      "categorie": "villageois",
+      "zone": "route_12",
+      "dialogues": {
+        "endormi": ["Zzz... (Un énorme Pokémon bloque le chemin...)"],
+        "reveille": ["Le Ronflex se réveille et attaque !"]
+      },
+      "pokemon_bloquant": { "pokemon": 143, "niveau": 30 },
+      "requiert_item": "poke_flute",
+      "unique": true,
+      "flags": ["blocking_pokemon", "catchable"]
+    },
+    "ronflex_route16": {
+      "id": "ronflex_route16",
+      "nom": "Ronflex",
+      "nomEN": "Snorlax",
+      "categorie": "villageois",
+      "zone": "route_16",
+      "dialogues": {
+        "endormi": ["Zzz..."],
+        "reveille": ["Le Ronflex attaque !"]
+      },
+      "pokemon_bloquant": { "pokemon": 143, "niveau": 30 },
+      "requiert_item": "poke_flute",
+      "unique": true,
+      "flags": ["blocking_pokemon", "catchable"]
+    },
+    "fantome_tour": {
+      "id": "fantome_tour",
+      "nom": "Fantôme",
+      "nomEN": "Ghost",
+      "categorie": "channelers",
+      "zone": "tour_pokemon",
+      "dialogues": {
+        "sans_silph_scope": ["(Une présence spectrale bloque le chemin...)"],
+        "avec_silph_scope": ["C'est le fantôme de la mère Osselait !"],
+        "apres_combat": ["Le fantôme peut enfin reposer en paix..."]
+      },
+      "combat_special": {
+        "pokemon": 105,
+        "niveau": 30,
+        "non_capturable": true
+      },
+      "requiert_item": "silph_scope",
+      "unique": true,
+      "flags": ["blocking_ghost", "story_important"]
+    },
+    "super_nerd_fossile": {
+      "id": "super_nerd_fossile",
+      "nom": "Super Nerd Miguel",
+      "nomEN": "Super Nerd Miguel",
+      "categorie": "super_nerds",
+      "zone": "mont_selenite",
+      "dialogues": {
+        "before_combat": ["Ces fossiles sont à moi !"],
+        "after_defeat": [
+          "D'accord ! Tu peux en prendre UN ! Fossile Dôme=Kabuto, Fossile Nautile=Amonita"
+        ]
+      },
+      "combat": true,
+      "equipe": [
+        { "pokemon": 81, "niveau": null },
+        { "pokemon": 100, "niveau": null }
+      ],
+      "donne_fossile_choix": ["fossile_dome", "fossile_nautile"],
+      "unique": true,
+      "flags": ["story_important"]
+    },
+    "scientifique_cramois": {
+      "id": "scientifique_cramois",
+      "nom": "Dr. Lefebvre",
+      "nomEN": "Scientist",
+      "categorie": "scientifiques",
+      "zone": "cramois_ile",
+      "dialogues": {
+        "intro": ["Je ressuscite les fossiles ! Donne-moi le tien !"],
+        "pokemon_pret": ["Ton Pokémon est ressuscité !"]
+      },
+      "ressuscite_fossiles": true,
+      "unique": true,
+      "flags": ["service_npc", "cannot_battle"]
+    }
+  }
+}

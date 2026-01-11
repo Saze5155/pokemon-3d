@@ -1,0 +1,164 @@
+{
+  "sauvegarde_1": {
+    "joueur": {
+      "nom": "RED",
+      "idDresseur": 5410,
+      "argent": 3000,
+      "badges": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "tempsJeu": 0,
+      "position": {
+        "map": "maisonetage",
+        "x": 5,
+        "y": 1.8,
+        "z": 5,
+        "direction": "south"
+      }
+    },
+    "equipe": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "pc": [],
+    "sac": {
+      "pokeballs": {},
+      "soins": {
+        "potion": 1
+      },
+      "pierres": {},
+      "boosts": {},
+      "cles": []
+    },
+    "pokedex": {
+      "vus": [],
+      "captures": []
+    },
+    "drapeaux": {
+      "intro_complete": false,
+      "starter_choisi": false,
+      "rival_battu_labo": false,
+      "pokedex_obtenu": false,
+      "carte_obtenue": false,
+      "pokeballs_debloquees": false,
+      "premier_pokemon": false,
+      "livraison_chen_faite": false,
+      "rival_battu_route22": false,
+      "foret_jade_traversee": false,
+      "badge_roche": false
+    },
+    "dresseursVaincus": [],
+    "dateCreation": "2026-01-11T19:09:19.606Z",
+    "dateSauvegarde": "2026-01-11T19:09:19.607Z"
+  },
+  "sauvegarde_2": {
+    "joueur": {
+      "nom": "RED",
+      "idDresseur": 24433,
+      "argent": 7235,
+      "badges": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "tempsJeu": 655,
+      "position": {
+        "map": "world",
+        "x": 9.730828772588524,
+        "y": 6.849990241919656,
+        "z": -91.34388737721412,
+        "direction": "south"
+      }
+    },
+    "equipe": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      8
+    ],
+    "pc": [
+      5,
+      6,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "sac": {
+      "pokeballs": {
+        "pokeball": 1,
+        "superball": 1
+      },
+      "soins": {
+        "potion": 1
+      },
+      "pierres": {},
+      "boosts": {},
+      "cles": []
+    },
+    "pokedex": {
+      "vus": [
+        4,
+        16,
+        19,
+        43,
+        69
+      ],
+      "captures": [
+        4,
+        5,
+        6,
+        16,
+        19,
+        43,
+        69
+      ]
+    },
+    "drapeaux": {
+      "intro_complete": false,
+      "starter_choisi": true,
+      "rival_battu_labo": false,
+      "pokedex_obtenu": true,
+      "carte_obtenue": false,
+      "pokeballs_debloquees": false,
+      "premier_pokemon": true,
+      "livraison_chen_faite": false,
+      "rival_battu_route22": false,
+      "foret_jade_traversee": false,
+      "badge_roche": false
+    },
+    "dateCreation": "2026-01-09T00:49:06.715Z",
+    "dateSauvegarde": "2026-01-11T18:47:03.591Z",
+    "dresseursVaincus": [
+      "dresseur_insecte_1_9",
+      "dresseur_shorts_joey_1",
+      "dresseur_shorts_joey_2",
+      "dresseur_insecte_1_1",
+      "dresseur_insecte_1_5",
+      "dresseur_insecte_1_6",
+      "pierre_1",
+      "dresseur_insecte_1_4",
+      "dresseur_insecte_1_7"
+    ]
+  },
+  "sauvegarde_3": null
+}

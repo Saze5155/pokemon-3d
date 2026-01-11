@@ -1,0 +1,67 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Sauvegardes
+save/
+*.sav
+
+# Logs
+logs/
+*.log
+
+# Fichiers système Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Fichiers système macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Fichiers système Linux
+*~
+.directory
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - WebStorm / JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*.cache
+.cache/
+
+# Build / Distribution
+dist/
+build/
+out/
+
+# Variables d'environnement
+.env
+.env.local
+.env.*.local
+
+# Assets lourds (optionnel - décommenter si nécessaire)
+# models/
+# sprites/
+# music/
+# assets/
+
+# Fichiers de test
+test-results/
+coverage/

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokémon 3D</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        overflow: hidden;
+        font-family: "Press Start 2P", monospace;
+        background: #000;
+        image-rendering: pixelated;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      /* HUD */
+      #hud {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      #player-info {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: #000;
+        padding: 12px;
+        border: 4px solid #fff;
+        box-shadow: inset 0 0 0 2px #000, inset 0 0 0 4px #888,
+          4px 4px 0 rgba(0, 0, 0, 0.5);
+        color: #fff;
+        font-size: 10px;
+        min-width: 180px;
+      }
+
+      #player-info .name {
+        margin-bottom: 8px;
+        color: #ffd700;
+      }
+
+      #minimap {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 120px;
+        height: 120px;
+        background: #1a472a;
+        border: 4px solid #fff;
+        box-shadow: inset 0 0 0 2px #000, inset 0 0 0 4px #2d6b4f,
+          4px 4px 0 rgba(0, 0, 0, 0.5);
+      }
+
+      #interaction-hint {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #000;
+        padding: 12px 20px;
+        border: 4px solid #fff;
+        box-shadow: inset 0 0 0 2px #000, inset 0 0 0 4px #888,
+          4px 4px 0 rgba(0, 0, 0, 0.5);
+        color: #fff;
+        font-size: 10px;
+        display: none;
+        pointer-events: none;
+      }
+
+      /* Pokégear */
+      #watch-container {
+        position: fixed;
+        bottom: -140px;
+        left: 30px;
+        pointer-events: all;
+        z-index: 100;
+      }
+
+      #watch {
+        background: linear-gradient(145deg, #d0d0d0, #a0a0a0);
+        border: 6px solid #000;
+        border-radius: 12px 12px 0 0;
+        padding: 8px;
+        box-shadow: 0 -4px 0 #000, 0 -8px 20px rgba(0, 0, 0, 0.6);
+        transform: translateY(0);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+
+      #watch.visible {
+        transform: translateY(-200px);
+      }
+
+      #watch-screen {
+        background: #fff;
+        border: 4px solid #000;
+        padding: 12px;
+        width: 200px;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      #watch-time {
+        text-align: center;
+        font-size: 11px;
+        color: #000;
+        margin-bottom: 12px;
+      }
+
+      #watch-menu {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .watch-button {
+        background: #fff;
+        border: 3px solid #000;
+        padding: 10px 4px;
+        color: #000;
+        font-size: 7px;
+        cursor: pointer;
+        transition: all 0.1s;
+        box-shadow: inset -2px -2px 0 #808080, inset 2px 2px 0 #fff,
+          2px 2px 0 rgba(0, 0, 0, 0.4);
+        text-transform: uppercase;
+        font-family: "Press Start 2P", monospace;
+        line-height: 1.3;
+        position: relative;
+      }
+
+      .watch-button:hover:not(.locked) {
+        background: #e0e0e0;
+      }
+
+      .watch-button:active:not(.locked) {
+        box-shadow: inset 2px 2px 0 #808080, inset -2px -2px 0 #fff;
+        transform: translate(1px, 1px);
+      }
+
+      .watch-button.locked {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: #ccc;
+      }
+
+      .watch-button.locked::after {
+        content: "🔒";
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        font-size: 8px;
+      }
+
+      /* Bouton sauver spécial */
+      .watch-button[data-menu="save"] {
+        background: linear-gradient(135deg, #4caf50, #388e3c);
+        color: #fff;
+        border-color: #2e7d32;
+      }
+
+      .watch-button[data-menu="save"]:hover {
+        background: linear-gradient(135deg, #66bb6a, #43a047);
+      }
+
+      /* Écrans de menu */
+      .menu-screen {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #f8f8f8;
+        border: 8px solid #000;
+        box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 8px #c0c0c0,
+          8px 8px 0 rgba(0, 0, 0, 0.5);
+        padding: 0;
+        min-width: 450px;
+        max-width: 600px;
+        max-height: 85vh;
+        display: none;
+        pointer-events: all;
+        font-size: 10px;
+      }
+
+      .menu-screen.visible {
+        display: block;
+        animation: screenOpen 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+
+      @keyframes screenOpen {
+        from {
+          transform: translate(-50%, -50%) scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+      }
+
+      .menu-screen h2 {
+        background: linear-gradient(180deg, #e03030 0%, #b02020 100%);
+        color: #fff;
+        margin: 0;
+        padding: 14px 20px;
+        font-size: 13px;
+        text-align: center;
+        border-bottom: 4px solid #000;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        letter-spacing: 2px;
+      }
+
+      #pokedex-screen h2 {
+        background: linear-gradient(180deg, #3060e0 0%, #2040b0 100%);
+      }
+
+      #settings-screen h2 {
+        background: linear-gradient(180deg, #50a050 0%, #308030 100%);
+      }
+
+      .menu-content {
+        padding: 16px;
+        max-height: calc(85vh - 70px);
+        overflow-y: auto;
+        background: #f8f8f8;
+      }
+
+      .menu-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #000;
+        border: 3px solid #fff;
+        width: 30px;
+        height: 30px;
+        color: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        font-family: "Press Start 2P", monospace;
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        z-index: 10;
+      }
+
+      .menu-close:hover {
+        background: #e03030;
+      }
+
+      /* Scrollbar */
+      .menu-content::-webkit-scrollbar {
+        width: 14px;
+      }
+      .menu-content::-webkit-scrollbar-track {
+        background: #c0c0c0;
+        border: 2px solid #000;
+      }
+      .menu-content::-webkit-scrollbar-thumb {
+        background: #e00000;
+        border: 2px solid #000;
+      }
+
+      /* Sprites */
+      .pokemon-sprite,
+      .item-sprite {
+        image-rendering: pixelated;
+        background-repeat: no-repeat;
+      }
+
+      /* Équipe */
+      #team-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .pokemon-card {
+        background: #fff;
+        border: 4px solid #000;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: inset 0 0 0 2px #e0e0e0, 4px 4px 0 rgba(0, 0, 0, 0.2);
+        transition: all 0.1s;
+      }
+
+      .pokemon-card:hover {
+        background: #e5f0ff;
+        transform: translate(-2px, -2px);
+        box-shadow: inset 0 0 0 2px #d0e0ff, 6px 6px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .pokemon-sprite-container {
+        width: 70px;
+        height: 58px;
+        background: #e0e0e0;
+        border: 3px solid #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .pokemon-card-sprite {
+        width: 70px;
+        height: 58px;
+        image-rendering: pixelated;
+        background-repeat: no-repeat;
+      }
+
+      .pokemon-info {
+        flex: 1;
+      }
+
+      .pokemon-name {
+        font-size: 11px;
+        color: #000;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+      }
+
+      .pokemon-level {
+        font-size: 9px;
+        color: #666;
+        margin-bottom: 6px;
+      }
+
+      .hp-bar {
+        height: 8px;
+        background: #333;
+        border: 2px solid #000;
+        overflow: hidden;
+      }
+
+      .hp-fill {
+        height: 100%;
+        background: #4caf50;
+        transition: width 0.3s ease;
+      }
+
+      .hp-fill.low {
+        background: #ffc107;
+      }
+      .hp-fill.critical {
+        background: #f44336;
+        animation: hpBlink 0.5s ease-in-out infinite;
+      }
+
+      @keyframes hpBlink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      /* Sac */
+      #bag-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 10px;
+      }
+
+      .item-card {
+        background: #fff;
+        border: 4px solid #000;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: inset 0 0 0 2px #e0e0e0, 3px 3px 0 rgba(0, 0, 0, 0.2);
+        transition: all 0.1s;
+      }
+
+      .item-card:hover {
+        background: #fff8e0;
+        transform: translate(-2px, -2px);
+        box-shadow: inset 0 0 0 2px #ffe0a0, 5px 5px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .bag-item-sprite {
+        width: 34px;
+        height: 34px;
+        margin: 0 auto 6px;
+        image-rendering: pixelated;
+        background-repeat: no-repeat;
+      }
+
+      .item-name {
+        font-size: 7px;
+        margin-bottom: 4px;
+        color: #000;
+        text-transform: uppercase;
+      }
+
+      .item-count {
+        font-size: 9px;
+        color: #e03030;
+        font-weight: bold;
+      }
+
+      .item-count::before {
+        content: "×";
+      }
+
+      /* Pokédex */
+      #pokedex-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+      }
+
+      .pokedex-entry {
+        background: #fff;
+        border: 4px solid #000;
+        padding: 8px;
+        text-align: center;
+        box-shadow: inset 0 0 0 2px #e0e0e0, 3px 3px 0 rgba(0, 0, 0, 0.2);
+        transition: all 0.1s;
+      }
+
+      .pokedex-entry:not(.unknown) {
+        cursor: pointer;
+      }
+
+      .pokedex-entry:not(.unknown):hover {
+        background: #ffe5e5;
+        transform: translate(-2px, -2px);
+      }
+
+      .pokedex-sprite {
+        width: 70px;
+        height: 58px;
+        margin: 0 auto 6px;
+        background: #e8e8e8;
+        border: 3px solid #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .pokedex-entry-sprite {
+        width: 70px;
+        height: 58px;
+        image-rendering: pixelated;
+        background-repeat: no-repeat;
+      }
+
+      .pokedex-entry.unknown .pokedex-sprite {
+        background: #555;
+      }
+      .pokedex-entry.unknown .pokedex-entry-sprite {
+        filter: brightness(0);
+      }
+
+      .pokedex-number {
+        font-size: 7px;
+        color: #666;
+        margin-bottom: 3px;
+      }
+
+      .pokedex-name {
+        font-size: 7px;
+        color: #000;
+        text-transform: uppercase;
+      }
+
+      .pokedex-entry.unknown .pokedex-name {
+        color: #888;
+      }
+
+      /* Paramètres */
+      .settings-section {
+        margin-bottom: 20px;
+        background: #fff;
+        border: 4px solid #000;
+        padding: 14px;
+        box-shadow: inset 0 0 0 2px #e0e0e0, 4px 4px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .settings-section h3 {
+        color: #e03030;
+        margin-bottom: 14px;
+        font-size: 10px;
+        text-transform: uppercase;
+        padding-bottom: 6px;
+        border-bottom: 3px solid #000;
+      }
+
+      .setting-item {
+        background: #f0f0f0;
+        border: 3px solid #000;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 8px;
+        color: #000;
+      }
+
+      .setting-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .setting-item input[type="range"] {
+        width: 100px;
+        height: 10px;
+        -webkit-appearance: none;
+        background: #888;
+        border: 2px solid #000;
+      }
+
+      .setting-item input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        background: #e03030;
+        border: 2px solid #000;
+        cursor: pointer;
+      }
+
+      .setting-item select {
+        background: #fff;
+        border: 3px solid #000;
+        padding: 5px 10px;
+        color: #000;
+        font-family: "Press Start 2P", monospace;
+        font-size: 7px;
+        cursor: pointer;
+      }
+
+      /* Message vide */
+      .empty-message {
+        text-align: center;
+        padding: 30px 15px;
+        color: #888;
+        font-size: 9px;
+        border: 3px dashed #ccc;
+        background: #f8f8f8;
+      }
+      /* Dialogue Combat */
+      #combat-dialogue-container {
+        position: absolute;
+        bottom: 249px; /* Au-dessus du menu de combat agrandi (50 + 250 + 30) */
+        left: 0;
+        width: 100%;
+        height: 60px; /* Plus petit pour ne pas trop masquer */
+        background: rgba(0, 0, 0, 0.6); /* Semi-transparent */
+        border-top: none;
+        border-bottom: 2px solid #fff;
+        padding: 10px 20px;
+        box-shadow: none;
+        display: none; /* Caché par défaut */
+        z-index: 50;
+        font-family: "Press Start 2P", monospace;
+        color: white;
+      }
+
+      #combat-dialogue-text {
+        font-size: 12px;
+        line-height: 1.5;
+        color: #fff;
+        text-shadow: 1px 1px 0 #000;
+      }
+
+      #combat-dialogue-arrow {
+        position: absolute;
+        bottom: 15px;
+        right: 20px;
+        color: #e03030;
+        animation: blinkArrow 1s infinite;
+      }
+
+      @keyframes blinkArrow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Écran Titre / Chargement -->
+    <div id="title-screen" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: 'Press Start 2P', monospace;
+    ">
+        <h1 style="
+            font-size: 40px;
+            color: #FFD700;
+            text-shadow: 4px 4px #2a75bb;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+        ">POKEMON 3D<br><span style="font-size: 20px; color: white; text-shadow: none;">VERSION WEB</span></h1>
+
+        <div style="
+            font-size: 8px;
+            color: #888;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 600px;
+            padding: 0 20px;
+        ">
+            Pokémon © Nintendo / Creatures Inc. / GAME FREAK Inc.<br>
+            Projet non-officiel à but éducatif - Tous droits réservés aux ayants droit
+        </div>
+
+        <div id="start-btn" style="
+            padding: 20px;
+            border: 4px solid white;
+            cursor: pointer;
+            animation: blink 1s infinite;
+            text-transform: uppercase;
+        ">
+            CLIQUER POUR LANCER
+        </div>
+
+        <div id="loading-msg" style="
+            display: none;
+            color: #888;
+            margin-top: 20px;
+            font-size: 12px;
+        ">
+            Chargement... Veuillez patienter...
+        </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud">
+      <div id="player-info">
+        <div class="name">DRESSEUR</div>
+        <div class="money">3000 ¥</div>
+      </div>
+      <div id="minimap"></div>
+      <div id="interaction-hint">APPUYEZ SUR E</div>
+    </div>
+
+    <!-- Pokégear avec SAUVER dans le menu -->
+    <div id="watch-container">
+      <div id="watch">
+        <div id="watch-screen">
+          <div id="watch-time">12:34</div>
+          <div id="watch-menu">
+            <button class="watch-button locked" data-menu="team">ÉQUIPE</button>
+            <button class="watch-button" data-menu="bag">SAC</button>
+            <button class="watch-button locked" data-menu="pokedex">
+              POKÉDEX
+            </button>
+            <button class="watch-button" data-menu="save">SAUVER</button>
+            <button class="watch-button" data-menu="settings">OPTIONS</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Écran Équipe -->
+    <div id="team-screen" class="menu-screen">
+      <button class="menu-close">X</button>
+      <h2>ÉQUIPE</h2>
+      <div class="menu-content">
+        <div id="team-list">
+          <div class="empty-message">Aucun Pokémon dans votre équipe</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Écran Sac -->
+    <div id="bag-screen" class="menu-screen">
+      <button class="menu-close">X</button>
+      <h2>SAC</h2>
+      <div class="menu-content">
+        <div id="bag-content">
+          <div class="empty-message">Votre sac est vide</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Écran Pokédex -->
+    <div id="pokedex-screen" class="menu-screen">
+      <button class="menu-close">X</button>
+      <h2>POKÉDEX</h2>
+      <div class="menu-content">
+        <div id="pokedex-list"></div>
+      </div>
+    </div>
+
+    <!-- Dialogue de Combat (Style Game Boy) -->
+    <div id="combat-dialogue-container">
+      <div id="combat-dialogue-text">Que va faire PIKACHU ?</div>
+      <div id="combat-dialogue-arrow">▼</div>
+    </div>
+
+    <!-- Écran Options -->
+    <div id="settings-screen" class="menu-screen">
+      <button class="menu-close">X</button>
+      <h2>OPTIONS</h2>
+      <div class="menu-content">
+        <div class="settings-section">
+          <h3>Audio</h3>
+          <div class="setting-item">
+            <span>Volume Musique</span>
+            <input
+              type="range"
+              id="music-volume"
+              min="0"
+              max="100"
+              value="50"
+            />
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Contrôles</h3>
+          <div class="setting-item">
+            <span>Sensibilité Souris</span>
+            <input
+              type="range"
+              id="mouse-sensitivity"
+              min="1"
+              max="20"
+              value="10"
+            />
+          </div>
+          <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+            <span style="margin-bottom: 6px;">Raccourcis Clavier</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%;">
+              <span>ZQSD / Flèches</span><span style="color: #666;">Déplacement</span>
+              <span>E</span><span style="color: #666;">Interagir</span>
+              <span>Espace</span><span style="color: #666;">Sauter</span>
+              <span>Shift</span><span style="color: #666;">Courir</span>
+              <span>TAB</span><span style="color: #666;">Menu Pokégear</span>
+              <span>ÉCHAP</span><span style="color: #666;">Fermer / Annuler</span>
+              <span>SOURIS GAUCHE</span><span style="color: #666;">Lancer Pokéball (Combat)</span>
+              <span>A</span><span style="color: #666;">Capturer Pokémon (Combat)</span>
+              <span>C</span><span style="color: #666;">Changer Vue (Combat)</span>
+              <span>SOURIS</span><span style="color: #666;">Regarder autour</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Écran Commandes (Affiché au démarrage nouvelle partie) -->
+    <div id="controls-overlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: 'Press Start 2P', monospace;
+        padding: 20px;
+    ">
+        <h1 style="color: #FFD700; margin-bottom: 30px; font-size: 24px; text-shadow: 2px 2px #2a75bb;">COMMANDES</h1>
+        
+        <div style="
+            background: #222;
+            border: 4px solid #fff;
+            padding: 30px 40px;
+            max-width: 500px;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
+        ">
+            <div style="display: grid; grid-template-columns: 120px 1fr; gap: 14px; font-size: 10px; line-height: 1.6;">
+                <span style="color: #4CAF50;">ZQSD / Flèches</span><span>Se déplacer</span>
+                <span style="color: #4CAF50;">Souris</span><span>Regarder autour</span>
+                <span style="color: #4CAF50;">E</span><span>Interagir / Parler</span>
+                <span style="color: #4CAF50;">Espace</span><span>Sauter</span>
+                <span style="color: #4CAF50;">Shift</span><span>Courir</span>
+                <span style="color: #4CAF50;">TAB</span><span>Ouvrir le Pokégear</span>
+                <span style="color: #4CAF50;">ÉCHAP</span><span>Fermer les menus</span>
+                <span style="color: #4CAF50;">CLIC GAUCHE</span><span>Lancer Pokéball (Combat)</span>
+                <span style="color: #4CAF50;">A / CLIC G.</span><span>Capturer Pokémon (Combat)</span>
+            </div>
+        </div>
+
+        <p style="margin-top: 30px; color: #888; font-size: 9px;">Cliquez dans le jeu pour capturer la souris</p>
+        
+        <button id="controls-ok-btn" style="
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: #e03030;
+            border: 4px solid #fff;
+            color: #fff;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+            transition: all 0.1s;
+        ">COMPRIS !</button>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
