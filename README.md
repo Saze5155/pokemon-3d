@@ -356,9 +356,6 @@ pokemon-3d/
 │
 ├── 📁 assets/              # Ressources du jeu
 │   ├── 📁 models/          # Modèles 3D (43 catégories)
-│   │   ├── terrain/        # Arbres, rochers, herbe
-│   │   ├── furniture/      # Meubles intérieurs
-│   │   ├── lab/            # Matériel laboratoire
 │   │   ├── bourgpalette/   # Bâtiments Bourg Palette
 │   │   └── argenta/        # Bâtiments Argenta
 │   │

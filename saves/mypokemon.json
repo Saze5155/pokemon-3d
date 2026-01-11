@@ -1,5 +1,190 @@
 {
-  "sauvegarde_1": {},
+  "sauvegarde_1": {
+    "1": {
+      "uniqueId": 1,
+      "speciesId": 4,
+      "surnom": null,
+      "niveau": 5,
+      "xp": 895,
+      "xpNextLevel": 179,
+      "stats": {
+        "hp": 0,
+        "hpMax": 29,
+        "attack": 16,
+        "defense": 16,
+        "special": 19,
+        "speed": 15
+      },
+      "ivs": {
+        "hp": 2,
+        "attack": 7,
+        "defense": 13,
+        "special": 1,
+        "speed": 2
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "griffe",
+        "rugissement",
+        "flammeche",
+        null
+      ],
+      "ppActuels": [
+        35,
+        40,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        40,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "RED",
+      "idDO": 29170,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 5,
+        "date": "2026-01-11T19:23:19.851Z"
+      },
+      "isOut": true,
+      "name": "Salamèche",
+      "hp": 0,
+      "level": 9
+    },
+    "2": {
+      "uniqueId": 2,
+      "speciesId": 10,
+      "surnom": null,
+      "niveau": 3,
+      "xp": 57,
+      "xpNextLevel": 96,
+      "stats": {
+        "hp": 16,
+        "hpMax": 16,
+        "attack": 8,
+        "defense": 8,
+        "special": 8,
+        "speed": 8
+      },
+      "ivs": {
+        "hp": 7,
+        "attack": 8,
+        "defense": 4,
+        "special": 0,
+        "speed": 9
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "charge",
+        null,
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "RED",
+      "idDO": 29170,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 3,
+        "date": "2026-01-11T19:25:13.487Z"
+      }
+    },
+    "3": {
+      "uniqueId": 3,
+      "speciesId": 43,
+      "surnom": null,
+      "niveau": 4,
+      "xp": 96,
+      "xpNextLevel": 135,
+      "stats": {
+        "hp": 18,
+        "hpMax": 18,
+        "attack": 10,
+        "defense": 9,
+        "special": 9,
+        "speed": 9
+      },
+      "ivs": {
+        "hp": 0,
+        "attack": 11,
+        "defense": 2,
+        "special": 14,
+        "speed": 14
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "charge",
+        null,
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "RED",
+      "idDO": 29170,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 4,
+        "date": "2026-01-11T19:25:18.032Z"
+      }
+    }
+  },
   "sauvegarde_2": {
     "1": {
       "uniqueId": 1,
