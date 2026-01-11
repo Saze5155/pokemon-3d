@@ -64,7 +64,7 @@ export class WorldManager {
   async loadZoneMetadata(zone) {
     try {
       const response = await fetch(
-        `http://localhost:3000/load-scene/${zone.scene}`
+        `/load-scene/${zone.scene}`
       );
       const data = await response.json();
 

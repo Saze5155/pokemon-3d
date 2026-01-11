@@ -205,7 +205,7 @@ export class CombatManager {
 
   setupCameraToggle() {
     document.addEventListener("keydown", (e) => {
-      if (e.key.toLowerCase() === "c" && this.isInCombat) {
+      if (e.key.toLowerCase() === "a" && this.isInCombat) {
         this.toggleCameraMode();
       }
     });
