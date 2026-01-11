@@ -500,7 +500,7 @@ class PokemonEditor {
 
     galleryList.innerHTML = '<div style="color:white;">Chargement...</div>';
 
-    fetch("http://localhost:3000/list-models")
+    fetch("/list-models")
       .then((res) => res.json())
       .then((data) => {
         this.models = data.models;
@@ -2196,7 +2196,7 @@ class PokemonEditor {
   }
 
   loadScene(sceneName) {
-    fetch(`http://localhost:3000/load-scene/${sceneName}`)
+    fetch(`/load-scene/${sceneName}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("ScÃ¨ne chargÃ©e:", data);
@@ -2553,7 +2553,7 @@ class PokemonEditor {
   // ========== PORTAL METHODS ==========
 
   loadScenesList() {
-    fetch("http://localhost:3000/list-scenes")
+    fetch("/list-scenes")
       .then((res) => res.json())
       .then((data) => {
         this.availableScenes = data.scenes || [];
@@ -2851,7 +2851,7 @@ class PokemonEditor {
         : { pnj: [], spawnZones: [] },
     };
 
-    fetch("http://localhost:3000/save-scene", {
+    fetch("/save-scene", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(sceneData),

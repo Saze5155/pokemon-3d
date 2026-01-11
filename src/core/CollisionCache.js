@@ -69,11 +69,6 @@ export class CollisionCache {
     this.flangeCache.set(sceneName, flanges);
     this.collisionCache.set(sceneName, collisions);
 
-    console.log(`🗂️ Cache construit pour ${sceneName}:`, {
-      floors: floors.length,
-      flanges: flanges.length,
-      collisions: collisions.length,
-    });
   }
 
   /**

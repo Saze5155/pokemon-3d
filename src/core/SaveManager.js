@@ -37,13 +37,13 @@ export class SaveManager {
   async init() {
     try {
       // Charger les sauvegardes depuis le serveur (Cache busting)
-      const saveResponse = await fetch(`http://localhost:3000/load-save?t=${Date.now()}`);
+      const saveResponse = await fetch(`/load-save?t=${Date.now()}`);
       if (saveResponse.ok) {
         this.allSaves = await saveResponse.json();
       }
 
       const pokemonResponse = await fetch(
-        `http://localhost:3000/load-mypokemon?t=${Date.now()}`
+        `/load-mypokemon?t=${Date.now()}`
       );
       if (pokemonResponse.ok) {
         this.allMyPokemon = await pokemonResponse.json();
@@ -371,7 +371,7 @@ export class SaveManager {
       console.log(`[SaveManager] Pokemon à sauvegarder (Memory):`, Object.keys(this.myPokemon || {}));
       console.log(`[SaveManager] Pokemon à sauvegarder (Global):`, Object.keys(this.allMyPokemon[key] || {}));
 
-      const response = await fetch("http://localhost:3000/save-game", {
+      const response = await fetch("/save-game", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

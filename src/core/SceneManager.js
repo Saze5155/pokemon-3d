@@ -666,7 +666,6 @@ export class SceneManager {
       destPos.add(offset);
       destPos.y = 1.6;
 
-      console.log("📍 Position destination:", destPos.x.toFixed(2), destPos.y.toFixed(2), destPos.z.toFixed(2));
 
       camera.position.copy(destPos);
       camera.rotation.set(0, destRot + Math.PI, 0);
@@ -842,17 +841,9 @@ export class SceneManager {
 
     const hits = raycaster.intersectObjects(flanges, true);
 
-    console.log(
-      "Raycast hits:",
-      hits.length,
-      "direction:",
-      direction,
-      "distance:",
-      distance
-    );
+   
 
     if (hits.length > 0) {
-      console.log("ðŸ›‘ FLANGE HIT Ã  distance:", hits[0].distance);
       return true;
     }
 

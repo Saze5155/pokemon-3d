@@ -39,7 +39,7 @@ export class WorldManager {
    */
   async loadWorldMap() {
     try {
-      const response = await fetch("http://localhost:3000/load-worldmap");
+      const response = await fetch("/load-worldmap");
       this.worldMapData = await response.json();
 
       if (this.worldMapData && this.worldMapData.zones) {

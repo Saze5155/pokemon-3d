@@ -286,14 +286,14 @@ export class WorldMapEditor {
 
   async loadAvailableScenes() {
     try {
-      const res = await fetch("http://localhost:3000/list-scenes");
+      const res = await fetch("/list-scenes");
       const data = await res.json();
       this.availableScenes = [];
 
       for (const sceneName of data.scenes || []) {
         try {
           const sceneRes = await fetch(
-            `http://localhost:3000/load-scene/${sceneName}`
+            `/load-scene/${sceneName}`
           );
           const sceneData = await sceneRes.json();
           if (sceneData) {
@@ -1270,7 +1270,7 @@ export class WorldMapEditor {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/save-worldmap", {
+      const res = await fetch("/save-worldmap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(worldMapData),
@@ -1290,7 +1290,7 @@ export class WorldMapEditor {
 
   async load() {
     try {
-      const res = await fetch("http://localhost:3000/load-worldmap");
+      const res = await fetch("/load-worldmap");
       const data = await res.json();
 
       if (data && data.zones) {
