@@ -803,6 +803,7 @@ export class SaveManager {
         niveau: level,
         date: new Date().toISOString(),
       },
+      name: (this.pokemonDatabase && this.pokemonDatabase.find(p => p.id == speciesId)?.nom) || "Pokémon " + speciesId,
     };
 
     // Initialiser les PP
@@ -974,7 +975,50 @@ export class SaveManager {
    * Récupère un Pokémon par son ID unique
    */
   getPokemon(uniqueId) {
-    return this.myPokemon[uniqueId] || null;
+    const p = this.myPokemon[uniqueId] || this.myPokemon[String(uniqueId)] || null;
+    if (p) {
+        // Auto-repair name if missing or generic
+        if ((!p.name || p.name.startsWith("Pokémon ") || p.name === "???") && this.pokemonDatabase) {
+             const base = this.pokemonDatabase.find(db => db.id == p.speciesId);
+             if (base && base.nom) {
+                 p.name = base.nom;
+                 console.log(`[SaveManager] Nom réparé pour ${uniqueId}: ${p.name}`);
+             }
+        }
+    }
+    return p;
+  }
+
+  /**
+   * Trouve les pré-évolutions d'une espèce (pour le Move Relearner)
+   * Retourne [id_base, id_intermediaire] etc.
+   */
+  getPreEvolutions(speciesId) {
+      if (!this.pokemonDatabase) return [];
+      
+      const ancestors = [];
+      let currentId = speciesId;
+      let found = true;
+      
+      // Sécurité anti-boucle
+      let attempts = 0;
+      
+      while(found && attempts < 10) {
+          found = false;
+          attempts++;
+          
+          // Chercher qui évolue vers currentId
+          // C'est lourd (scan tout le tableau), mais ça va pour une action UI rare
+          for (const p of this.pokemonDatabase) {
+              if (p.evolution && p.evolution.vers == currentId) {
+                  ancestors.unshift(p.id); // Ajouter au début (ordre chrono)
+                  currentId = p.id;
+                  found = true;
+                  break; 
+              }
+          }
+      }
+      return ancestors;
   }
 
   /**
@@ -993,11 +1037,16 @@ export class SaveManager {
   addToTeam(uniqueId) {
     if (!this.saveData) return false;
 
-    // Trouver un slot libre
-    const freeSlot = this.saveData.equipe.findIndex((slot) => slot === null);
+    // Trouver un slot libre (soit null, soit nouvelle case si < 6)
+    let freeSlot = this.saveData.equipe.findIndex((slot) => slot === null);
+    
+    // Si pas de trou mais que l'équipe n'est pas complète, on prend la suite
+    if (freeSlot === -1 && this.saveData.equipe.length < 6) {
+        freeSlot = this.saveData.equipe.length;
+    }
 
     if (freeSlot === -1) {
-      // Équipe pleine, envoyer au PC
+      // Équipe pleine (6 Pokémon et aucun slot null), envoyer au PC
       this.addToPC(uniqueId);
       return false;
     }
@@ -1016,7 +1065,8 @@ export class SaveManager {
   removeFromTeam(uniqueId) {
     if (!this.saveData) return false;
 
-    const index = this.saveData.equipe.indexOf(uniqueId);
+    // Trouver l'index (support string/int mixed)
+    const index = this.saveData.equipe.findIndex(id => id == uniqueId);
     if (index === -1) return false;
 
     // Vérifier qu'on garde au moins 1 Pokémon
@@ -1029,6 +1079,7 @@ export class SaveManager {
     }
 
     this.saveData.equipe[index] = null;
+    console.log(`[SaveManager] Pokemon ${uniqueId} retiré de l'équipe (Index: ${index})`);
     return true;
   }
 
@@ -1050,9 +1101,12 @@ export class SaveManager {
   removeFromPC(uniqueId) {
     if (!this.saveData) return;
 
-    const index = this.saveData.pc.indexOf(uniqueId);
+    const index = this.saveData.pc.findIndex(id => id == uniqueId);
     if (index !== -1) {
       this.saveData.pc.splice(index, 1);
+      console.log(`[SaveManager] Pokemon ${uniqueId} retiré du PC (Index: ${index})`);
+    } else {
+      console.warn(`[SaveManager] ECHEC suppression PC: ID ${uniqueId} non trouvé`);
     }
   }
 
@@ -1095,6 +1149,7 @@ export class SaveManager {
     team.forEach((pokemon) => {
       // Restaurer les PV
       pokemon.stats.hp = pokemon.stats.hpMax;
+      pokemon.hp = pokemon.stats.hpMax; // ✅ SYNC UI
 
       // Restaurer les PP
       pokemon.ppActuels = [...pokemon.ppMax];

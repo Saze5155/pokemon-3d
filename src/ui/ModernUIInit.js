@@ -9,6 +9,9 @@ import { ModernHUD } from './ModernHUD.js';
 import { TutorialSystem } from './TutorialSystem.js';
 import { ModernTeamUI } from './ModernTeamUI.js';
 import { ModernBagUI } from './ModernBagUI.js';
+import { ModernStorageUI } from './ModernStorageUI.js';
+import { ModernSettingsUI } from './ModernSettingsUI.js';
+import { ModernPokedexUI } from './ModernPokedexUI.js';
 
 /**
  * Initialise tous les systèmes UI modernes
@@ -61,23 +64,40 @@ export function initModernUI(game) {
   // 5. Connecter les événements de mise à jour
   setupUIUpdates(game);
   
-  // 6. Initialiser Team et Bag UIs
+  // 6. Initialiser Team, Bag et Storage UIs
   game.modernTeamUI = new ModernTeamUI(ui);
   game.modernBagUI = new ModernBagUI(ui);
-  console.log('✅ ModernTeamUI et ModernBagUI initialisés');
+  game.modernStorageUI = new ModernStorageUI(ui);
+  game.modernSettingsUI = new ModernSettingsUI(ui);
+  game.modernPokedexUI = new ModernPokedexUI(ui);
+  console.log('✅ All Modern UIs initialized');
 
   // Override de ui.openMenu
   const originalOpenMenu = ui.openMenu.bind(ui);
   ui.openMenu = function(menuName) {
-    // Si c'est team ou bag, utiliser l'interface moderne
     if (menuName === 'team') {
         game.modernTeamUI.show();
-        // Optionnel : fermer les autres menus si besoin
     } else if (menuName === 'bag') {
         game.modernBagUI.show();
+    } else if (menuName === 'storage') {
+        game.modernStorageUI.show();
+    } else if (menuName === 'settings') {
+        game.modernSettingsUI.show();
+    } else if (menuName === 'pokedex') {
+        game.modernPokedexUI.show();
     } else {
         originalOpenMenu(menuName);
     }
+  };
+
+  // Override de ui.showPC pour utiliser la nouvelle interface
+  ui.showPC = function() {
+      if (game.modernStorageUI) {
+          game.modernStorageUI.show();
+      } else {
+          // Fallback old PC if needed, but we replace it
+          console.warn("ModernStorageUI not ready");
+      }
   };
   
   // Override de ui.closeAllMenus pour inclure les nouveaux menus
@@ -86,6 +106,9 @@ export function initModernUI(game) {
       // Fermer les menus modernes
       if (game.modernTeamUI) game.modernTeamUI.hide();
       if (game.modernBagUI) game.modernBagUI.hide();
+      if (game.modernStorageUI) game.modernStorageUI.hide();
+      if (game.modernSettingsUI) game.modernSettingsUI.hide();
+      if (game.modernPokedexUI) game.modernPokedexUI.hide();
       if (game.modernHUD) game.modernHUD.closeAllMenus();
       
       originalCloseAllMenus();

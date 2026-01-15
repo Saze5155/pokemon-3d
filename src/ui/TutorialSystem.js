@@ -143,6 +143,14 @@ Quand les PV tombent à <span class="highlight">0</span>, le Pokémon est K.O. e
             tip: 'Utilise des Potions pour soigner tes Pokémon !'
           },
           {
+            title: 'Capture Rapide',
+            content: `Tu n'es pas obligé d'ouvrir le sac pour capturer !
+            
+Appuie sur <kbd>A</kbd> ou <kbd>Clic Gauche</kbd> pour passer en **mode visée**.
+Relâche pour lancer ta Pokéball.`,
+            tip: 'Vise bien le Pokémon pour réussir ton tir !'
+          },
+          {
             title: 'L\'Expérience',
             content: `Après avoir vaincu un Pokémon ennemi, ton Pokémon gagne de l'<span class="highlight">expérience</span>.
 
@@ -206,7 +214,7 @@ Ton objectif : <span class="highlight">tous les attraper</span> pour compléter 
           {
             title: 'Ton Équipe',
             content: `Tu peux avoir <span class="highlight">jusqu'à 6 Pokémon</span> dans ton équipe.
-
+            
 Le premier de la liste sera envoyé en premier au combat.`,
             tip: 'Réorganise ton équipe selon tes stratégies !'
           },
@@ -224,17 +232,47 @@ Le premier de la liste sera envoyé en premier au combat.`,
           {
             title: 'Gérer les Attaques',
             content: `Clique sur un Pokémon dans l'écran Équipe pour voir ses <span class="highlight">attaques</span>.
-
+            
 Tu peux <span class="highlight">échanger</span> des attaques entre les 4 slots actifs et les attaques en réserve.`,
             tip: 'Un Pokémon apprend de nouvelles attaques en montant de niveau.'
           },
           {
             title: 'Le Stockage PC',
             content: `Si ton équipe est pleine, les Pokémon capturés vont dans le <span class="highlight">PC</span>.
-
+            
 Accède au Stockage via le Pokégear pour gérer tes Pokémon stockés.`,
             tip: 'Tu peux déposer et retirer des Pokémon à tout moment.'
           }
+        ]
+      },
+
+      // ==================== TUTORIEL SAC ====================
+      bag: {
+        id: 'bag',
+        title: 'Ton Sac à Dos',
+        icon: 'backpack',
+        subtitle: 'Tes objets',
+        canSkip: true,
+        steps: [
+            {
+                title: 'Inventaire',
+                content: `Ton sac contient tous tes objets, triés par <span class="highlight">catégorie</span>.
+                
+Utilise les onglets à gauche pour naviguer.`,
+                items: [
+                   { name: 'Objets', desc: 'Objets divers et évolutions' },
+                   { name: 'Soins', desc: 'Potions et remèdes' },
+                   { name: 'Pokéballs', desc: 'Pour la capture' },
+                   { name: 'Rares', desc: 'Objets clés importants' }
+                ]
+            },
+            {
+                title: 'Utiliser un objet',
+                content: `Clique sur un objet pour voir sa description.
+                
+Le bouton <span class="highlight">UTILISER</span> permet de s'en servir sur un Pokémon (Potion, Évolution...)`,
+                tip: 'Certains objets ne peuvent être utilisés qu\'en combat.'
+            }
         ]
       },
 

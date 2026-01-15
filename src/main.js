@@ -12,7 +12,7 @@ import { WorldManager } from "./core/WorldManager.js";
 import { XPManager } from "./core/XPManager.js";
 import { NPCManager } from "./entities/NPCManager.js";
 import { PokemonManager } from "./entities/PokemonManager.js";
-import { DialogueSystem } from "./ui/DialogueSystem.js";
+import { ModernDialogueSystem } from "./ui/ModernDialogueSystem.js";
 import { UIManager } from "./ui/UI.js";
 import { Portal } from "./world/Portal.js";
 import { initModernUI, hookCombatUI } from "./ui/ModernUIInit.js";
@@ -425,6 +425,13 @@ class PokemonGame {
       // Marquer la position de départ pour le chargement
       this.startPosition = pos;
     }
+
+    // TENTER D'AFFICHER LE TUTORIEL DE BIENVENUE
+    setTimeout(() => {
+        if (this.ui && this.ui.tutorialSystem) {
+             this.ui.tutorialSystem.showIfNotSeen('welcome');
+        }
+    }, 2000); // Petit délai pour laisser le monde charger
   }
   syncNPCFlagsFromSave() {
     if (!this.saveManager || !this.npcManager) return;
@@ -1107,7 +1114,7 @@ class PokemonGame {
         await this.npcManager.loadPNJDatabase();
     }
 
-    this.dialogueSystem = new DialogueSystem(this.ui);
+    this.dialogueSystem = new ModernDialogueSystem(this.ui);
 
     // Charger la base de données des PNJ (si pas déjà fait)
     if (Object.keys(this.npcManager.pnjDatabase).length === 0) {

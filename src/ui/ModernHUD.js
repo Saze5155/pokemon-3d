@@ -59,98 +59,31 @@ export class ModernHUD {
     this.hud = document.createElement('div');
     this.hud.id = 'modern-hud';
     this.hud.className = 'modern-ui';
-    this.hud.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 100;
-    `;
+    // Styles gérés par CSS (#modern-hud)
 
     // Info joueur (haut gauche)
     this.playerInfo = document.createElement('div');
     this.playerInfo.id = 'modern-player-info';
-    this.playerInfo.style.cssText = `
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85));
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      min-width: 200px;
-      pointer-events: auto;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    `;
+    // Styles gérés par CSS (#modern-player-info)
+    
     this.playerInfo.innerHTML = `
-      <div id="modern-player-name" style="
-        font-size: 16px;
-        font-weight: 600;
-        color: #f8fafc;
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      ">
-        <span style="width: 8px; height: 8px; background: #10b981; border-radius: 999px; box-shadow: 0 0 8px #10b981;"></span>
+      <div id="modern-player-name">
+        <span style="width: 10px; height: 10px; background: #10b981; border: 2px solid #fff;"></span>
         DRESSEUR
       </div>
-      <div id="modern-player-money" style="
-        font-size: 14px;
-        color: #f59e0b;
-        font-weight: 600;
-        font-family: 'JetBrains Mono', monospace;
-      ">3000 ¥</div>
+      <div id="modern-player-money">3000 ¥</div>
     `;
     this.hud.appendChild(this.playerInfo);
 
     // Indice d'interaction (bas centre)
     this.interactionHint = document.createElement('div');
     this.interactionHint.id = 'modern-interaction-hint';
-    this.interactionHint.style.cssText = `
-      position: absolute;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 14px 24px;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      border-radius: 999px;
-      color: #f8fafc;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      display: none;
-      box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-      pointer-events: none;
-      animation: hintPulse 2s ease-in-out infinite;
-    `;
-    this.interactionHint.innerHTML = `
-      <span style="margin-right: 8px;">Appuie sur</span>
-      <kbd style="
-        background: rgba(99, 102, 241, 0.3);
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-family: 'JetBrains Mono', monospace;
-        font-weight: 600;
-      ">E</kbd>
-    `;
+    // Styles gérés par CSS (#modern-interaction-hint)
 
-    // Ajouter l'animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes hintPulse {
-        0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
-        50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.4); }
-      }
+    this.interactionHint.innerHTML = `
+      <span style="margin-right: 8px;">INTERAGIR :</span>
+      <kbd style="border: 2px solid #fff; padding: 2px 6px;">E</kbd>
     `;
-    document.head.appendChild(style);
 
     this.hud.appendChild(this.interactionHint);
 
@@ -170,34 +103,13 @@ export class ModernHUD {
     // Créer le nouveau Pokégear
     this.pokegear = document.createElement('div');
     this.pokegear.id = 'modern-pokegear';
-    this.pokegear.className = 'modern-ui';
-    this.pokegear.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      z-index: 200;
-      pointer-events: auto;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    `;
+    // Styles gérés par CSS (#modern-pokegear)
 
     // Bouton toggle
     this.pokegearToggle = document.createElement('button');
     this.pokegearToggle.id = 'pokegear-toggle';
-    this.pokegearToggle.style.cssText = `
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
-      border: none;
-      border-radius: 999px;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    `;
+    // Styles gérés par CSS (#pokegear-toggle)
+    
     this.pokegearToggle.innerHTML = '<span class="material-symbols-rounded">smartphone</span>';
     this.pokegearToggle.title = 'Pokégear (TAB)';
     this.pokegear.appendChild(this.pokegearToggle);
@@ -205,38 +117,21 @@ export class ModernHUD {
     // Menu du Pokégear
     this.pokegearMenu = document.createElement('div');
     this.pokegearMenu.id = 'pokegear-menu';
-    this.pokegearMenu.style.cssText = `
-      position: absolute;
-      bottom: 70px;
-      left: 0;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 16px;
-      min-width: 240px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(20px) scale(0.95);
-      transition: all 0.25s ease;
-    `;
+    // Styles gérés par CSS (#pokegear-menu)
 
     // Horloge
     this.pokegearMenu.innerHTML = `
       <div id="pokegear-time" style="
         text-align: center;
-        padding: 16px;
-        margin-bottom: 12px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 24px;
-        font-weight: 600;
-        color: #f8fafc;
+        padding: 5px;
+        margin-bottom: 10px;
+        background: #000;
+        border: 2px solid #fff;
+        font-family: 'VT323', monospace;
+        font-size: 32px;
+        color: var(--theme-blue);
       ">12:00</div>
-      <div id="pokegear-buttons" style="display: flex; flex-direction: column; gap: 8px;">
+      <div id="pokegear-buttons">
         <!-- Boutons ajoutés dynamiquement -->
       </div>
     `;
@@ -249,16 +144,6 @@ export class ModernHUD {
 
     // Events
     this.pokegearToggle.addEventListener('click', () => this.togglePokegear());
-
-    // Hover effect
-    this.pokegearToggle.addEventListener('mouseenter', () => {
-      this.pokegearToggle.style.transform = 'scale(1.1)';
-      this.pokegearToggle.style.boxShadow = '0 10px 50px rgba(99, 102, 241, 0.6)';
-    });
-    this.pokegearToggle.addEventListener('mouseleave', () => {
-      this.pokegearToggle.style.transform = 'scale(1)';
-      this.pokegearToggle.style.boxShadow = '0 10px 40px rgba(99, 102, 241, 0.4)';
-    });
   }
 
   /**
@@ -278,37 +163,11 @@ export class ModernHUD {
     ];
 
     container.innerHTML = buttons.map(btn => {
-      const lockedStyle = btn.locked ? 'opacity: 0.4; cursor: not-allowed;' : '';
-      const specialStyle = btn.special === 'save' ? `
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
-        border-color: rgba(16, 185, 129, 0.4);
-        color: #10b981;
-      ` : '';
-
       return `
-        <button class="pokegear-btn" data-menu="${btn.id}" ${btn.locked ? 'disabled' : ''} style="
-          width: 100%;
-          padding: 14px 16px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-          color: #f8fafc;
-          font-family: inherit;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.25s ease;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          ${lockedStyle}
-          ${specialStyle}
-        ">
-          <span class="material-symbols-rounded" style="font-size: 20px;">${btn.icon}</span>
+        <button class="pokegear-btn" data-menu="${btn.id}" ${btn.locked ? 'disabled' : ''}>
+          <span class="material-symbols-rounded">${btn.icon}</span>
           <span>${btn.label}</span>
-          ${btn.locked ? '<span class="material-symbols-rounded" style="margin-left: auto; font-size: 16px;">lock</span>' : ''}
+          ${btn.locked ? '<span class="material-symbols-rounded" style="margin-left: auto;">lock</span>' : ''}
         </button>
       `;
     }).join('');
@@ -323,24 +182,7 @@ export class ModernHUD {
         }
         this.handleMenuAction(menu);
       });
-
-      // Hover effect
-      btn.addEventListener('mouseenter', () => {
-        if (!btn.disabled) {
-          btn.style.background = 'rgba(99, 102, 241, 0.2)';
-          btn.style.borderColor = '#6366f1';
-          btn.style.transform = 'translateX(4px)';
-        }
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.background = btn.dataset.menu === 'save'
-          ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))'
-          : 'rgba(255, 255, 255, 0.05)';
-        btn.style.borderColor = btn.dataset.menu === 'save'
-          ? 'rgba(16, 185, 129, 0.4)'
-          : 'rgba(255, 255, 255, 0.1)';
-        btn.style.transform = 'translateX(0)';
-      });
+      // Hover effects removed (handled by CSS)
     });
   }
 
@@ -351,19 +193,11 @@ export class ModernHUD {
     this.pokegearVisible = !this.pokegearVisible;
 
     if (this.pokegearVisible) {
-      this.pokegearMenu.style.opacity = '1';
-      this.pokegearMenu.style.visibility = 'visible';
-      this.pokegearMenu.style.transform = 'translateY(0) scale(1)';
-      this.pokegearToggle.style.background = 'linear-gradient(135deg, #ec4899, #db2777)';
+      this.pokegearMenu.classList.add('visible');
       this.pokegearToggle.innerHTML = '<span class="material-symbols-rounded">close</span>';
     } else {
-      this.pokegearMenu.style.opacity = '0';
-      this.pokegearMenu.style.visibility = 'hidden';
-      this.pokegearMenu.style.transform = 'translateY(20px) scale(0.95)';
-      this.pokegearToggle.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
+      this.pokegearMenu.classList.remove('visible');
       this.pokegearToggle.innerHTML = '<span class="material-symbols-rounded">smartphone</span>';
-
-      // Fermer les menus ouverts
       this.closeAllMenus();
     }
   }
@@ -467,7 +301,7 @@ export class ModernHUD {
    * Ferme tous les menus
    */
   closeAllMenus() {
-    document.querySelectorAll('.menu-screen').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.menu-screen, .modern-menu-overlay').forEach(s => s.classList.remove('visible'));
     this.currentMenu = null;
   }
 

@@ -60,28 +60,32 @@ export class ModernDialogueSystem {
     this.container.className = "modern-dialogue-container modern-ui";
     this.container.style.display = "none";
 
+    // NAME TAG (Flottant au-dessus)
+    this.nameTag = document.createElement("div");
+    this.nameTag.className = "modern-dialogue-nametag";
+    this.nameTag.id = "dialogue-name-tag";
+    this.nameTag.innerText = "NPC";
+    this.container.appendChild(this.nameTag);
+
     // Boîte de dialogue
     this.dialogueBox = document.createElement("div");
     this.dialogueBox.className = "modern-dialogue-box";
 
-    // En-tête avec portrait et nom
-    this.header = document.createElement("div");
-    this.header.className = "modern-dialogue-header";
-    this.header.innerHTML = `
-      <div class="modern-dialogue-portrait" id="dialogue-portrait">👤</div>
-      <div>
-        <div class="modern-dialogue-name" id="dialogue-name">NPC</div>
-        <div class="modern-dialogue-role" id="dialogue-role">Habitant</div>
-      </div>
-    `;
-    this.dialogueBox.appendChild(this.header);
-
     // Contenu du dialogue
     this.contentArea = document.createElement("div");
     this.contentArea.className = "modern-dialogue-content";
+    
+    // Portrait (Maintenant à gauche du texte)
+    this.portraitEl = document.createElement("div");
+    this.portraitEl.className = "modern-dialogue-portrait";
+    this.portraitEl.id = "dialogue-portrait";
+    this.contentArea.appendChild(this.portraitEl);
+
+    // Texte
     this.textContainer = document.createElement("div");
     this.textContainer.className = "modern-dialogue-text";
     this.contentArea.appendChild(this.textContainer);
+    
     this.dialogueBox.appendChild(this.contentArea);
 
     // Conteneur de choix
@@ -90,28 +94,21 @@ export class ModernDialogueSystem {
     this.choicesContainer.style.display = "none";
     this.dialogueBox.appendChild(this.choicesContainer);
 
-    // Footer avec indice et indicateur
-    this.footer = document.createElement("div");
-    this.footer.className = "modern-dialogue-footer";
-    this.footer.innerHTML = `
-      <div class="modern-dialogue-hint">
-        <span>Appuie sur</span>
-        <kbd>E</kbd>
-        <kbd>Espace</kbd>
-        <span>pour continuer</span>
-      </div>
-      <div class="modern-dialogue-indicator" id="dialogue-indicator">▼</div>
-    `;
-    this.dialogueBox.appendChild(this.footer);
+    // Indicateur de suite (Flèche rouge)
+    this.indicatorEl = document.createElement("div");
+    this.indicatorEl.className = "modern-dialogue-indicator";
+    this.indicatorEl.id = "dialogue-indicator";
+    this.indicatorEl.innerHTML = "▼";
+    this.dialogueBox.appendChild(this.indicatorEl);
+
+    // Hint (Espace/E)
+    this.hintEl = document.createElement("div");
+    this.hintEl.className = "modern-dialogue-hint-text";
+    this.hintEl.innerText = "PRESS E";
+    this.dialogueBox.appendChild(this.hintEl);
 
     this.container.appendChild(this.dialogueBox);
     document.body.appendChild(this.container);
-
-    // Références aux éléments
-    this.portraitEl = document.getElementById("dialogue-portrait");
-    this.nameEl = document.getElementById("dialogue-name");
-    this.roleEl = document.getElementById("dialogue-role");
-    this.indicatorEl = document.getElementById("dialogue-indicator");
   }
 
   /**
@@ -188,9 +185,13 @@ export class ModernDialogueSystem {
     const npcInfo = this.getNPCInfo(npc);
 
     // Mettre à jour l'en-tête
-    this.portraitEl.innerHTML = `<span class="material-symbols-rounded">${npcInfo.icon}</span>`;
-    this.nameEl.textContent = npc.nom || "???";
-    this.roleEl.textContent = npcInfo.role;
+    if (this.nameTag) {
+        this.nameTag.textContent = npc.nom || "???";
+    }
+    
+    if (this.portraitEl) {
+        this.portraitEl.innerHTML = `<span class="material-symbols-rounded">${npcInfo.icon}</span>`;
+    }
 
     // Afficher
     this.container.style.display = "block";

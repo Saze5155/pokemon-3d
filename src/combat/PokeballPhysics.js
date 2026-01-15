@@ -236,14 +236,14 @@ export class PokeballPhysics {
       // Cela évite de lancer la pokéball lors des clics sur les menus UI
       const isPointerLocked = this.inputManager?.isLocked() || document.pointerLockElement !== null;
 
-      if ((e.button === 0 || e.button === 2) && isPointerLocked) {
+      if (e.button === 0 && isPointerLocked) {
         // e.preventDefault(); // Optionnel selon l'effet sur le PointerLock
         this.startCharging();
       }
     });
 
     document.addEventListener("mouseup", (e) => {
-      if ((e.button === 0 || e.button === 2) && this.isCharging) {
+      if (e.button === 0 && this.isCharging) {
         // e.preventDefault();
         this.throwPokeball();
       }
@@ -270,8 +270,14 @@ export class PokeballPhysics {
   }
 
   startCharging() {
+    // ✅ FIX: Anti-spam Cooldown
+    const now = Date.now();
+    if (this.lastThrowTime && now - this.lastThrowTime < 500) return;
+
+    if (this.isCharging) return;
+
     this.isCharging = true;
-    this.chargeStartTime = Date.now();
+    this.chargeStartTime = now;
     this.aimIndicator.visible = true;
     console.log("Charging pokéball throw...");
   }
@@ -351,6 +357,8 @@ export class PokeballPhysics {
     } else {
       console.log(`⚪ Lancer CAPTURE (pokéball vide)`);
     }
+    
+    this.lastThrowTime = Date.now();
   }
 
   createPokeballEntity(position, direction, force, pokemon) {
@@ -420,6 +428,10 @@ export class PokeballPhysics {
       pokeball.mesh.rotation.x += pokeball.angularVelocity.x * deltaTime;
       pokeball.mesh.rotation.y += pokeball.angularVelocity.y * deltaTime;
       pokeball.mesh.rotation.z += pokeball.angularVelocity.z * deltaTime;
+
+      // ✅ FIX: Suppression du délai de collision qui causait un bug "vol infini"
+      // (Car le continue sautait l'incrémentation de lifetime)
+
 
       // ✅ Vérifier collision Pokémon EN PREMIER (avant le sol)
       if (this.checkPokemonCollision(pokeball)) {
@@ -645,13 +657,23 @@ export class PokeballPhysics {
       wildPokemon.inCombat = false;
 
       // ✅ FIX: Trouver le bon ID dans la base de données
-      const speciesId = wildPokemon.id || wildPokemon.speciesId || wildPokemon.pokemonData?.id;
+      const speciesId = wildPokemon.speciesId || wildPokemon.id || wildPokemon.pokemonData?.id;
       console.log(`[PokeballPhysics] Tentative capture - SpeciesID trouvé: ${speciesId}`, wildPokemon);
 
       // Ajouter à l'équipe
       // ✅ FIX: Utilisation directe du SaveManager (plus fiable que le callback)
-      if (this.saveManager) {
-          console.log(`[PokeballPhysics] Sauvegarde via SaveManager direct...`);
+      // ✅ FIX: Prioriser le callback externe (c'est lui qui gère le flux de fin de combat dans main.js)
+      if (this.onCaptureComplete) {
+          console.log(`[PokeballPhysics] Délégation de la capture au callback main.js`);
+          this.onCaptureComplete({
+              id: speciesId,
+              species: wildPokemon.species,
+              level: wildPokemon.level
+          });
+      }
+      // Fallback: Gestion interne si pas de callback configuré (ex: hors main.js)
+      else if (this.saveManager) {
+          console.log(`[PokeballPhysics] Sauvegarde via SaveManager interne (Fallback)`);
           
           const newPokemonData = this.saveManager.createPokemon(speciesId, wildPokemon.level);
           
@@ -660,18 +682,14 @@ export class PokeballPhysics {
                this.uiManager.showNotification(`${wildPokemon.species} a été ${added ? "ajouté à l'équipe" : "envoyé au PC"} !`);
                
                this.saveManager.save().then(() => console.log("💾 Sauvegarde terminée"));
-               this.uiManager.syncFromSaveManager(); // ✅ FIX: refresh UI
-               // this.uiManager.updateTeamUI(); // Remove if not existing, syncFromSaveManager covers it
+               this.uiManager.syncFromSaveManager();
           }
-      } else if (this.onCaptureComplete) {
-         // Fallback ancien système
-        this.onCaptureComplete({
-            id: speciesId,
-            species: wildPokemon.species,
-            level: wildPokemon.level
-        });
+           // Terminer le combat via callback générique si défini
+          if (this.onCombatEnd) {
+            this.onCombatEnd("capture");
+          }
       } else {
-        console.warn("⚠️ Ni SaveManager ni Callback défini dans PokeballPhysics !");
+        console.warn("⚠️ Ni Callback ni SaveManager défini dans PokeballPhysics !");
       }
 
       // Retirer le Pokémon de la scène
@@ -685,9 +703,10 @@ export class PokeballPhysics {
         this.pokemonManager.pokemons.splice(index, 1);
       }
 
-      // Terminer le combat via callback
-      if (this.onCombatEnd) {
-        this.onCombatEnd("capture");
+      // ❌ FIX: Ne PAS appeler onCombatEnd ici si onCaptureComplete a été appelé
+      // Cela créerait un double appel de fin de combat
+      if (!this.onCaptureComplete && this.onCombatEnd) {
+          this.onCombatEnd("capture");
       }
 
       // Message de succès

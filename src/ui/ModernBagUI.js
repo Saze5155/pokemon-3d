@@ -12,7 +12,7 @@ export class ModernBagUI {
     this.categories = {
       items: { icon: 'backpack', label: 'Objets' },
       medicine: { icon: 'medication', label: 'Soins' },
-      balls: { icon: 'catching_pokemon', label: 'Pokéballs' },
+      balls: { icon: 'sports_baseball', label: 'Pokéballs' },
       key: { icon: 'key', label: 'Objets Rares' }
     };
     
@@ -22,11 +22,11 @@ export class ModernBagUI {
   createUI() {
     this.container = document.createElement('div');
     this.container.id = 'modern-bag-ui';
-    this.container.className = 'menu-screen modern-ui';
+    this.container.className = 'modern-menu-overlay modern-ui';
     this.container.style.display = 'none';
     
     this.container.innerHTML = `
-      <div class="modern-menu-container glass-dark">
+      <div class="modern-menu-container theme-yellow">
         <div class="modern-menu-header">
           <div class="modern-menu-title">
             <span class="material-symbols-rounded">backpack</span>
@@ -99,6 +99,10 @@ export class ModernBagUI {
     if (document.exitPointerLock) {
         document.exitPointerLock();
     }
+
+    if (this.ui.tutorialSystem) {
+        this.ui.tutorialSystem.showIfNotSeen('bag');
+    }
   }
 
   hide() {
@@ -151,7 +155,7 @@ export class ModernBagUI {
       card.innerHTML = `
         <div class="modern-item-icon" style="${this.ui.getItemSpriteStyle(config.spriteIndex)} transform: scale(1);"></div>
         <div class="modern-item-info">
-          <div class="modern-item-name">${config.name}</div>
+          <div class="modern-item-name">${config ? config.name : itemKey}</div>
           <div class="modern-item-count">x${count}</div>
         </div>
       `;

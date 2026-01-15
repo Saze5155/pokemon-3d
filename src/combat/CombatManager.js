@@ -99,6 +99,15 @@ export class CombatManager {
     this.savedCameraPosition = this.camera.position.clone();
     this.savedCameraRotation = this.camera.rotation.clone();
 
+    // Tuto Combat
+    if (this.uiManager.tutorialSystem) {
+         if (trainer) {
+             this.uiManager.tutorialSystem.showIfNotSeen('trainers');
+         } else {
+             this.uiManager.tutorialSystem.showIfNotSeen('combat');
+         }
+    }
+
     // Positionner les Pokémon face à face
     this.setupCombatPositions();
 
@@ -1200,6 +1209,16 @@ export class CombatManager {
     if (combatUI) {
       combatUI.remove();
     }
+    
+    // FIX: Retirer aussi l'UI moderne (ModernCombatUI)
+    const modernCombatUI = document.getElementById("modern-combat-ui");
+    if (modernCombatUI) {
+      if (typeof modernCombatUI.timeoutId !== 'undefined') clearTimeout(modernCombatUI.timeoutId);
+      modernCombatUI.remove();
+    }
+    
+    // FIX: Retirer les infos flottantes (HP bars)
+    document.querySelectorAll('.combat-pokemon-info').forEach(el => el.remove());
     
     // Masquer le dialogue de combat
     if (this.uiManager) {

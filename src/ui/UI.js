@@ -8,6 +8,8 @@
  * - Sprites depuis spritesheets
  */
 
+import { TutorialSystem } from './TutorialSystem.js';
+
 export class UIManager {
   constructor() {
     this.watchVisible = false;
@@ -16,6 +18,9 @@ export class UIManager {
 
     // Référence au SaveManager (sera injectée)
     this.saveManager = null;
+    
+    // Système de tutoriels
+    this.tutorialSystem = new TutorialSystem(this);
 
     // Configuration des sprites
     this.spriteConfig = {

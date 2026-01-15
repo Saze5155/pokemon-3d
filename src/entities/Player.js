@@ -55,19 +55,7 @@ export class Player {
       }
     });
 
-    document.addEventListener("mousedown", (e) => {
-      if (e.button === 0) {
-        // Clic gauche
-        PokeballPhysics.instance.startCharging();
-      }
-    });
 
-    document.addEventListener("mouseup", (e) => {
-      if (e.button === 0) {
-        // Clic gauche
-        PokeballPhysics.instance.throwPokeball();
-      }
-    });
 
     document.addEventListener("keyup", (e) => {
       if (e.code === "KeyW") this.keys.z = false;

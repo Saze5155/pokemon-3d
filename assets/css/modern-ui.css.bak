@@ -1,0 +1,2175 @@
+/**
+ * Modern UI Design System - Pokemon 3D
+ * Glassmorphism, animations fluides, UX moderne
+ */
+
+/* ==================== VARIABLES CSS ==================== */
+:root {
+  /* Couleurs principales */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary: #ec4899;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+
+  /* Couleurs neutres */
+  --bg-dark: #0f172a;
+  --bg-darker: #020617;
+  --bg-card: rgba(30, 41, 59, 0.8);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Bordures et ombres */
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-accent: rgba(99, 102, 241, 0.5);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Rayons */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* ==================== FONTS ==================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ==================== RESET MODERNE ==================== */
+.modern-ui * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.modern-ui {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* ==================== GLASS MORPHISM ==================== */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-accent {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.1));
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-accent);
+}
+
+/* ==================== DIALOGUE BOX MODERNE ==================== */
+.modern-dialogue-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.modern-dialogue-box {
+  max-width: 800px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 0;
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(99, 102, 241, 0.15);
+  pointer-events: auto;
+  overflow: hidden;
+  animation: dialogueSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dialogueSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modern-dialogue-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), transparent);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modern-dialogue-portrait {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: center;
+  color: white; /* Force white icon */
+  box-shadow: var(--shadow-md), 0 0 20px rgba(99, 102, 241, 0.3);
+  flex-shrink: 0;
+}
+
+.modern-dialogue-portrait .material-symbols-rounded {
+  font-size: 32px;
+}
+
+.modern-dialogue-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modern-dialogue-role {
+  font-size: 11px;
+  color: var(--primary-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-dialogue-content {
+  padding: 20px 24px;
+  min-height: 80px;
+}
+
+.modern-dialogue-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.modern-dialogue-text .highlight {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.modern-dialogue-footer {
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.modern-dialogue-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modern-dialogue-hint kbd {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.modern-dialogue-indicator {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-light);
+  animation: bounceIndicator 1s ease-in-out infinite;
+}
+
+@keyframes bounceIndicator {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ==================== DIALOGUE CHOICES ==================== */
+.modern-dialogue-choices {
+  padding: 16px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modern-choice-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-choice-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transition: transform var(--transition-fast);
+}
+
+.modern-choice-btn:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(99, 102, 241, 0.1));
+  border-color: var(--primary);
+  transform: translateX(8px);
+  box-shadow: var(--shadow-glow);
+}
+
+.modern-choice-btn:hover::before {
+  transform: scaleY(1);
+}
+
+.modern-choice-btn.selected {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-color: var(--primary);
+  color: white;
+}
+
+/* ==================== TUTORIEL SYSTEM ==================== */
+.tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tutorial-container {
+  width: 90%;
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(99, 102, 241, 0.2);
+  overflow: hidden;
+  animation: tutorialPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tutorialPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.tutorial-header {
+  padding: 20px 24px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.2));
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tutorial-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.tutorial-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tutorial-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.tutorial-content {
+  padding: 24px;
+}
+
+.tutorial-step {
+  display: none;
+  animation: stepFadeIn 0.4s ease;
+}
+
+.tutorial-step.active {
+  display: block;
+}
+
+@keyframes stepFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.tutorial-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.tutorial-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--primary-light);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.tutorial-image {
+  width: 100%;
+  height: 200px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.tutorial-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  margin-top: 16px;
+}
+
+.tutorial-tip-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.tutorial-tip-text {
+  font-size: 13px;
+  color: var(--accent);
+  line-height: 1.6;
+}
+
+.tutorial-footer {
+  padding: 16px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tutorial-progress {
+  display: flex;
+  gap: 8px;
+}
+
+.tutorial-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--text-muted);
+  transition: all var(--transition-normal);
+}
+
+.tutorial-progress-dot.active {
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+}
+
+.tutorial-progress-dot.completed {
+  background: var(--success);
+}
+
+.tutorial-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* ==================== BOUTONS MODERNES ==================== */
+.modern-btn {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.modern-btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.modern-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.modern-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+.modern-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--text-muted);
+}
+
+.modern-btn-success {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.modern-btn-danger {
+  background: linear-gradient(135deg, var(--danger), #dc2626);
+  color: white;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+.modern-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ==================== HUD MODERNE ==================== */
+.modern-hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.modern-player-info {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85));
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  pointer-events: auto;
+}
+
+.modern-player-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modern-player-name::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px var(--success);
+}
+
+.modern-player-money {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ==================== POKEGEAR MODERNE ==================== */
+.modern-pokegear {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 200;
+  pointer-events: auto;
+}
+
+.modern-pokegear-toggle {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: none;
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(99, 102, 241, 0.4);
+  transition: all var(--transition-normal);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.modern-pokegear-toggle .material-symbols-rounded {
+  font-size: 28px; /* Slightly smaller to ensure it fits */
+  line-height: normal; /* Reset line-height */
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+
+.modern-pokegear-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(99, 102, 241, 0.6);
+}
+
+.modern-pokegear-toggle.active {
+  background: linear-gradient(135deg, var(--secondary), #db2777);
+}
+
+.modern-pokegear-menu {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  min-width: 220px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.95);
+  transition: all var(--transition-normal);
+}
+
+.modern-pokegear-menu.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.modern-pokegear-time {
+  text-align: center;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modern-pokegear-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modern-pokegear-btn {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-pokegear-btn:hover:not(.locked) {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.modern-pokegear-btn.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.modern-pokegear-btn.locked::after {
+  content: '🔒';
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.modern-pokegear-btn.save-btn {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+  border-color: rgba(16, 185, 129, 0.4);
+  color: var(--success);
+}
+
+.modern-pokegear-btn.save-btn:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.2));
+}
+
+.pokegear-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* ==================== COMBAT UI MODERNE ==================== */
+.modern-combat-ui {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 500;
+}
+
+.modern-combat-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.modern-combat-dialogue {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 16px 24px;
+  margin-bottom: -1px;
+}
+
+.modern-combat-dialogue-text {
+  font-size: 15px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.modern-combat-menu {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: 20px;
+}
+
+.modern-combat-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.modern-combat-btn {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: uppercase;
+}
+
+.modern-combat-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(99, 102, 241, 0.15));
+  border-color: var(--primary);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-glow);
+}
+
+.modern-combat-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.modern-combat-btn.attack {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.modern-combat-btn.attack:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.2));
+  border-color: var(--danger);
+}
+
+.combat-btn-icon {
+  font-size: 20px;
+}
+
+/* Moves Grid */
+.modern-moves-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.modern-move-btn {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+}
+
+.modern-move-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--primary);
+}
+
+.modern-move-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.modern-move-info {
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Type colors */
+.type-normal { color: #a8a878; }
+.type-fire { color: #f08030; }
+.type-water { color: #6890f0; }
+.type-grass { color: #78c850; }
+.type-electric { color: #f8d030; }
+.type-ice { color: #98d8d8; }
+.type-fighting { color: #c03028; }
+.type-poison { color: #a040a0; }
+.type-ground { color: #e0c068; }
+.type-flying { color: #a890f0; }
+.type-psychic { color: #f85888; }
+.type-bug { color: #a8b820; }
+.type-rock { color: #b8a038; }
+.type-ghost { color: #705898; }
+.type-dragon { color: #7038f8; }
+
+/* ==================== HP BARS MODERNES ==================== */
+.modern-hp-container {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-full);
+  padding: 3px;
+  overflow: hidden;
+}
+
+.modern-hp-bar {
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--success), #34d399);
+  transition: width 0.5s ease, background 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-hp-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+  border-radius: var(--radius-full) var(--radius-full) 0 0;
+}
+
+.modern-hp-bar.low {
+  background: linear-gradient(90deg, var(--warning), #fbbf24);
+}
+
+.modern-hp-bar.critical {
+  background: linear-gradient(90deg, var(--danger), #f87171);
+  animation: hpPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes hpPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ==================== TEAM SELECTOR MODERNE ==================== */
+.modern-team-selector {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 150;
+  pointer-events: auto;
+}
+
+.modern-team-slot {
+  width: 64px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85));
+  backdrop-filter: blur(8px);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.modern-team-slot:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+}
+
+.modern-team-slot.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  transform: translateY(-8px) scale(1.05);
+}
+
+.modern-team-slot.fainted {
+  opacity: 0.4;
+  filter: grayscale(0.5);
+}
+
+.team-slot-sprite {
+  width: 40px;
+  height: 32px;
+  image-rendering: pixelated;
+  margin-bottom: 4px;
+}
+
+.team-slot-name {
+  font-size: 8px;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.team-slot-hp {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.team-slot-hp-fill {
+  height: 100%;
+  background: var(--success);
+  transition: width 0.3s ease;
+}
+
+/* ==================== NOTIFICATIONS MODERNES ==================== */
+.modern-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  padding: 16px 28px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0;
+  animation: notificationSlideIn 0.4s ease forwards;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+@keyframes notificationSlideIn {
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.modern-notification.success {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.modern-notification.success::before {
+  content: '✓';
+  color: var(--success);
+  font-weight: bold;
+}
+
+.modern-notification.error {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.modern-notification.error::before {
+  content: '✕';
+  color: var(--danger);
+  font-weight: bold;
+}
+
+.modern-notification.info {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.modern-notification.info::before {
+  content: 'ℹ';
+  color: var(--primary);
+}
+
+/* ==================== MENU SCREENS MODERNES ==================== */
+.modern-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.modern-menu-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modern-menu-screen {
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform: scale(0.9) translateY(20px);
+  transition: all var(--transition-slow);
+}
+
+.modern-menu-overlay.visible .modern-menu-screen {
+  transform: scale(1) translateY(0);
+}
+
+.modern-menu-header {
+  padding: 20px 24px;
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), transparent);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modern-menu-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modern-menu-close {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-menu-close:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.modern-menu-content {
+  padding: 20px;
+  max-height: calc(85vh - 80px);
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar */
+.modern-menu-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modern-menu-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+}
+
+.modern-menu-content::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: var(--radius-full);
+}
+
+/* ==================== POKEMON CARDS MODERNES ==================== */
+.modern-pokemon-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.modern-pokemon-card:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.modern-pokemon-sprite {
+  width: 64px;
+  height: 52px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modern-pokemon-info {
+  flex: 1;
+}
+
+.modern-pokemon-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.modern-pokemon-level {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.modern-pokemon-hp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modern-pokemon-hp-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 60px;
+}
+
+/* ==================== ITEM CARDS MODERNES ==================== */
+.modern-item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.modern-item-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.modern-item-card:hover {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.modern-item-sprite {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 10px;
+  image-rendering: pixelated;
+}
+
+.modern-item-name {
+  font-size: 11px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.modern-item-count {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ==================== POKEDEX MODERNE ==================== */
+.modern-pokedex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+}
+
+.modern-pokedex-entry {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.modern-pokedex-entry:not(.unknown) {
+  cursor: pointer;
+}
+
+.modern-pokedex-entry:not(.unknown):hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--primary);
+}
+
+.modern-pokedex-entry.unknown {
+  opacity: 0.4;
+}
+
+.modern-pokedex-entry.unknown .pokedex-sprite-img {
+  filter: brightness(0);
+}
+
+.modern-pokedex-number {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modern-pokedex-name {
+  font-size: 9px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.modern-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.modern-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.modern-empty-text {
+  font-size: 14px;
+}
+
+/* ==================== ANIMATIONS UTILITAIRES ==================== */
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .modern-dialogue-box {
+    border-radius: var(--radius-lg);
+    margin: 0 10px;
+  }
+
+  .tutorial-container {
+    width: 95%;
+    max-width: none;
+  }
+
+  .modern-combat-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .modern-team-selector {
+    bottom: 10px;
+    right: 10px;
+    gap: 4px;
+  }
+
+  .modern-team-slot {
+    width: 52px;
+    height: 68px;
+  }
+}
+
+/* ==================== TEAM UI MODERNE ==================== */
+.modern-menu-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 1000px;
+  height: 80vh;
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg), 0 0 100px rgba(0, 0, 0, 0.5);
+}
+
+.modern-menu-header {
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modern-menu-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 1px;
+}
+
+.modern-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  padding: 8px;
+  border-radius: var(--radius-full);
+}
+
+.modern-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  transform: rotate(90deg);
+}
+
+.modern-team-content {
+  flex: 1;
+  display: flex;
+  padding: 30px;
+  gap: 30px;
+  overflow: hidden;
+}
+
+.modern-team-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.modern-pokemon-card {
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent; /* Fix for hover border jump */
+}
+
+.modern-pokemon-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.modern-pokemon-sprite {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.modern-pokemon-info {
+  flex: 1;
+}
+
+.modern-pokemon-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.modern-pokemon-level {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.modern-hp-bar-container {
+  width: 100%;
+}
+
+.modern-hp-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modern-hp-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.modern-hp-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.details-icon {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all var(--transition-normal);
+}
+
+.modern-pokemon-card:hover .details-icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Team Stats Panel */
+.modern-team-stats {
+  width: 350px;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-subtle);
+}
+
+.empty-details {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  gap: 16px;
+  text-align: center;
+}
+
+.empty-details .material-symbols-rounded {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.details-header {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  align-items: center;
+}
+
+.details-info h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.type-badge {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.stat-item label {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.moves-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.move-item {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.details-actions {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ==================== MENU GENERAL ==================== */
+.modern-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+  display: none !important; /* Force hide by default */
+}
+
+.modern-menu-overlay.visible {
+  display: block !important;
+}
+
+/* ==================== BAG UI MODERNE ==================== */
+.modern-bag-layout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.modern-bag-sidebar {
+  width: 200px;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 10px;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.bag-category-btn {
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all var(--transition-normal);
+}
+
+.bag-category-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.bag-category-btn.active {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.2), transparent);
+  border-left: 3px solid var(--primary);
+  color: var(--primary-light);
+}
+
+.modern-bag-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modern-bag-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.modern-item-card {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.modern-item-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-glow);
+}
+
+.modern-item-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-item-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.modern-item-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.modern-bag-details {
+  width: 300px;
+  background: rgba(15, 23, 42, 0.6);
+  border-left: 1px solid var(--border-subtle);
+  padding: 24px;
+}
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+:root {
+  /* --- PALETTE RETRO GEN 5 --- */
+  --bg-dark: #121212;
+  --bg-panel: #1e1e1e;
+  --bg-dark-trans: rgba(18, 18, 18, 0.95);
+  
+  /* Thèmes couleurs (Néon / Actif) */
+  --theme-blue: #00a8ff;   /* Team */
+  --theme-yellow: #fbc531; /* Bag */
+  --theme-green: #4cd137;  /* Settings */
+  --theme-red: #e84118;    /* Pokedex/Combat */
+  --theme-purple: #9c88ff; /* Save */
+
+  /* Textes */
+  --text-primary: #f5f6fa;
+  --text-secondary: #dcdde1;
+  --text-muted: #7f8fa6;
+
+  /* Grille de fond */
+  --grid-color: rgba(255, 255, 255, 0.05);
+  --grid-size: 20px;
+}
+
+/* =========================================
+   RESET & BASE GLOBAL
+   ========================================= */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: none; /* Pixel art crisp */
+}
+
+body {
+  font-family: 'VT323', monospace; /* Police Pixel */
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+  color: var(--text-primary);
+  font-size: 20px; /* Base plus grande pour pixel font */
+}
+
+/* =========================================
+   STYLE DES MENUS (GEN 5 / RETRO)
+   ========================================= */
+
+/* Overlay général qui grise le fond */
+.modern-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.modern-menu-overlay.visible {
+  display: flex !important;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Conteneur Principal du Menu */
+.modern-menu-container {
+  width: 90%;
+  max-width: 1000px; /* Largeur max */
+  height: 85%;
+  background-color: var(--bg-dark);
+  
+  /* EFFET GRILLE EN FOND */
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  
+  border: 2px solid var(--text-secondary);
+  box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.5);
+  
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 4px;
+}
+
+/* Bandeau Titre */
+.modern-menu-header {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: rgba(255,255,255,0.05);
+  border-bottom: 2px solid var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.modern-menu-title {
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.modern-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.2s;
+}
+.modern-close-btn span {
+    font-size: 32px;
+}
+.modern-close-btn:hover {
+  color: var(--text-primary);
+}
+
+
+/* =========================================
+   THÈMES DE COULEUR (Bordures & Accents)
+   ========================================= */
+
+/* --- THÈME BLEU (ÉQUIPE) --- */
+.modern-menu-container.theme-blue {
+    border-color: var(--theme-blue);
+    box-shadow: 0 0 15px rgba(0, 168, 255, 0.4);
+}
+.theme-blue .modern-menu-header {
+    background: linear-gradient(90deg, rgba(0, 168, 255, 0.2), transparent);
+    border-bottom-color: var(--theme-blue);
+}
+.theme-blue .modern-menu-title {
+    color: var(--theme-blue);
+}
+.theme-blue .modern-close-btn:hover { color: var(--theme-blue); }
+
+/* --- THÈME JAUNE (SAC) --- */
+.modern-menu-container.theme-yellow {
+    border-color: var(--theme-yellow);
+    box-shadow: 0 0 15px rgba(251, 197, 49, 0.4);
+}
+.theme-yellow .modern-menu-header {
+    background: linear-gradient(90deg, rgba(251, 197, 49, 0.2), transparent);
+    border-bottom-color: var(--theme-yellow);
+}
+.theme-yellow .modern-menu-title {
+    color: var(--theme-yellow);
+}
+.theme-yellow .modern-close-btn:hover { color: var(--theme-yellow); }
+
+/* --- THÈME VERT (OPTIONS) --- */
+.modern-menu-container.theme-green {
+    border-color: var(--theme-green);
+    box-shadow: 0 0 15px rgba(76, 209, 55, 0.4);
+}
+.theme-green .modern-menu-header {
+    background: linear-gradient(90deg, rgba(76, 209, 55, 0.2), transparent);
+    border-bottom-color: var(--theme-green);
+}
+.theme-green .modern-menu-title {
+    color: var(--theme-green);
+}
+.theme-green .modern-close-btn:hover { color: var(--theme-green); }
+
+/* --- THÈME ROUGE (COMBAT / DEX) --- */
+.modern-menu-container.theme-red {
+    border-color: var(--theme-red);
+    box-shadow: 0 0 15px rgba(232, 65, 24, 0.4);
+}
+.theme-red .modern-menu-header {
+    background: linear-gradient(90deg, rgba(232, 65, 24, 0.2), transparent);
+    border-bottom-color: var(--theme-red);
+}
+
+
+/* =========================================
+   COMPOSANTS RÉUTILISABLES
+   ========================================= */
+
+/* Boutons "Retro" */
+.modern-btn {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  padding: 8px 20px;
+  border: 2px solid var(--text-muted);
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.1s;
+  box-shadow: 2px 2px 0 #000; /* Ombre dure */
+}
+
+.modern-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--text-primary);
+}
+
+.modern-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+.modern-btn-primary {
+    border-color: var(--theme-blue);
+    color: var(--theme-blue);
+}
+.modern-btn-primary:hover {
+    background: var(--theme-blue);
+    color: #000;
+}
+
+.modern-btn-secondary {
+    border-color: var(--text-secondary);
+}
+
+/* Cartes et panneaux (Glassmorphism remplacé par Panel solide) */
+.glass, .glass-dark {
+    background: var(--bg-panel);
+    border: 1px solid var(--text-muted);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5); 
+    backdrop-filter: none; /* Pas de flou, style net */
+    border-radius: 0; /* Angles droits */
+}
+
+/* Sidebar Layout */
+.modern-bag-layout {
+    display: flex;
+    height: 100%;
+}
+.modern-bag-sidebar {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+}
+.bag-category-btn {
+    padding: 15px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    font-family: 'VT323', monospace;
+    font-size: 24px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.bag-category-btn:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+}
+.bag-category-btn.active {
+    background: var(--theme-yellow);
+    color: #000;
+}
+
+.modern-bag-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+.modern-bag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+/* Bag Item Card */
+.bag-item-card {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--text-muted);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+.bag-item-card:hover {
+    border-color: var(--theme-yellow);
+    background: rgba(255,255,255,0.05);
+}
+.bag-item-card.selected {
+    border-color: var(--theme-yellow);
+    box-shadow: 0 0 10px rgba(251, 197, 49, 0.3);
+}
+.bag-item-icon {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+}
+
+
+/* Animations simples */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scrollbar retro */
+::-webkit-scrollbar {
+  width: 12px;
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border: 2px solid #000;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-primary);
+}
+
+/* ==================== TUTORIAL OVERLAY (RETRO) ==================== */
+.tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.9) !important;
+}
+
+.tutorial-container {
+  width: 600px;
+  background-color: var(--bg-dark);
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  
+  border: 2px solid var(--theme-blue);
+  box-shadow: 0 0 0 4px #000, 0 0 20px var(--theme-blue);
+  
+  padding: 0;
+  overflow: hidden;
+  animation: tutorialPopIn 0.3s steps(5);
+}
+
+@keyframes tutorialPopIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.tutorial-header {
+  background: var(--theme-blue);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 4px solid #000;
+}
+
+.tutorial-icon {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.tutorial-title {
+  font-size: 28px;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.tutorial-content {
+  padding: 20px;
+  background: rgba(0,0,0,0.8);
+}
+
+.tutorial-text {
+  font-size: 22px;
+  line-height: 1.4;
+  color: #fff;
+}
+
+.tutorial-highlight {
+  color: var(--theme-yellow);
+  text-decoration: underline;
+}
+
+.tutorial-footer {
+  padding: 15px;
+  background: #000;
+  border-top: 2px solid var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+.tutorial-progress-dot {
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border: 1px solid #fff;
+}
+.tutorial-progress-dot.active {
+  background: var(--theme-blue);
+}
+
+/* ==================== HUD NOTIFICATIONS ==================== */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+.hud-notification {
+    background: #000;
+    border: 2px solid var(--text-primary);
+    padding: 10px 20px;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    font-family: 'VT323', monospace;
+    color: #fff;
+    
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.2s steps(5);
+}
+
+.hud-notification.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.hud-notification.success { border-color: var(--theme-green); color: var(--theme-green); }
+.hud-notification.info { border-color: var(--theme-blue); color: var(--theme-blue); }
+.hud-notification.warning { border-color: var(--theme-yellow); color: var(--theme-yellow); }
+.hud-notification.error { border-color: var(--theme-red); color: var(--theme-red); }

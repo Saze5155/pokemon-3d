@@ -1,63 +1,76 @@
-/* Shop UI */
+
+/* Shop UI - RETRO THEME GEN 5 */
+
 #shop-container {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 800px;
-    height: 500px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    width: 900px;
+    height: 600px;
+    background: var(--bg-panel);
+    border: 2px solid var(--theme-blue);
+    box-shadow: 0 0 0 3000px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.8);
     display: none;
     flex-direction: column;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'VT323', monospace;
     z-index: 2000;
     overflow: hidden;
-    border: 4px solid #343a40;
+    color: #fff;
+    
+    /* Grid Pattern */
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
 }
 
 #shop-header {
-    background: #007bff;
-    color: white;
-    padding: 15px;
-    font-weight: bold;
-    font-size: 24px;
+    background: var(--theme-blue);
+    color: #fff;
+    padding: 15px 20px;
+    font-size: 32px;
+    text-transform: uppercase;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 4px solid #0056b3;
+    border-bottom: 4px solid #fff;
+    text-shadow: 2px 2px 0 #000;
 }
 
 #shop-money {
-    background: #FFD700;
-    color: #333;
+    background: #000;
+    color: var(--theme-yellow);
     padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    border: 2px solid var(--theme-yellow);
+    font-size: 24px;
+    box-shadow: inset 0 0 10px rgba(251, 197, 49, 0.2);
 }
 
 #shop-tabs {
     display: flex;
-    background: #343a40;
+    background: #000;
+    border-bottom: 2px solid var(--text-muted);
 }
 
 .shop-tab {
     flex: 1;
-    padding: 15px;
+    padding: 10px;
     text-align: center;
-    color: #adb5bd;
+    color: var(--text-muted);
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s;
+    font-size: 24px;
+    text-transform: uppercase;
+    border-right: 1px solid #333;
 }
-
+.shop-tab:hover {
+    background: #222;
+    color: #fff;
+}
 .shop-tab.active {
-    background: #fff;
-    color: #333;
-    border-top: 4px solid #007bff;
+    background: var(--bg-panel);
+    color: var(--theme-blue);
+    border-top: 4px solid var(--theme-blue);
 }
 
 .shop-content {
@@ -69,82 +82,100 @@
 #shop-list {
     flex: 1;
     overflow-y: auto;
-    background: #fff;
-    border-right: 1px solid #dee2e6;
+    background: rgba(0,0,0,0.3);
+    border-right: 2px solid var(--text-muted);
+    padding: 10px;
 }
 
 .shop-item {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    border: 2px solid transparent;
     display: flex;
     align-items: center;
     cursor: pointer;
-    transition: background 0.2s;
+    margin-bottom: 5px;
+    background: rgba(255,255,255,0.02);
 }
 
 .shop-item:hover {
-    background: #f8f9fa;
+    background: rgba(0, 168, 255, 0.1);
+    border-color: rgba(0, 168, 255, 0.3);
 }
 
 .shop-item.selected {
-    background: #e7f1ff;
-    border-left: 4px solid #007bff;
+    background: rgba(0, 168, 255, 0.2);
+    border-color: var(--theme-blue);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
 }
 
 .shop-item-icon {
-    width: 32px;
-    height: 32px;
-    background-color: #eee;
-    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    background-color: transparent;
     margin-right: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
+    image-rendering: pixelated;
 }
 
 .shop-item-details {
     flex: 1;
+    font-size: 22px;
 }
 
 .shop-item-price {
-    font-weight: bold;
-    color: #28a745;
+    font-weight: normal;
+    color: var(--theme-yellow);
+    font-size: 22px;
 }
 
 #shop-details-panel {
-    width: 300px;
+    width: 350px;
     padding: 20px;
-    background: #f8f9fa;
+    background: rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    border-left: 2px solid #000;
 }
 
 #shop-selected-icon {
-    width: 64px;
-    height: 64px;
-    background: #ddd;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    width: 96px;
+    height: 96px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid var(--text-muted);
+    margin-bottom: 20px;
+    image-rendering: pixelated;
 }
 
 #shop-selected-name {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 28px;
+    color: var(--theme-blue);
+    text-transform: uppercase;
     margin-bottom: 10px;
+    border-bottom: 2px solid var(--text-muted);
+    width: 100%;
+    padding-bottom: 5px;
 }
 
 #shop-selected-desc {
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 20px;
-    font-style: italic;
-    font-size: 14px;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1.4;
+    text-align: left;
+    width: 100%;
 }
 
 #shop-actions {
     margin-top: auto;
     width: 100%;
+    background: #000;
+    padding: 15px;
+    border: 2px solid var(--text-muted);
 }
 
 .quantity-selector {
@@ -155,41 +186,47 @@
 }
 
 .quantity-btn {
-    width: 30px;
-    height: 30px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    background: #333;
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 24px;
     cursor: pointer;
 }
+.quantity-btn:hover { background: var(--theme-blue); color: #000; }
 
 .quantity-display {
     margin: 0 15px;
-    font-size: 18px;
-    font-weight: bold;
-    width: 50px;
+    font-size: 28px;
+    min-width: 60px;
     text-align: center;
+    color: var(--theme-yellow);
 }
 
 #shop-confirm-btn {
     width: 100%;
-    padding: 12px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 10px;
+    background: var(--theme-blue);
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 24px;
+    font-family: 'VT323', monospace;
     cursor: pointer;
-    transition: background 0.2s;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0 #000;
 }
 
 #shop-confirm-btn:hover {
-    background: #218838;
+    background: #fff;
+    color: var(--theme-blue);
+    border-color: var(--theme-blue);
 }
 
 #shop-confirm-btn:disabled {
-    background: #ccc;
+    background: #333;
+    border-color: #555;
+    color: #777;
     cursor: not-allowed;
+    box-shadow: none;
 }
