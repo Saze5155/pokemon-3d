@@ -7,6 +7,8 @@ import { ModernDialogueSystem } from './ModernDialogueSystem.js';
 import { ModernCombatUI } from './ModernCombatUI.js';
 import { ModernHUD } from './ModernHUD.js';
 import { TutorialSystem } from './TutorialSystem.js';
+import { ModernTeamUI } from './ModernTeamUI.js';
+import { ModernBagUI } from './ModernBagUI.js';
 
 /**
  * Initialise tous les systèmes UI modernes
@@ -58,8 +60,38 @@ export function initModernUI(game) {
 
   // 5. Connecter les événements de mise à jour
   setupUIUpdates(game);
+  
+  // 6. Initialiser Team et Bag UIs
+  game.modernTeamUI = new ModernTeamUI(ui);
+  game.modernBagUI = new ModernBagUI(ui);
+  console.log('✅ ModernTeamUI et ModernBagUI initialisés');
 
-  // 6. Afficher le tutoriel de bienvenue si c'est une nouvelle partie
+  // Override de ui.openMenu
+  const originalOpenMenu = ui.openMenu.bind(ui);
+  ui.openMenu = function(menuName) {
+    // Si c'est team ou bag, utiliser l'interface moderne
+    if (menuName === 'team') {
+        game.modernTeamUI.show();
+        // Optionnel : fermer les autres menus si besoin
+    } else if (menuName === 'bag') {
+        game.modernBagUI.show();
+    } else {
+        originalOpenMenu(menuName);
+    }
+  };
+  
+  // Override de ui.closeAllMenus pour inclure les nouveaux menus
+  const originalCloseAllMenus = ui.closeAllMenus.bind(ui);
+  ui.closeAllMenus = function() {
+      // Fermer les menus modernes
+      if (game.modernTeamUI) game.modernTeamUI.hide();
+      if (game.modernBagUI) game.modernBagUI.hide();
+      if (game.modernHUD) game.modernHUD.closeAllMenus();
+      
+      originalCloseAllMenus();
+  };
+
+  // 7. Afficher le tutoriel de bienvenue si c'est une nouvelle partie
   if (game.saveManager && game.saveManager.isNewGame) {
     setTimeout(() => {
       game.tutorialSystem.showIfNotSeen('welcome');

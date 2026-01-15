@@ -34,6 +34,15 @@ export class ModernHUD {
       link.href = 'assets/css/modern-ui.css';
       document.head.appendChild(link);
     }
+    
+    // Injecter Google Material Symbols
+    if (!document.getElementById('material-icons')) {
+        const link = document.createElement('link');
+        link.id = 'material-icons';
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0';
+        document.head.appendChild(link);
+    }
   }
 
   /**
@@ -189,7 +198,7 @@ export class ModernHUD {
       align-items: center;
       justify-content: center;
     `;
-    this.pokegearToggle.innerHTML = '⌚';
+    this.pokegearToggle.innerHTML = '<span class="material-symbols-rounded">smartphone</span>';
     this.pokegearToggle.title = 'Pokégear (TAB)';
     this.pokegear.appendChild(this.pokegearToggle);
 
@@ -260,12 +269,12 @@ export class ModernHUD {
     if (!container) return;
 
     const buttons = [
-      { id: 'team', icon: '👥', label: 'ÉQUIPE', locked: !this.ui.unlockedFeatures.team },
-      { id: 'bag', icon: '🎒', label: 'SAC', locked: false },
-      { id: 'pokedex', icon: '📖', label: 'POKÉDEX', locked: !this.ui.unlockedFeatures.pokedex },
-      { id: 'storage', icon: '📦', label: 'STOCKAGE', locked: !this.ui.unlockedFeatures.team },
-      { id: 'save', icon: '💾', label: 'SAUVER', locked: false, special: 'save' },
-      { id: 'settings', icon: '⚙️', label: 'OPTIONS', locked: false },
+      { id: 'team', icon: 'group', label: 'ÉQUIPE', locked: !this.ui.unlockedFeatures.team },
+      { id: 'bag', icon: 'backpack', label: 'SAC', locked: false },
+      { id: 'pokedex', icon: 'menu_book', label: 'POKÉDEX', locked: !this.ui.unlockedFeatures.pokedex },
+      { id: 'storage', icon: 'inventory_2', label: 'STOCKAGE', locked: !this.ui.unlockedFeatures.team },
+      { id: 'save', icon: 'save', label: 'SAUVER', locked: false, special: 'save' },
+      { id: 'settings', icon: 'settings', label: 'OPTIONS', locked: false },
     ];
 
     container.innerHTML = buttons.map(btn => {
@@ -297,9 +306,9 @@ export class ModernHUD {
           ${lockedStyle}
           ${specialStyle}
         ">
-          <span style="font-size: 18px;">${btn.icon}</span>
+          <span class="material-symbols-rounded" style="font-size: 20px;">${btn.icon}</span>
           <span>${btn.label}</span>
-          ${btn.locked ? '<span style="margin-left: auto; font-size: 12px;">🔒</span>' : ''}
+          ${btn.locked ? '<span class="material-symbols-rounded" style="margin-left: auto; font-size: 16px;">lock</span>' : ''}
         </button>
       `;
     }).join('');
@@ -346,13 +355,13 @@ export class ModernHUD {
       this.pokegearMenu.style.visibility = 'visible';
       this.pokegearMenu.style.transform = 'translateY(0) scale(1)';
       this.pokegearToggle.style.background = 'linear-gradient(135deg, #ec4899, #db2777)';
-      this.pokegearToggle.innerHTML = '✕';
+      this.pokegearToggle.innerHTML = '<span class="material-symbols-rounded">close</span>';
     } else {
       this.pokegearMenu.style.opacity = '0';
       this.pokegearMenu.style.visibility = 'hidden';
       this.pokegearMenu.style.transform = 'translateY(20px) scale(0.95)';
       this.pokegearToggle.style.background = 'linear-gradient(135deg, #6366f1, #4f46e5)';
-      this.pokegearToggle.innerHTML = '⌚';
+      this.pokegearToggle.innerHTML = '<span class="material-symbols-rounded">smartphone</span>';
 
       // Fermer les menus ouverts
       this.closeAllMenus();
@@ -494,11 +503,11 @@ export class ModernHUD {
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     `;
 
-    const icon = type === 'error' ? '✕' : type === 'info' ? 'ℹ' : '✓';
+    const icon = type === 'error' ? 'error' : type === 'info' ? 'info' : 'check_circle';
     const iconColor = type === 'error' ? '#ef4444' : type === 'info' ? '#6366f1' : '#10b981';
 
     notif.innerHTML = `
-      <span style="color: ${iconColor}; font-weight: bold;">${icon}</span>
+      <span class="material-symbols-rounded" style="color: ${iconColor}; font-weight: bold;">${icon}</span>
       <span>${message}</span>
     `;
 

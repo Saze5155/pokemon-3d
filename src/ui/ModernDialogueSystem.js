@@ -147,31 +147,31 @@ export class ModernDialogueSystem {
    */
   getNPCInfo(npc) {
     const categoryInfo = {
-      professeurs: { emoji: "🔬", role: "Professeur" },
-      famille: { emoji: "🏠", role: "Famille" },
-      rivaux: { emoji: "😤", role: "Rival" },
-      champions: { emoji: "🏆", role: "Champion d'Arène" },
-      conseil_4: { emoji: "👑", role: "Conseil des 4" },
-      team_rocket: { emoji: "🚀", role: "Team Rocket" },
-      infirmieres: { emoji: "💗", role: "Infirmière" },
-      marchands: { emoji: "🛒", role: "Vendeur" },
-      villageois: { emoji: "👤", role: "Habitant" },
-      dresseurs_insecte: { emoji: "🐛", role: "Dresseur Insecte" },
-      dresseurs_shorts: { emoji: "👦", role: "Gamin" },
-      pecheurs: { emoji: "🎣", role: "Pêcheur" },
-      scientifiques: { emoji: "🧪", role: "Scientifique" },
-      montagnards: { emoji: "⛰️", role: "Montagnard" },
-      beautes: { emoji: "💄", role: "Beauté" },
-      gentlemen: { emoji: "🎩", role: "Gentleman" },
-      rockers: { emoji: "🎸", role: "Rocker" },
-      psychics: { emoji: "🔮", role: "Médium" },
-      channelers: { emoji: "👻", role: "Exorciste" },
-      karateka: { emoji: "🥋", role: "Karatéka" },
-      ceinture_noire: { emoji: "🥋", role: "Ceinture Noire" },
-      cooltrainers: { emoji: "⭐", role: "Top Dresseur" },
+      professeurs: { icon: "science", role: "Professeur" },
+      famille: { icon: "home", role: "Famille" },
+      rivaux: { icon: "swords", role: "Rival" },
+      champions: { icon: "trophy", role: "Champion d'Arène" },
+      conseil_4: { icon: "crown", role: "Conseil des 4" },
+      team_rocket: { icon: "rocket_launch", role: "Team Rocket" },
+      infirmieres: { icon: "favorite", role: "Infirmière" },
+      marchands: { icon: "store", role: "Vendeur" },
+      villageois: { icon: "person", role: "Habitant" },
+      dresseurs_insecte: { icon: "bug_report", role: "Dresseur Insecte" },
+      dresseurs_shorts: { icon: "face", role: "Gamin" },
+      pecheurs: { icon: "phishing", role: "Pêcheur" },
+      scientifiques: { icon: "experiment", role: "Scientifique" },
+      montagnards: { icon: "landscape", role: "Montagnard" },
+      beautes: { icon: "palette", role: "Beauté" },
+      gentlemen: { icon: "person_celebrate", role: "Gentleman" },
+      rockers: { icon: "music_note", role: "Rocker" },
+      psychics: { icon: "psychology", role: "Médium" },
+      channelers: { icon: "visibility", role: "Exorciste" },
+      karateka: { icon: "sports_martial_arts", role: "Karatéka" },
+      ceinture_noire: { icon: "sports_martial_arts", role: "Ceinture Noire" },
+      cooltrainers: { icon: "star", role: "Top Dresseur" },
     };
 
-    return categoryInfo[npc.categorie] || { emoji: "👤", role: "Inconnu" };
+    return categoryInfo[npc.categorie] || { icon: "person", role: "Inconnu" };
   }
 
   /**
@@ -188,7 +188,7 @@ export class ModernDialogueSystem {
     const npcInfo = this.getNPCInfo(npc);
 
     // Mettre à jour l'en-tête
-    this.portraitEl.textContent = npcInfo.emoji;
+    this.portraitEl.innerHTML = `<span class="material-symbols-rounded">${npcInfo.icon}</span>`;
     this.nameEl.textContent = npc.nom || "???";
     this.roleEl.textContent = npcInfo.role;
 
