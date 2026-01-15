@@ -15,6 +15,7 @@ import { PokemonManager } from "./entities/PokemonManager.js";
 import { DialogueSystem } from "./ui/DialogueSystem.js";
 import { UIManager } from "./ui/UI.js";
 import { Portal } from "./world/Portal.js";
+import { initModernUI, hookCombatUI } from "./ui/ModernUIInit.js";
 
 function fixAllMaterials(scene, name = "scene") {
   let fixed = 0;
@@ -389,6 +390,9 @@ class PokemonGame {
     // Synchroniser l'UI avec les données de sauvegarde
     this.ui.syncFromSaveManager();
     this.syncNPCFlagsFromSave();
+
+    // Initialiser l'UI moderne (tutoriels, dialogue moderne, HUD)
+    initModernUI(this);
 
     // Charger les scènes et démarrer le jeu
 
@@ -974,14 +978,17 @@ class PokemonGame {
     });
 
     this.combatManager = new CombatManager(
-        exteriorScene, 
-        this.camera, 
-        this.ui, 
+        exteriorScene,
+        this.camera,
+        this.ui,
         this.pokemonManager,
         this.typeManager,
         this.moveManager,
         this.xpManager
     );
+
+    // Hook l'UI de combat moderne
+    hookCombatUI(this.combatManager, this.ui);
 
     // Lier le lancer de Pokéball au démarrage du combat
     this.pokeballPhysics.onCombatStart = (
@@ -997,6 +1004,13 @@ class PokemonGame {
 
       // Musique de combat sauvage
       this.audioManager.playMusic('battle-wild');
+
+      // Tutoriel de combat (première fois)
+      if (this.tutorialSystem) {
+        setTimeout(() => {
+          this.tutorialSystem.showIfNotSeen('combat');
+        }, 1500);
+      }
     };
 
     // ✅ FIX: Gérer la sauvegarde après une capture
@@ -1045,9 +1059,16 @@ class PokemonGame {
       
       // 4. Mettre à jour l'interface
       this.uiManager.updateTeamUI();
-      
+
       // 5. Nettoyer le combat
       this.combatManager.endCombatByCapture();
+
+      // 6. Tutoriel de capture (première fois)
+      if (this.tutorialSystem) {
+        setTimeout(() => {
+          this.tutorialSystem.showIfNotSeen('capture');
+        }, 2000);
+      }
     };
 
     // Callback de fin de combat : nettoyer l'état de PokeballPhysics
