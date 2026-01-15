@@ -323,6 +323,24 @@ export function hookCombatUI(combatManager, uiManager) {
     if (originalHideCombatUI) originalHideCombatUI();
   };
 
+  // Intercepter endCombat pour cacher l'UI moderne
+  const originalEndCombat = combatManager.endCombat.bind(combatManager);
+  combatManager.endCombat = function(wasEscape = false) {
+    // Cacher l'UI moderne AVANT d'appeler l'original
+    modernCombatUI.hide();
+    // Appeler la méthode originale
+    originalEndCombat(wasEscape);
+  };
+
+  // Intercepter endCombatByCapture aussi
+  if (combatManager.endCombatByCapture) {
+    const originalEndCombatByCapture = combatManager.endCombatByCapture.bind(combatManager);
+    combatManager.endCombatByCapture = function() {
+      modernCombatUI.hide();
+      originalEndCombatByCapture();
+    };
+  }
+
   // Exposer pour les mises à jour
   combatManager.modernCombatUI = modernCombatUI;
 
