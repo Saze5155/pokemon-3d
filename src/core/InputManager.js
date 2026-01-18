@@ -140,12 +140,10 @@ export class InputManager {
     move.addScaledVector(forward, -direction.z * speed);
     move.addScaledVector(right, direction.x * speed);
 
-    // DEBUG VR Input
+    // Apply VR Input
     if (this.vrInput.x !== 0 || this.vrInput.z !== 0) {
-      console.log(`🎯 VR Input reçu: x=${this.vrInput.x.toFixed(2)}, z=${this.vrInput.z.toFixed(2)}`);
-      move.x += this.vrInput.x * speed;
-      move.z += this.vrInput.z * speed;
-      console.log(`🚀 Move final: x=${move.x.toFixed(3)}, z=${move.z.toFixed(3)}`);
+        move.x += this.vrInput.x * speed;
+        move.z += this.vrInput.z * speed;
     }
 
     return move;

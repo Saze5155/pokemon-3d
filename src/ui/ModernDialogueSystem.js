@@ -317,6 +317,7 @@ export class ModernDialogueSystem {
    * Affiche un choix au joueur
    */
   showChoices(choices) {
+    console.log(`[ModernDialogueSystem] showChoices called with ${choices.length} choices`);
     this.choicesContainer.innerHTML = "";
     this.choicesContainer.style.display = "flex";
     this.indicatorEl.style.display = "none";
@@ -419,7 +420,9 @@ export class ModernDialogueSystem {
     }
 
     // Don du starter
+    console.log(`[DEBUG] Checking starter: info.donne_starter=${info.donne_starter}, dialogueKey=${dialogueKey}`);
     if (info.donne_starter && dialogueKey === "choix_starter") {
+      console.log(`[DEBUG] ✅ Calling showStarterChoice!`);
       this.showStarterChoice(npc);
       return;
     }

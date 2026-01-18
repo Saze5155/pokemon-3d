@@ -56,39 +56,17 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       // Note: Cela sera fait dans init()
       
       // écouter les changements de scène pour déplacer le Rig
-      // On utilise une méthode interne pour s'assurer qu'on ne se fait pas écraser
       this.game.sceneManager.addSceneChangeListener((newSceneName) => {
           this.onSceneChanged(newSceneName);
       });
 
-      // Activer les contrôles de debug pour la montre
-      // this.bindDebugKeys();
-      
-      // Initialiser le panneau de dialogue VR
-      this.vrDialoguePanel = new VRDialoguePanel(this.game);
-      
-      // Hook du système de dialogue
-      if (this.game.ui && this.game.ui.dialogueSystem) {
-          const originalStart = this.game.ui.dialogueSystem.start.bind(this.game.ui.dialogueSystem);
-          
-          this.game.ui.dialogueSystem.start = (npc, dialogues, key) => {
-              if (this.session) {
-                  // Mode VR : Utiliser le panneau 3D
-                  console.log("💬 VR Dialogue Triggered for " + npc.nom);
-                  this.vrDialoguePanel.show(npc, dialogues, key);
-              } else {
-                  // Mode Desktop : Original
-                  originalStart(npc, dialogues, key);
-              }
-          };
-      }
-      
-      // Raycaster d'interaction (Laser)
+      // NOTE: Le panneau de dialogue et les hooks sont initialisés dans init() pour garantir que l'UI est prête.
+      this.vrDialoguePanel = null;
       this.interactionRaycaster = new THREE.Raycaster();
       this.lastTriggerState = { left: false, right: false };
-
-      // Helper Laser Visuel (Optionnel, si pas déjà présent dans SetupController)
     }
+
+
 
     onSceneChanged(newSceneName) {
         console.log(`🔍 VRManager: onSceneChanged called for ${newSceneName}. Enabled? ${this.enabled}`);
@@ -234,9 +212,19 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       // Activer XR sur le renderer
       this.renderer.xr.enabled = true;
       
-      // Créer les contrôleurs
+      // 2. Configurer les contrôleurs
       this.setupControllers();
 
+      // 3. Initialiser la loop VR
+      this.renderer.setAnimationLoop((time, frame) => {
+          this.game.renderFrame(); // Appelle sceneManager.update, etc.
+      });
+      
+      // 4. Initialiser le Dialogue Panel VR & Hook
+      this.vrDialoguePanel = new VRDialoguePanel(this.game);
+      
+      console.log("✅ VRManager initialized");
+      
       // Événements de session
       this.renderer.xr.addEventListener('sessionstart', () => this.onSessionStart());
       this.renderer.xr.addEventListener('sessionend', () => this.onSessionEnd());
@@ -387,6 +375,49 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
       console.log(`📍 VR Session: Rig position = (${this.playerRig.position.x.toFixed(2)}, ${this.playerRig.position.y.toFixed(2)}, ${this.playerRig.position.z.toFixed(2)})`);
       console.log(`📍 VR Session: Camera added to rig, controllers count = ${this.playerRig.children.length}`);
+
+      // Hook du système de dialogue (re-check à chaque session start pour être sûr)
+      // Hook du système de dialogue (re-check à chaque session start pour être sûr)
+      if (this.game.dialogueSystem && !this.game.dialogueSystem._isVRHooked) {
+          const originalStart = this.game.dialogueSystem.start.bind(this.game.dialogueSystem);
+          
+          this.game.dialogueSystem.start = (npc, dialogues, key) => {
+              // Vérifier si VR est actif
+              if (this.renderer.xr.isPresenting) {
+                  console.log("💬 VR Dialogue Triggered for " + npc.nom);
+                  this.vrDialoguePanel.show(npc, dialogues, key);
+              } else {
+                  originalStart(npc, dialogues, key);
+              }
+          };
+          this.game.dialogueSystem._isVRHooked = true;
+          console.log("✅ VRManager: Dialogue System Hooked (onSessionStart)!");
+      }
+
+      // Hook pour les CHOIX (ModernDialogueSystem)
+      // IMPORTANT: dialogueSystem et modernDialogue peuvent être la même instance ou différentes
+      // On hook les deux pour être sûr
+      const dialogueSystems = [
+          { name: 'dialogueSystem', instance: this.game.dialogueSystem },
+          { name: 'modernDialogue', instance: this.game.modernDialogue }
+      ];
+
+      dialogueSystems.forEach(({ name, instance }) => {
+          if (instance && instance.showChoices && !instance._isVRChoicesHooked) {
+              const originalShowChoices = instance.showChoices.bind(instance);
+              
+              instance.showChoices = (choices) => {
+                 if (this.renderer.xr.isPresenting) {
+                      console.log(`🤔 VR Choices Triggered (via ${name}):`, choices);
+                      this.vrDialoguePanel.showChoices(choices);
+                 } else {
+                      originalShowChoices(choices);
+                 }
+              };
+              instance._isVRChoicesHooked = true;
+              console.log(`✅ VRManager: ${name}.showChoices Hooked!`);
+          }
+      });
     }
 
     onSessionEnd() {
@@ -478,14 +509,6 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
       let leftGamepad = null;
       let rightGamepad = null;
-      for (const source of session.inputSources) {
-        if (source.gamepad && source.handedness === 'left') {
-          const axes = source.gamepad.axes;
-          // Afficher les 4 axes avec leurs valeurs
-          console.log(`🕹️ LEFT axes: [0]=${axes[0]?.toFixed(2)}, [1]=${axes[1]?.toFixed(2)}, [2]=${axes[2]?.toFixed(2)}, [3]=${axes[3]?.toFixed(2)}`);
-        }
-  }
-
       // Récupérer les gamepads FRAIS depuis la session
       for (const source of session.inputSources) {
         if (source.gamepad) {
@@ -608,8 +631,31 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
         if (interactingHand) {
             console.log("🔫 VR Interaction Triggered!");
             
-            // Si un dialogue est déjà ouvert, avancer
+            // Si un dialogue est déjà ouvert
             if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
+                // Raycast sur le panel pour les choix
+                if (this.vrDialoguePanel.isShowingChoices) {
+                     this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
+                     this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
+                     this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+                     
+                     const intersects = this.interactionRaycaster.intersectObject(this.vrDialoguePanel.mesh);
+                     if (intersects.length > 0) {
+                         const uv = intersects[0].uv;
+                         const choiceIndex = this.vrDialoguePanel.checkClick(uv);
+                         if (choiceIndex >= 0) {
+                             const choice = this.vrDialoguePanel.choices[choiceIndex];
+                             console.log("✅ VR Choice Selected:", choice);
+                             // Propager au système principal
+                             if (this.game.modernDialogue) {
+                                  this.game.modernDialogue.selectChoice(choiceIndex, choice);
+                             }
+                             return;
+                         }
+                     }
+                }
+                
+                // Sinon clic simple pour avancer
                 this.vrDialoguePanel.advance();
                 return;
             }
@@ -654,7 +700,10 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                     
                     // Déclencher le dialogue via l'UI Manager
                     // (Cela appellera notre hook start())
-                    this.game.ui.startDialogue(npc, "default");
+                    const dialogue = this.game.npcManager.startDialogue(npc);
+                    if (this.game.dialogueSystem) {
+                         this.game.dialogueSystem.start(npc, dialogue.dialogues, dialogue.key);
+                    }
                 }
             }
         }
