@@ -46,7 +46,8 @@ export class VRWatchMenu {
     // Rotation Z actuelle: PI/2. Sens contraire -> On augmente ? (PI/2 + ...)
     
     // Nouvelle position : Plus vers "nous" (+Z) et décalé
-    this.container.position.set(-0.04, -0.02, 0.10); 
+    // On rapproche un peu du poignet (X: -0.03 au lieu de -0.04) pour éviter l'effet flottant "au dessus"
+    this.container.position.set(-0.03, -0.02, 0.09); 
     
     // Rotation: On tourne encore plus ("un cran")
     // Z: Math.PI (180 deg) -> Complètement à l'envers/extérieur
