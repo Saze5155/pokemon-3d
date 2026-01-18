@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFactory.js";
+import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
 /**
  * VRManager - Gère l'intégration WebXR
@@ -32,6 +33,16 @@ export class VRManager {
     
     // Factory pour les modèles de manettes
     this.controllerModelFactory = new XRControllerModelFactory();
+    
+    // UI Montre
+    this.watchMenu = new VRWatchMenu(game);
+    
+    // Laser Pointer
+    this.raycaster = new THREE.Raycaster();
+    this.tempMatrix = new THREE.Matrix4();
+    this.laserLine = null;
+
+    // Group pour le joueur (Camera + Mains)
     
     // Group pour le joueur (Camera + Mains)
     // En WebXR, la caméra est déplacée par le headset, donc on déplace un "PlayerRig" parent
@@ -69,6 +80,21 @@ export class VRManager {
     // Événements de session
     this.renderer.xr.addEventListener('sessionstart', () => this.onSessionStart());
     this.renderer.xr.addEventListener('sessionend', () => this.onSessionEnd());
+    
+    // Setup Laser Visual
+    this.createLaserPointer();
+  }
+
+  createLaserPointer() {
+      const geometry = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(0, 0, 0),
+          new THREE.Vector3(0, 0, -5)
+      ]);
+      const material = new THREE.LineBasicMaterial({ color: 0x00d2ff });
+      this.laserLine = new THREE.Line(geometry, material);
+      this.laserLine.name = 'laserPointer';
+      this.laserLine.scale.z = 1; // Longueur par défaut
+  }
   }
 
   setupControllers() {
@@ -102,6 +128,11 @@ export class VRManager {
     
     this.controllersArr = [controller1, controller2];
     this.gripsArr = [controllerGrip1, controllerGrip2];
+    
+    // Attacher la montre au GRIP gauche (pour qu'elle suive le poignet visuel)
+    // Note: On ne sait pas encore lequel est gauche/droite avant la connection
+    // On le fera dans l'update ou via un check constant
+  }
   }
 
   onControllerConnected(event, controller) {
@@ -116,7 +147,28 @@ export class VRManager {
       this.controllers.right = controller;
       controller.userData.handedness = 'right';
       controller.userData.gamepad = event.data.gamepad;
+      
+      // Ajouter le Laser à la main DROITE
+      if (this.laserLine) controller.add(this.laserLine.clone());
+      
+    } else if (handedness === 'left') { // FIX: Inversion potentielle logic
+       // Left logic
+      this.controllers.left = controller;
+      controller.userData.handedness = 'left';
+      controller.userData.gamepad = event.data.gamepad;
+
+       // Initialiser la Montre sur la main GAUCHE
+       // On attend un peu que le modèle soit chargé ou on l'ajoute direct au grip ?
+       // Ajout au grip (modèle physique) est mieux pour le suivi
+       // Mais attention, this.controllerGrips.left est le bon endroit
     }
+  }
+
+  // APPELÉ DEPUIS SETUPCONTROLLERS POUR LES GRIPS
+  setupGrips() {
+      // Cette méthode n'existait pas vraiment, j'ai tout mis dans setupControllers
+      // Je vais modifier setupControllers pour injecter la montre
+  }
   }
 
   onControllerDisconnected(event, controller) {
@@ -133,6 +185,11 @@ export class VRManager {
     // TODO: Phase 5 - Interactions plus complexes
     if (controller.userData.handedness === 'right') {
         this.game.inputManager.triggerInteraction();
+        
+        // Interaction UI Montre
+        if (this.watchMenu && this.watchMenu.isVisible) {
+            this.watchMenu.click();
+        }
     }
   }
 
@@ -143,8 +200,8 @@ export class VRManager {
   onSessionStart() {
     console.log("🕶️ Session VR Démarrée");
     this.enabled = true;
-    this.game.useVR = true; // Flag global
-    
+    this.session = this.renderer.xr.getSession();
+
     // Ajouter le Rig à la scène active
     if (this.game.sceneManager.activeSceneName === 'world') {
         this.game.worldManager.worldScene.add(this.playerRig);
@@ -188,9 +245,52 @@ export class VRManager {
 
     this.handleLocomotion(delta);
     
-    // Mettre à jour les gamepads (nécessaire pour lire les axes à chaque frame)
-    // Les objets gamepad ne se mettent pas à jour auto, il faut les relire depuis la source ou c'est géré par WebXR ?
-    // En WebXR, event.data.gamepad est une référence.
+    // Gestion Montre (Apparition / Interaction)
+    this.handleWatch(delta);
+  }
+
+  handleWatch(delta) {
+      // 1. Initialisation tardive (une fois le controller 'left' identifié)
+      if (this.controllers.left && !this.watchMenu.container.parent) {
+           // On cherche le GRIP correspondant
+           // C'est un peu tricky car controllers.left est le RaySpace.
+           // Le GripSpace est souvent index 0 ou 1 correspondant.
+           // Simplification: On attache au GripController (qui a le modèle 3D)
+           // On doit trouver quel grip correspond à 'left'
+           
+           // Hack: On assume que si controllers.left est index 0, grip[0] est left.
+           // WebXR standard tries to keep indices consistent.
+           const index = this.controllersArr.indexOf(this.controllers.left);
+           if (index >= 0 && this.gripsArr[index]) {
+               this.watchMenu.init(this.gripsArr[index]);
+               console.log("⌚ Montre attachée au contrôleur gauche !");
+           }
+      }
+
+      // 2. Détection du geste "Regarder la montre"
+      if (this.controllers.left && this.watchMenu.container.parent) {
+          // On vérifie le produit scalaire entre la normale de la montre et le regard
+          // Ou simplement la rotation Z du poignet
+          const rotation = this.controllers.left.rotation;
+          
+          // Debug (à calibrer)
+          // console.log(rotation);
+          
+          // La montre est visible si on la regarde
+          // Pour l'instant, on la laisse toujours visible pour debug
+          this.watchMenu.isVisible = true; 
+          
+          // Update Raycaster depuis la main DROITE
+          if (this.controllers.right) {
+              // Pos et Dir du controller droit
+              this.tempMatrix.identity().extractRotation(this.controllers.right.matrixWorld);
+              this.raycaster.ray.origin.setFromMatrixPosition(this.controllers.right.matrixWorld);
+              this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+              
+              // Mettre à jour l'UI de la montre
+              this.watchMenu.update(this.raycaster);
+          }
+      }
   }
 
   handleLocomotion(delta) {
