@@ -126,7 +126,6 @@ export class InputManager {
 
     direction.normalize();
 
-    // Calculer la direction par rapport à la caméra
     const forward = new THREE.Vector3();
     this.camera.getWorldDirection(forward);
     forward.y = 0;
@@ -135,29 +134,18 @@ export class InputManager {
     const right = new THREE.Vector3();
     right.crossVectors(forward, this.camera.up);
 
-    // Calculer le mouvement final
     const move = new THREE.Vector3();
     const speed = this.moveSpeed * (this.keys.run ? this.runMultiplier : 1);
 
     move.addScaledVector(forward, -direction.z * speed);
     move.addScaledVector(right, direction.x * speed);
 
-    // Ajouter le mouvement VR
+    // DEBUG VR Input
     if (this.vrInput.x !== 0 || this.vrInput.z !== 0) {
-        // Le mouvement VR est déjà calculé en WORLD space dans VRManager
-        // Ou en local ? Dans VRManager j'ai fait applyAxisAngle...
-        // Attendons, si VRManager envoie du world relative to camera, c'est bon.
-        // MAIS ici on doit s'assurer qu'on ne double pas la vitesse.
-        
-        // VRManager envoie des vecteurs normalisés (joystick) mais déjà tournés.
-        // On applique la vitesse ici.
-        // Simplification: VRManager envoie dx, dz (world space, normalized-ish)
-        
-        // Note: Dans VRManager j'ai fait applyAxisAngle, donc vrInput.x/z sont en World Space (absolu)
-        // Mais ils sont "petits" (0 à 1).
-        
-        move.x += this.vrInput.x * speed;
-        move.z += this.vrInput.z * speed;
+      console.log(`🎯 VR Input reçu: x=${this.vrInput.x.toFixed(2)}, z=${this.vrInput.z.toFixed(2)}`);
+      move.x += this.vrInput.x * speed;
+      move.z += this.vrInput.z * speed;
+      console.log(`🚀 Move final: x=${move.x.toFixed(3)}, z=${move.z.toFixed(3)}`);
     }
 
     return move;

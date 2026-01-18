@@ -1910,269 +1910,267 @@ class PokemonGame {
     }
   }
 
-  updateWorldMapMode(delta) {
-    // Vérifier si on peut bouger
-    if (!this.inputManager.isLocked()) return;
-    if (this.ui.isMenuOpen()) return;
+ updateWorldMapMode(delta) {
+  // Vérifier si on peut bouger
+  if (!this.inputManager.isLocked()) return;
+  if (this.ui.isMenuOpen()) return;
 
-    // Bloquer en mode combat
-    if (this.combatManager?.isInCombat && !this.combatManager.freeCameraMode) {
-      return;
-    }
-
-    // Bloquer pendant les dialogues
-    if (this.dialogueSystem?.isDialogueActive()) {
-      return;
-    }
-
-    if (this.isJumping) {
-      this.jumpProgress += delta * 3;
-
-      if (this.jumpProgress >= 1) {
-        this.camera.position.x = this.jumpTargetX;
-        this.camera.position.z = this.jumpTargetZ;
-        this.camera.position.y = this.jumpTargetY + 1.6;
-        this.isJumping = false;
-      } else {
-        const arc = Math.sin(this.jumpProgress * Math.PI) * 1.5;
-        this.camera.position.x =
-          this.jumpStartX +
-          (this.jumpTargetX - this.jumpStartX) * this.jumpProgress;
-        this.camera.position.z =
-          this.jumpStartZ +
-          (this.jumpTargetZ - this.jumpStartZ) * this.jumpProgress;
-        const currentY =
-          this.jumpStartY +
-          (this.jumpTargetY - this.jumpStartY) * this.jumpProgress;
-        this.camera.position.y = currentY + 1.6 + arc;
-      }
-
-      this.worldManager.update(this.camera.position);
-      return;
-    }
-
-    const perfTimers = {};
-    let t = performance.now();
-
-    // Calculer le mouvement
-    const move = this.inputManager.getMovementVector();
-    const newPosition = this.camera.position.clone().add(move);
-
-    perfTimers.movement = performance.now() - t;
-    t = performance.now();
-
-    // Gestion des PNJ en mode WorldMap
-    if (this.npcManager && !this.dialogueSystem?.isDialogueActive()) {
-        this.npcManager.update(delta, this.camera.position);
-
-        // Vérifier vision dresseurs
-        const spottingTrainer = this.npcManager.checkTrainerVision(this.camera.position, delta);
-        if (spottingTrainer) {
-            console.log(`👀 ${spottingTrainer.nom} vous a repéré (WorldMap)!`);
-            this.dialogueSystem.showTrainerAlert();
-            
-            setTimeout(() => {
-                if (!this.dialogueSystem.isDialogueActive()) {
-                    this.npcManager.lookAtPlayer(spottingTrainer, this.camera.position);
-                    const dialogue = this.npcManager.startDialogue(spottingTrainer);
-                    this.dialogueSystem.start(spottingTrainer, dialogue.dialogues, dialogue.key);
-                }
-            }, 800);
-        }
-    }
-
-    // Update portails
-    this.sceneManager.updatePortals(this.camera);
-
-
-    perfTimers.portals = performance.now() - t;
-    t = performance.now();
-
-    // Check portal crossing
-    // Check portal crossing
-    // More robust check: don't rely on activeZone.scene for SceneManager state
-    const zonePortal = this.sceneManager.checkPortalCrossing(
-      this.camera.position,
-      this.lastPlayerSide
-    );
-
-    if (zonePortal) {
-      this.lastInteriorScene = zonePortal.targetScene;
-      this.useWorldMap = false;
-      this.sceneManager.activeSceneName = zonePortal.targetScene;
-
-      // FIX: Forcer le chargement des PNJ pour la scène cible (cas dynamic load)
-      if (this.npcManager) {
-          const targetSceneData = this.sceneManager.sceneData.get(zonePortal.targetScene);
-          if (targetSceneData) {
-               this.npcManager.loadNPCsForScene(zonePortal.targetScene, targetSceneData).catch(e => console.warn(e));
-          }
-      }
-
-      // Chercher le portail de retour dans la scène cible
-      // Robustesse: utiliser zonePortal.sourceZone (la vraie zone physique)
-      const sourceZoneName = zonePortal.sourceZone || (this.worldManager.activeZone ? this.worldManager.activeZone.scene : "world");
-      
-      const destPortal = this.sceneManager.portals.find(
-        (p) =>
-          p.sourceScene === zonePortal.targetScene &&
-          p.targetScene === sourceZoneName
-      );
-
-        if (destPortal?.portal?.portalMesh) {
-          const destPos = destPortal.portal.portalMesh.position.clone();
-          const destRot = destPortal.portal.portalMesh.rotation.y;
-
-          // Offset pour spawner devant le portail
-          const offset = new THREE.Vector3(0, 0, 1.5);
-          offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), destRot);
-          destPos.add(offset);
-          destPos.y = 1.6;
-
-          this.camera.position.copy(destPos);
-          this.camera.rotation.set(0, destRot + Math.PI, 0);
-        } else if (zonePortal.spawnPosition) {
-          // Fallback
-          this.camera.position.set(
-            zonePortal.spawnPosition.x || 0,
-            zonePortal.spawnPosition.y || 1.6,
-            zonePortal.spawnPosition.z || 0
-          );
-        }
-
-        this.camera.fov = 85;
-        this.camera.updateProjectionMatrix();
-        return;
-      }
-
-
-    perfTimers.portalCheck = performance.now() - t;
-    t = performance.now();
-
-    // VÃ©rifier si on peut sauter d'un rebord
-    const forward = new THREE.Vector3();
-    this.camera.getWorldDirection(forward);
-    forward.y = 0;
-    forward.normalize();
-
-    const flangeCheck = this.worldManager.isAboveFlange(
-      this.camera.position,
-      forward
-    );
-
-    perfTimers.flangeCheck = performance.now() - t;
-    t = performance.now();
-
-    if (flangeCheck.canJump && this.inputManager.isJumpPressed()) {
-      this.isJumping = true;
-      this.jumpStartY = this.camera.position.y - 1.6;
-      this.jumpTargetY = flangeCheck.landingY;
-      this.jumpStartX = this.camera.position.x;
-      this.jumpStartZ = this.camera.position.z;
-      this.jumpTargetX = flangeCheck.landingX;
-      this.jumpTargetZ = flangeCheck.landingZ;
-      this.jumpProgress = 0;
-
-      return;
-    }
-
-    // VÃ©rifications collisions
-    const nearPortal = this.sceneManager.isNearPortal(newPosition);
-    const hasCollision = this.worldManager.checkCollision(newPosition);
-
-    perfTimers.collision = performance.now() - t;
-    t = performance.now();
-
-    const currentHeight = this.worldManager.getTerrainHeight(
-      this.camera.position.x,
-      this.camera.position.z
-    );
-    const newHeight = this.worldManager.getTerrainHeight(
-      newPosition.x,
-      newPosition.z
-    );
-
-    perfTimers.terrainHeight = performance.now() - t;
-    t = performance.now();
-
-    const hasFlangeBlock = this.worldManager.checkFlangeCollision(
-      this.camera.position,
-      newPosition
-    );
-
-    perfTimers.flangeCollision = performance.now() - t;
-    t = performance.now();
-
-    // Peut bouger si : prÃ¨s d'un portail OU (pas de collision ET pas de flange)
-    if (nearPortal || (!hasCollision && !hasFlangeBlock)) {
-      this.camera.position.copy(newPosition);
-    } else {
-      // Glissement
-      const slideX = this.camera.position.clone();
-      slideX.x = newPosition.x;
-      const slideXBlocked =
-        this.worldManager.checkCollision(slideX) ||
-        this.worldManager.checkFlangeCollision(this.camera.position, slideX);
-      if (!slideXBlocked) {
-        this.camera.position.x = slideX.x;
-      }
-
-      const slideZ = this.camera.position.clone();
-      slideZ.z = newPosition.z;
-      const slideZBlocked =
-        this.worldManager.checkCollision(slideZ) ||
-        this.worldManager.checkFlangeCollision(this.camera.position, slideZ);
-      if (!slideZBlocked) {
-        this.camera.position.z = slideZ.z;
-      }
-    }
-
-    perfTimers.sliding = performance.now() - t;
-    t = performance.now();
-
-    // Ajuster la hauteur sur le _floor
-    const finalHeight = this.worldManager.getTerrainHeight(
-      this.camera.position.x,
-      this.camera.position.z
-    );
-    this.camera.position.y = finalHeight + 1.6;
-
-    perfTimers.finalHeight = performance.now() - t;
-    t = performance.now();
-
-    // Mettre Ã  jour le chargement des zones
-    this.worldManager.update(this.camera.position);
-
-    perfTimers.worldUpdate = performance.now() - t;
-    t = performance.now();
-
-    const collisionObjects = this.worldManager.getCollisionObjects();
-
-    if (this.pokemonManager) {
-      this.pokemonManager.update(delta, this.camera.position, collisionObjects);
-    }
-
-    if (this.pokeballPhysics) {
-      this.pokeballPhysics.update(delta);
-    }
-
-    if (this.combatManager) {
-      this.combatManager.update(delta);
-    }
-
-    if (this.npcManager) {
-      this.npcManager.update(delta, this.camera.position); // On passe la position du joueur pour la vision
-    }
-
-
-
-    perfTimers.gameSystems = performance.now() - t;
-
-    // Log des perfs toutes les 60 frames
-    if (!this._perfFrameCount) this._perfFrameCount = 0;
-    this._perfFrameCount++;
+  // Bloquer en mode combat
+  if (this.combatManager?.isInCombat && !this.combatManager.freeCameraMode) {
+    return;
   }
 
+  // Bloquer pendant les dialogues
+  if (this.dialogueSystem?.isDialogueActive()) {
+    return;
+  }
+
+  // ✅ Déterminer la cible de mouvement (Rig VR ou Caméra)
+  let moveTarget = this.camera;
+  if (this.useVR && this.vrManager && this.vrManager.playerRig) {
+    moveTarget = this.vrManager.playerRig;
+  }
+
+  if (this.isJumping) {
+    this.jumpProgress += delta * 3;
+
+    if (this.jumpProgress >= 1) {
+      moveTarget.position.x = this.jumpTargetX;
+      moveTarget.position.z = this.jumpTargetZ;
+      moveTarget.position.y = this.jumpTargetY + 1.6;
+      this.isJumping = false;
+    } else {
+      const arc = Math.sin(this.jumpProgress * Math.PI) * 1.5;
+      moveTarget.position.x =
+        this.jumpStartX +
+        (this.jumpTargetX - this.jumpStartX) * this.jumpProgress;
+      moveTarget.position.z =
+        this.jumpStartZ +
+        (this.jumpTargetZ - this.jumpStartZ) * this.jumpProgress;
+      const currentY =
+        this.jumpStartY +
+        (this.jumpTargetY - this.jumpStartY) * this.jumpProgress;
+      moveTarget.position.y = currentY + 1.6 + arc;
+    }
+
+    this.worldManager.update(moveTarget.position);
+    return;
+  }
+
+  const perfTimers = {};
+  let t = performance.now();
+
+  // Calculer le mouvement
+  const move = this.inputManager.getMovementVector();
+  const newPosition = moveTarget.position.clone().add(move);
+
+  perfTimers.movement = performance.now() - t;
+  t = performance.now();
+
+  // Gestion des PNJ en mode WorldMap
+  if (this.npcManager && !this.dialogueSystem?.isDialogueActive()) {
+    this.npcManager.update(delta, moveTarget.position);
+
+    // Vérifier vision dresseurs
+    const spottingTrainer = this.npcManager.checkTrainerVision(moveTarget.position, delta);
+    if (spottingTrainer) {
+      console.log(`👀 ${spottingTrainer.nom} vous a repéré (WorldMap)!`);
+      this.dialogueSystem.showTrainerAlert();
+
+      setTimeout(() => {
+        if (!this.dialogueSystem.isDialogueActive()) {
+          this.npcManager.lookAtPlayer(spottingTrainer, moveTarget.position);
+          const dialogue = this.npcManager.startDialogue(spottingTrainer);
+          this.dialogueSystem.start(spottingTrainer, dialogue.dialogues, dialogue.key);
+        }
+      }, 800);
+    }
+  }
+
+  // Update portails
+  this.sceneManager.updatePortals(this.camera);
+
+  perfTimers.portals = performance.now() - t;
+  t = performance.now();
+
+  // Check portal crossing
+  const zonePortal = this.sceneManager.checkPortalCrossing(
+    moveTarget.position,
+    this.lastPlayerSide
+  );
+
+  if (zonePortal) {
+    this.lastInteriorScene = zonePortal.targetScene;
+    this.useWorldMap = false;
+    this.sceneManager.activeSceneName = zonePortal.targetScene;
+
+    // FIX: Forcer le chargement des PNJ pour la scène cible
+    if (this.npcManager) {
+      const targetSceneData = this.sceneManager.sceneData.get(zonePortal.targetScene);
+      if (targetSceneData) {
+        this.npcManager.loadNPCsForScene(zonePortal.targetScene, targetSceneData).catch(e => console.warn(e));
+      }
+    }
+
+    // Chercher le portail de retour dans la scène cible
+    const sourceZoneName = zonePortal.sourceZone || (this.worldManager.activeZone ? this.worldManager.activeZone.scene : "world");
+
+    const destPortal = this.sceneManager.portals.find(
+      (p) =>
+        p.sourceScene === zonePortal.targetScene &&
+        p.targetScene === sourceZoneName
+    );
+
+    if (destPortal?.portal?.portalMesh) {
+      const destPos = destPortal.portal.portalMesh.position.clone();
+      const destRot = destPortal.portal.portalMesh.rotation.y;
+
+      // Offset pour spawner devant le portail
+      const offset = new THREE.Vector3(0, 0, 1.5);
+      offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), destRot);
+      destPos.add(offset);
+      destPos.y = 1.6;
+
+      moveTarget.position.copy(destPos);
+      this.camera.rotation.set(0, destRot + Math.PI, 0);
+    } else if (zonePortal.spawnPosition) {
+      // Fallback
+      moveTarget.position.set(
+        zonePortal.spawnPosition.x || 0,
+        zonePortal.spawnPosition.y || 1.6,
+        zonePortal.spawnPosition.z || 0
+      );
+    }
+
+    this.camera.fov = 85;
+    this.camera.updateProjectionMatrix();
+    return;
+  }
+
+  perfTimers.portalCheck = performance.now() - t;
+  t = performance.now();
+
+  // Vérifier si on peut sauter d'un rebord
+  const forward = new THREE.Vector3();
+  this.camera.getWorldDirection(forward);
+  forward.y = 0;
+  forward.normalize();
+
+  const flangeCheck = this.worldManager.isAboveFlange(
+    moveTarget.position,
+    forward
+  );
+
+  perfTimers.flangeCheck = performance.now() - t;
+  t = performance.now();
+
+  if (flangeCheck.canJump && this.inputManager.isJumpPressed()) {
+    this.isJumping = true;
+    this.jumpStartY = moveTarget.position.y - 1.6;
+    this.jumpTargetY = flangeCheck.landingY;
+    this.jumpStartX = moveTarget.position.x;
+    this.jumpStartZ = moveTarget.position.z;
+    this.jumpTargetX = flangeCheck.landingX;
+    this.jumpTargetZ = flangeCheck.landingZ;
+    this.jumpProgress = 0;
+
+    return;
+  }
+
+  // Vérifications collisions
+  const nearPortal = this.sceneManager.isNearPortal(newPosition);
+  const hasCollision = this.worldManager.checkCollision(newPosition);
+
+  perfTimers.collision = performance.now() - t;
+  t = performance.now();
+
+  const currentHeight = this.worldManager.getTerrainHeight(
+    moveTarget.position.x,
+    moveTarget.position.z
+  );
+  const newHeight = this.worldManager.getTerrainHeight(
+    newPosition.x,
+    newPosition.z
+  );
+
+  perfTimers.terrainHeight = performance.now() - t;
+  t = performance.now();
+
+  const hasFlangeBlock = this.worldManager.checkFlangeCollision(
+    moveTarget.position,
+    newPosition
+  );
+
+  perfTimers.flangeCollision = performance.now() - t;
+  t = performance.now();
+
+  // Peut bouger si : près d'un portail OU (pas de collision ET pas de flange)
+  if (nearPortal || (!hasCollision && !hasFlangeBlock)) {
+    moveTarget.position.copy(newPosition);
+  } else {
+    // Glissement
+    const slideX = moveTarget.position.clone();
+    slideX.x = newPosition.x;
+    const slideXBlocked =
+      this.worldManager.checkCollision(slideX) ||
+      this.worldManager.checkFlangeCollision(moveTarget.position, slideX);
+    if (!slideXBlocked) {
+      moveTarget.position.x = slideX.x;
+    }
+
+    const slideZ = moveTarget.position.clone();
+    slideZ.z = newPosition.z;
+    const slideZBlocked =
+      this.worldManager.checkCollision(slideZ) ||
+      this.worldManager.checkFlangeCollision(moveTarget.position, slideZ);
+    if (!slideZBlocked) {
+      moveTarget.position.z = slideZ.z;
+    }
+  }
+
+  perfTimers.sliding = performance.now() - t;
+  t = performance.now();
+
+  // Ajuster la hauteur sur le _floor
+  const finalHeight = this.worldManager.getTerrainHeight(
+    moveTarget.position.x,
+    moveTarget.position.z
+  );
+  moveTarget.position.y = finalHeight + 1.6;
+
+  perfTimers.finalHeight = performance.now() - t;
+  t = performance.now();
+
+  // Mettre à jour le chargement des zones
+  this.worldManager.update(moveTarget.position);
+
+  perfTimers.worldUpdate = performance.now() - t;
+  t = performance.now();
+
+  const collisionObjects = this.worldManager.getCollisionObjects();
+
+  if (this.pokemonManager) {
+    this.pokemonManager.update(delta, moveTarget.position, collisionObjects);
+  }
+
+  if (this.pokeballPhysics) {
+    this.pokeballPhysics.update(delta);
+  }
+
+  if (this.combatManager) {
+    this.combatManager.update(delta);
+  }
+
+  if (this.npcManager) {
+    this.npcManager.update(delta, moveTarget.position);
+  }
+
+  perfTimers.gameSystems = performance.now() - t;
+
+  // Log des perfs toutes les 60 frames
+  if (!this._perfFrameCount) this._perfFrameCount = 0;
+  this._perfFrameCount++;
+}
   checkWorldMapPortals() {
     const playerPos = this.camera.position;
     const playerRadius = 1;

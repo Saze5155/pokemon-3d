@@ -198,6 +198,8 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       this.enabled = true;
       this.session = this.renderer.xr.getSession();
 
+      this.game.useVR = true;
+
       // Ajouter le Rig à la scène active
       if (this.game.sceneManager.activeSceneName === 'world') {
           this.game.worldManager.worldScene.add(this.playerRig);
@@ -291,10 +293,20 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
     handleLocomotion(delta) {
       const session = this.renderer.xr.getSession();
-      if (!session) return;
+      if (!session) {
+        console.log("❌ Pas de session XR");
+        return;
+      }
 
       let leftGamepad = null;
       let rightGamepad = null;
+      for (const source of session.inputSources) {
+        if (source.gamepad && source.handedness === 'left') {
+          const axes = source.gamepad.axes;
+          // Afficher les 4 axes avec leurs valeurs
+          console.log(`🕹️ LEFT axes: [0]=${axes[0]?.toFixed(2)}, [1]=${axes[1]?.toFixed(2)}, [2]=${axes[2]?.toFixed(2)}, [3]=${axes[3]?.toFixed(2)}`);
+        }
+  }
 
       // Récupérer les gamepads FRAIS depuis la session
       for (const source of session.inputSources) {
