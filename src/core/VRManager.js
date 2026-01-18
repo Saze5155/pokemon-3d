@@ -94,7 +94,7 @@ export class VRManager {
       this.laserLine = new THREE.Line(geometry, material);
       this.laserLine.name = 'laserPointer';
       this.laserLine.scale.z = 1; // Longueur par défaut
-  }
+  
   }
 
   setupControllers() {
