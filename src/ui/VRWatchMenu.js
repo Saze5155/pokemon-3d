@@ -38,21 +38,25 @@ export class VRWatchMenu {
     // Coordonnées locales GripSpace: +Y Haut, +X Droite (Intérieur), -Z Avant
     
     // Position: X négatif (Gauche), Y centré, Z un peu en arrière
-    this.container.position.set(-0.04, 0.01, 0.08); 
+    // Positionner sur le poignet (Main Gauche)
+    // "Face gauche" -> Côté extérieur
+    // Correction "Vers nous" -> On augmente Z (vers le coude)
+    // "Sens contraire montre" -> On tourne autour de l'axe du bras (Z) dans le sens trigo inverse ? (Horire = sens montre)
+    // Sens montre = Visser. Sens contraire = Dévisser.
+    // Rotation Z actuelle: PI/2. Sens contraire -> On augmente ? (PI/2 + ...)
     
-    // Rotation:
-    // Le mesh de base a l'écran vers +Y (Haut).
-    // On veut qu'il regarde vers la gauche (-X).
-    // Donc on fait une rotation sur Z de +90 degrés (Math.PI / 2).
-    // Et on ajuste X/Y pour qu'il soit bien orienté vers le joueur quand il tourne le poignet.
+    // Nouvelle position : Plus vers "nous" (+Z) et décalé
+    this.container.position.set(-0.04, -0.02, 0.10); 
     
-    this.container.rotation.set(0, 0, Math.PI / 2);
+    // Rotation: On tourne encore plus ("un cran")
+    // Z: Math.PI (180 deg) -> Complètement à l'envers/extérieur
+    this.container.rotation.set(0, 0, Math.PI);
     
-    // Ajustement fin pour l'angle de vue
-    this.container.rotateY(Math.PI / 8); // Un peu incliné vers le haut/visage 
+    // Ajustement fin
+    this.container.rotateY(Math.PI / 6); 
     
     this.baseScale = new THREE.Vector3(1, 1, 1);
-    this.focusedScale = new THREE.Vector3(1.8, 1.8, 1.8); // +80% quand on regarde
+    this.focusedScale = new THREE.Vector3(1.8, 1.8, 1.8);
     this.isFocused = false;
     
     parentController.add(this.container);
@@ -107,6 +111,7 @@ export class VRWatchMenu {
     this.menuMesh = new THREE.Mesh(screenGeo, screenMat);
     this.menuMesh.position.y = 0.048; // Légèrement au dessus du boîtier
     this.menuMesh.rotation.x = -Math.PI / 2;
+    this.menuMesh.rotation.z = Math.PI; // Inverser l'écran (Haut -> Bas)
     this.container.add(this.menuMesh);
 
     // Initialiser l'UI par défaut

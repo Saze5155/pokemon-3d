@@ -416,10 +416,17 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             // Produit scalaire
             const dot = n.dot(toCam);
             
-            // Si dot > 0.7 (env 45 deg), on regarde la montre
-            const isLooking = dot > 0.65;
+            // Avec la rotation Z presque à PI (180deg), la normale Y+ pointe probablement vers le bas/l'extérieur.
+            // Donc quand on regarde l'écran, la normale pointe à l'opposé de la caméra.
+            // Dot product doit être NÉGATIF.
+            // On teste avec un seuil négatif.
             
-            this.watchMenu.isVisible = isLooking || true; // Pour l'instant on laisse visible, mais on focus
+            const isLooking = dot < -0.4;
+            
+            // DEBUG (à enlever plus tard)
+            // if (Math.random() < 0.05) console.log(`⌚ Dot: ${dot.toFixed(2)}, Focused: ${isLooking}`);
+            
+            this.watchMenu.isVisible = true; // Toujours visible pour tester
             this.watchMenu.setFocus(isLooking);
 
             // Update Raycaster depuis la main DROITE
