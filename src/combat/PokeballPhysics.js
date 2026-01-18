@@ -234,10 +234,21 @@ export class PokeballPhysics {
     document.addEventListener("mousedown", (e) => {
       // ✅ FIX: Ne lancer la pokéball que si le pointer lock est actif
       // Cela évite de lancer la pokéball lors des clics sur les menus UI
-      const isPointerLocked = this.inputManager?.isLocked() || document.pointerLockElement !== null;
+      // MODIF: Vérifier que le pointeur est REELLEMENT verrouillé avant de lancer
+      // Si c'est le clic qui initie le verrouillage, on ne lance pas.
+      const isPointerLocked = this.inputManager?.isLocked() && document.pointerLockElement !== null;
 
       if (e.button === 0 && isPointerLocked) {
-        // e.preventDefault(); // Optionnel selon l'effet sur le PointerLock
+        // ✅ FIX: Ignorer si on clique sur une interface (bouton, input, etc.)
+        if (e.target.closest("button") || e.target.closest("input") || e.target.closest(".interactive-ui")) {
+            return;
+        }
+
+        // Si le pointeur vient juste d'être verrouillé (< 500ms), on ignore le clic initial
+        if (this.inputManager.lastLockTime && (Date.now() - this.inputManager.lastLockTime < 500)) {
+            return;
+        }
+        
         this.startCharging();
       }
     });
@@ -251,7 +262,8 @@ export class PokeballPhysics {
 
     document.addEventListener("keydown", (e) => {
       // ✅ FIX: Touche 'A' pour lancer (si pas dans un input)
-      if (e.code === "KeyA" && document.activeElement.tagName !== "INPUT") {
+      // Utilisation de e.key pour compatible AZERTY/QWERTY
+      if (e.key.toLowerCase() === "a" && document.activeElement.tagName !== "INPUT") {
           this.startCharging();
       }
 
@@ -261,7 +273,7 @@ export class PokeballPhysics {
     });
 
     document.addEventListener("keyup", (e) => {
-        if (e.code === "KeyA" && this.isCharging) {
+        if (e.key.toLowerCase() === "a" && this.isCharging) {
             this.throwPokeball();
         }
     });

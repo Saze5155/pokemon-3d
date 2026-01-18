@@ -3,7 +3,7 @@
     "joueur": {
       "nom": "RED",
       "idDresseur": 20279,
-      "argent": 3060,
+      "argent": 3560,
       "badges": [
         false,
         false,
@@ -14,7 +14,89 @@
         false,
         false
       ],
-      "tempsJeu": 1064,
+      "tempsJeu": 1723,
+      "position": {
+        "map": "route2",
+        "x": 6.518387752748001,
+        "y": 7.599988356255064,
+        "z": -162.5185026960576,
+        "direction": "south"
+      }
+    },
+    "equipe": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "pc": [
+      7
+    ],
+    "sac": {
+      "pokeballs": {},
+      "soins": {
+        "potion": 1
+      },
+      "pierres": {},
+      "boosts": {},
+      "cles": []
+    },
+    "pokedex": {
+      "vus": [
+        4,
+        16,
+        19,
+        43,
+        69
+      ],
+      "captures": [
+        4,
+        16,
+        19,
+        43,
+        69,
+        5
+      ]
+    },
+    "drapeaux": {
+      "intro_complete": true,
+      "starter_choisi": true,
+      "rival_battu_labo": false,
+      "pokedex_obtenu": true,
+      "carte_obtenue": false,
+      "pokeballs_debloquees": true,
+      "premier_pokemon": true,
+      "livraison_chen_faite": false,
+      "rival_battu_route22": false,
+      "foret_jade_traversee": false,
+      "badge_roche": false
+    },
+    "dresseursVaincus": [
+      "dresseur_shorts_joey_2",
+      "dresseur_insecte_1_9",
+      "dresseur_shorts_joey_1"
+    ],
+    "dateCreation": "2026-01-15T13:47:37.335Z",
+    "dateSauvegarde": "2026-01-18T12:08:26.763Z"
+  },
+  "sauvegarde_2": {
+    "joueur": {
+      "nom": "RED",
+      "idDresseur": 23184,
+      "argent": 3120,
+      "badges": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "tempsJeu": 237,
       "position": {
         "map": "maisonetage",
         "x": 5,
@@ -26,8 +108,8 @@
     "equipe": [
       1,
       2,
-      3,
-      4,
+      null,
+      null,
       null,
       null
     ],
@@ -43,14 +125,12 @@
     },
     "pokedex": {
       "vus": [
-        4,
-        19,
-        69
+        7,
+        43
       ],
       "captures": [
-        4,
-        19,
-        69
+        7,
+        43
       ]
     },
     "drapeaux": {
@@ -66,12 +146,9 @@
       "foret_jade_traversee": false,
       "badge_roche": false
     },
-    "dresseursVaincus": [
-      "dresseur_insecte_1_1"
-    ],
-    "dateCreation": "2026-01-15T13:47:37.335Z",
-    "dateSauvegarde": "2026-01-15T16:29:32.830Z"
+    "dresseursVaincus": [],
+    "dateCreation": "2026-01-18T01:29:43.611Z",
+    "dateSauvegarde": "2026-01-18T10:35:25.490Z"
   },
-  "sauvegarde_2": null,
   "sauvegarde_3": null
 }

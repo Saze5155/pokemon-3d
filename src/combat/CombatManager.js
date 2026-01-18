@@ -67,14 +67,14 @@ export class CombatManager {
     this.onCombatEndCallback = null;
   }
 
-  startCombat(playerPokemon, wildPokemon, playerPokemonEntity, trainer = null, enemyTeam = []) {
+  startCombat(playerPokemon, wildPokemon, playerPokemonEntity, trainer = null, enemyTeam = [], respawnPosition = null) {
     console.log(
       `⚔️ Combat started: ${playerPokemon.name} vs ${wildPokemon.name} (Trainer: ${trainer?.nom})`
     );
 
     this.isInCombat = true;
     this.currentTrainer = trainer; // Stocker le dresseur
-    this.enemyTeam = enemyTeam;    // Stocker l'équipe adverse complète
+    this.enemyTeam = enemyTeam;    // Stocker l'équipe complète
     this.currentEnemyIndex = 0;    // Index du Pokémon actuel
 
     // Si c'est un dresseur, wildPokemon est le premier de l'équipe
@@ -91,8 +91,12 @@ export class CombatManager {
       this.playerPokemonEntity.inCombat = true;
     }
 
-    // FIX: Sauvegarder la position ORIGINALE du joueur (pour restaurer après fuite)
-    this.originalPlayerPosition.copy(this.camera.position);
+    // FIX: Sauvegarder la position ORIGINALE du joueur
+    if (respawnPosition) {
+        this.originalPlayerPosition.copy(respawnPosition);
+    } else {
+        this.originalPlayerPosition.copy(this.camera.position);
+    }
     this.originalPlayerRotation.copy(this.camera.rotation);
 
     // Sauvegarder aussi pour le toggle caméra
@@ -125,6 +129,11 @@ export class CombatManager {
     this.setCombatCamera();
     this.combatState = "PLAYER_TURN";
     // console.log("C'est votre tour !");
+    
+    // FIX: Masquer le HUD au démarrage du combat
+    if (this.uiManager && this.uiManager.modernHUD) {
+        this.uiManager.modernHUD.hideForCombat();
+    }
   }
 
   setupCombatPositions() {
@@ -708,7 +717,15 @@ export class CombatManager {
   }
 
   enemyTurn() {
-    if (this.combatState !== "OPPONENT_TURN") return;
+    // FIX: Vérifier si le combat est fini ou si le Pokémon est KO avant d'attaquer
+    if (this.combatState !== "OPPONENT_TURN" || 
+        this.combatState === "VICTORY" || 
+        this.combatState === "DEFEAT") return;
+
+    if (!this.wildPokemon || this.getPokemonHp(this.wildPokemon) <= 0) {
+        console.warn("⚠️ Enemy turn skipped: Pokemon is dead or null");
+        return;
+    }
 
     // IA Simple: Choisir une attaque au hasard
     const moves = this.wildPokemon.attaques || ["charge"];
@@ -806,6 +823,11 @@ export class CombatManager {
     this.combatState = "DEFEAT";
 
     setTimeout(() => {
+      // Cooldown aussi en cas de défaite pour éviter le spam
+      if (this.currentTrainer) {
+          this.currentTrainer.battleCooldown = Date.now() + 5000;
+          this.currentTrainer.isBattling = false; // Reset lock
+      }
       this.endCombat(false);
     }, 2000);
   }
@@ -1175,6 +1197,13 @@ export class CombatManager {
   endCombat(wasEscape = false) {
     this.isInCombat = false;
 
+    // Réafficher le HUD
+    if (this.uiManager && this.uiManager.modernHUD) {
+        this.uiManager.modernHUD.showAfterCombat();
+        // FIX: Forcer l'interaction utilisateur pour relancer le PointerLock
+        setTimeout(() => this.uiManager.modernHUD.showResumeOverlay(), 100);
+    }
+
     // FIX: Restaurer tous les objets cachés par l'occlusion
     this.restoreHiddenObjects();
 
@@ -1183,7 +1212,16 @@ export class CombatManager {
       this.wildPokemon.inCombat = false;
       // ✅ FIX: Supprimer le modèle de la scène pour éviter la duplication
       if (this.wildPokemon.model) {
-        this.scene.remove(this.wildPokemon.model);
+        // Suppression robuste: retirer du parent quel qu'il soit
+        if(this.wildPokemon.model.parent) {
+             this.wildPokemon.model.parent.remove(this.wildPokemon.model);
+        } else {
+             this.scene.remove(this.wildPokemon.model);
+        }
+      }
+      // Nettoyage complet
+      if(typeof this.wildPokemon.dispose === 'function') {
+          this.wildPokemon.dispose();
       }
     }
 
@@ -1246,6 +1284,12 @@ export class CombatManager {
 
     if (this.onCombatEndCallback) {
       this.onCombatEndCallback();
+    }
+
+    // FIX: S'assurer que les inputs sont débloqués
+    if (this.uiManager && this.uiManager.game && this.uiManager.game.inputManager) {
+        console.log("🔓 Déblocage forcé des inputs post-combat");
+        this.uiManager.game.inputManager.locked = false;
     }
   }
 
@@ -1502,26 +1546,38 @@ export class CombatManager {
       this.currentEnemyIndex = index;
       const nextRawData = this.enemyTeam[index];
       
-      // 2. Préparer les données
-      // Il nous faut les stats complètes. Si nextRawData n'est qu'un {pokemon: ID, niveau: 5}, on doit hydrater
-      const nextPokemonID = nextRawData.pokemon || nextRawData.id;
-      const baseData = this.pokemonManager.pokemonDatabase.find(p => p.id === nextPokemonID);
+      // FIX: Robustesse des données (supporte {pokemon: ID}, {id: ID} ou juste ID)
+      let nextPokemonID, level;
+      
+      if (typeof nextRawData === 'object' && nextRawData !== null) {
+          nextPokemonID = nextRawData.pokemon || nextRawData.id;
+          level = nextRawData.niveau || nextRawData.level || 5;
+      } else {
+          // Cas où c'est juste un ID (ex: [4, 16])
+          nextPokemonID = nextRawData;
+          level = 5; // Niveau par défaut
+      }
+
+      console.log(`🔍 Chargement Enemy #${index}: RawData=`, nextRawData, "ID=", nextPokemonID);
+
+      const baseData = this.pokemonManager.pokemonDatabase.find(p => p.id == nextPokemonID); // Loose equality pour string/int
       if (!baseData) {
-          console.error("Impossible de charger le prochain Pokemon:", nextPokemonID);
+          console.error("🚨 Impossible de charger le prochain Pokemon:", nextPokemonID);
           this.victory(); // Fallback
           return;
       }
 
-      const level = nextRawData.niveau || 5;
       const nextPokemon = {
           ...baseData,
           level: level,
           uuid: `trainer_${this.currentTrainer.id}_p${index}`,
           stats: this.pokemonManager.calculateStats(baseData.stats, level),
-          // S'assurer que les HP sont au max
       };
-      // Init HP
+      // Init HP : ActivePokemon utilise la propriété .hp, pas seulement .stats.hp
       nextPokemon.stats.hp = nextPokemon.stats.hpMax;
+      nextPokemon.hp = nextPokemon.stats.hpMax;
+      nextPokemon.maxHp = nextPokemon.stats.hpMax;
+      // nextPokemon.name est déjà défini par PokemonManager (alias de nom)
 
       console.log(`✨ Envoi de ${nextPokemon.name} Niv.${level}`);
       this.uiManager.showDialogue(`${this.currentTrainer.nom} envoie ${nextPokemon.name} !`);
@@ -1879,8 +1935,12 @@ export class CombatManager {
   }
 
   executePlayerMove(moveId) {
+      if (this.isActionInProgress) return;
+      
       const move = this.moveManager.getMove(moveId);
       if (!move) return;
+
+      this.isActionInProgress = true;
 
       // Cacher le menu pendant l'attaque
       // this.showMainMenu(false);
@@ -1901,12 +1961,14 @@ export class CombatManager {
             if (damageInfo.critical) this.uiManager.showNotification("Coup critique !");
 
             this.nextTurn();
+            this.isActionInProgress = false;
         }, 1000);
       } else {
         // Logique Statut (TODO)
         setTimeout(() => {
             this.uiManager.showNotification("Mais cela échoue ! (Statut non implémenté)");
             this.nextTurn();
+            this.isActionInProgress = false;
         }, 1000);
       }
   }

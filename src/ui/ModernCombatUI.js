@@ -353,8 +353,10 @@ export class ModernCombatUI {
    */
   updateHP() {
     // Ennemi
-    const enemyHp = this.getPokemonHp(this.enemyPokemon);
-    const enemyMaxHp = this.getPokemonMaxHp(this.enemyPokemon);
+    // FIX: Utiliser la référence à jour du CombatManager
+    const enemyPokemon = this.combatManager.wildPokemon || this.enemyPokemon;
+    const enemyHp = this.getPokemonHp(enemyPokemon);
+    const enemyMaxHp = this.getPokemonMaxHp(enemyPokemon);
     const enemyPercent = (enemyHp / enemyMaxHp) * 100;
     const enemyHpClass = enemyPercent < 25 ? 'critical' : enemyPercent < 50 ? 'low' : '';
 
@@ -362,6 +364,10 @@ export class ModernCombatUI {
     if (enemyInfo) {
       const hpBar = enemyInfo.querySelector('.combat-hp-bar');
       const hpText = enemyInfo.querySelector('.combat-hp-text');
+      // FIX: Update Name and Level
+      const nameText = enemyInfo.querySelector('.combat-pokemon-name');
+      const levelText = enemyInfo.querySelector('.combat-pokemon-level');
+
       if (hpBar) {
         hpBar.style.width = `${enemyPercent}%`;
         hpBar.className = `combat-hp-bar ${enemyHpClass}`;
@@ -369,11 +375,16 @@ export class ModernCombatUI {
       if (hpText) {
         hpText.textContent = `PV: ${enemyHp} / ${enemyMaxHp}`;
       }
+      // FIX: Force update text content
+      if (nameText) nameText.textContent = this.getPokemonName(enemyPokemon);
+      if (levelText) levelText.textContent = `Niv. ${this.getPokemonLevel(enemyPokemon)}`;
     }
 
     // Joueur
-    const playerHp = this.getPokemonHp(this.playerPokemon);
-    const playerMaxHp = this.getPokemonMaxHp(this.playerPokemon);
+    // FIX: Utiliser la référence à jour du CombatManager
+    const playerPokemon = this.combatManager.playerPokemon || this.playerPokemon;
+    const playerHp = this.getPokemonHp(playerPokemon);
+    const playerMaxHp = this.getPokemonMaxHp(playerPokemon);
     const playerPercent = (playerHp / playerMaxHp) * 100;
     const playerHpClass = playerPercent < 25 ? 'critical' : playerPercent < 50 ? 'low' : '';
 
@@ -381,6 +392,10 @@ export class ModernCombatUI {
     if (playerInfo) {
       const hpBar = playerInfo.querySelector('.combat-hp-bar');
       const hpText = playerInfo.querySelector('.combat-hp-text');
+       // FIX: Update Name and Level
+      const nameText = playerInfo.querySelector('.combat-pokemon-name');
+      const levelText = playerInfo.querySelector('.combat-pokemon-level');
+
       if (hpBar) {
         hpBar.style.width = `${playerPercent}%`;
         hpBar.className = `combat-hp-bar ${playerHpClass}`;
@@ -388,6 +403,9 @@ export class ModernCombatUI {
       if (hpText) {
         hpText.textContent = `PV: ${playerHp} / ${playerMaxHp}`;
       }
+      // FIX: Force update text content
+      if (nameText) nameText.textContent = this.getPokemonName(playerPokemon);
+      if (levelText) levelText.textContent = `Niv. ${this.getPokemonLevel(playerPokemon)}`;
     }
   }
 
@@ -421,7 +439,8 @@ export class ModernCombatUI {
   }
 
   getPokemonLevel(pokemon) {
-    return pokemon?.niveau || pokemon?.level || 5;
+    // FIX: Préférer .level (mis à jour par XPManager) à .niveau
+    return pokemon?.level || pokemon?.niveau || 5;
   }
 
   getPokemonHp(pokemon) {

@@ -3,15 +3,15 @@
  * Ce fichier facilite l'intégration des nouveaux modules UI
  */
 
-import { ModernDialogueSystem } from './ModernDialogueSystem.js';
-import { ModernCombatUI } from './ModernCombatUI.js';
-import { ModernHUD } from './ModernHUD.js';
-import { TutorialSystem } from './TutorialSystem.js';
-import { ModernTeamUI } from './ModernTeamUI.js';
 import { ModernBagUI } from './ModernBagUI.js';
-import { ModernStorageUI } from './ModernStorageUI.js';
-import { ModernSettingsUI } from './ModernSettingsUI.js';
+import { ModernCombatUI } from './ModernCombatUI.js';
+import { ModernDialogueSystem } from './ModernDialogueSystem.js';
+import { ModernHUD } from './ModernHUD.js';
 import { ModernPokedexUI } from './ModernPokedexUI.js';
+import { ModernSettingsUI } from './ModernSettingsUI.js';
+import { ModernStorageUI } from './ModernStorageUI.js';
+import { ModernTeamUI } from './ModernTeamUI.js';
+import { TutorialSystem } from './TutorialSystem.js';
 
 /**
  * Initialise tous les systèmes UI modernes
@@ -48,6 +48,8 @@ export function initModernUI(game) {
 
   // 3. HUD moderne
   game.modernHUD = new ModernHUD(ui);
+  // FIX: Attacher le HUD moderne à l'UI Manager pour y accéder depuis CombatManager
+  ui.modernHUD = game.modernHUD;
   console.log('✅ ModernHUD initialisé');
 
   // Synchroniser le HUD avec les données du joueur

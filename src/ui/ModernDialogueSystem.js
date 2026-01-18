@@ -55,6 +55,10 @@ export class ModernDialogueSystem {
    * Crée l'interface de dialogue moderne
    */
   createDialogueUI() {
+    // Nettoyer les anciennes instances
+    const existingContainers = document.querySelectorAll('.modern-dialogue-container.modern-ui');
+    existingContainers.forEach(el => el.remove());
+
     // Conteneur principal
     this.container = document.createElement("div");
     this.container.className = "modern-dialogue-container modern-ui";
@@ -179,7 +183,11 @@ export class ModernDialogueSystem {
     this.currentNPC = npc;
     this.dialogues = dialogues;
     this.dialogueKey = dialogueKey;
+    this.dialogueKey = dialogueKey;
     this.currentIndex = 0;
+
+    console.log(`[ModernDialogueSystem] Starting dialogue with ${npc?.nom}, Key: ${dialogueKey}`);
+
 
     // Obtenir les infos du PNJ
     const npcInfo = this.getNPCInfo(npc);
@@ -199,6 +207,11 @@ export class ModernDialogueSystem {
 
     // Premier dialogue
     this.showCurrentDialogue();
+
+    // S'assurer que le pointeur est déverrouillé pour pouvoir cliquer
+    if (document.pointerLockElement) {
+        document.exitPointerLock();
+    }
 
     return this;
   }
@@ -223,7 +236,7 @@ export class ModernDialogueSystem {
     // Gérer l'indicateur de suite
     const isLast = this.currentIndex >= this.dialogues.length - 1;
     this.indicatorEl.style.display = isLast ? "none" : "flex";
-    this.footer.querySelector('.modern-dialogue-hint').textContent = isLast
+    this.hintEl.textContent = isLast
       ? "Appuie sur E pour terminer"
       : "";
   }
@@ -307,7 +320,7 @@ export class ModernDialogueSystem {
     this.choicesContainer.innerHTML = "";
     this.choicesContainer.style.display = "flex";
     this.indicatorEl.style.display = "none";
-    this.footer.querySelector('.modern-dialogue-hint').textContent = "Sélectionne une option";
+    this.hintEl.textContent = "Sélectionne une option";
 
     choices.forEach((choice, index) => {
       const button = document.createElement("button");
@@ -364,6 +377,7 @@ export class ModernDialogueSystem {
     this.triggerSpecialEvents(npc, key);
 
     if (this.onDialogueComplete) {
+      console.log(`[ModernDialogueSystem] Calling onDialogueComplete for ${npc?.nom}, Key: ${key}`);
       this.onDialogueComplete(npc, key);
     }
 
@@ -397,6 +411,7 @@ export class ModernDialogueSystem {
     if (!npc?.info) return;
 
     const info = npc.info;
+    console.log(`[ModernDialogueSystem] triggerSpecialEvents for ${npc?.nom}, Key: ${dialogueKey}`, info);
 
     // Soin de l'équipe
     if ((info.soigne_equipe || info.soigne) && this.onSpecialEvent) {
@@ -437,7 +452,14 @@ export class ModernDialogueSystem {
    */
   showStarterChoice(npc) {
     this.isActive = true;
+    // Restaurer le PNJ actif (car complete() l'a mis à null via currentNPC = null)
+    this.currentNPC = npc;
     this.container.style.display = "block";
+
+    // Déverrouiller le pointeur pour permettre le clic
+    if (document.pointerLockElement) {
+        document.exitPointerLock();
+    }
 
     const starters = [
       { text: "🌱 Bulbizarre (Plante)", id: 1, name: "Bulbizarre" },
@@ -527,22 +549,15 @@ export class ModernDialogueSystem {
     return this.isActive;
   }
 
-  /**
-   * Affiche un message rapide (notification en dialogue)
-   */
   showQuickMessage(message, duration = 2000) {
     this.textContainer.innerHTML = message;
     this.container.style.display = "block";
     this.choicesContainer.style.display = "none";
     this.indicatorEl.style.display = "none";
-    this.header.style.display = "none";
-    this.footer.style.display = "none";
     this.isActive = false; // Pas interactif
 
     setTimeout(() => {
       this.container.style.display = "none";
-      this.header.style.display = "flex";
-      this.footer.style.display = "flex";
     }, duration);
   }
 }

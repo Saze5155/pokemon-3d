@@ -21,6 +21,7 @@ export class PokemonManager {
       // ✅ Convertir l'objet en tableau
       this.pokemonDatabase = Object.entries(data).map(([id, pokemon]) => ({
         id: parseInt(id),
+        name: pokemon.nom, // Alias pour compatibilité
         ...pokemon,
       }));
 
@@ -461,6 +462,10 @@ class WildPokemon {
 
     this.model = null;
     this.species = pokemonData.nom || pokemonData.name;
+    // FIX: Aliases pour la compatibilité avec UI/CombatManager
+    this.name = this.species;
+    this.nom = this.species;
+    
     this.collisionRadius = 0.5;
 
     this.maxHp = this.calculateHP(pokemonData, level);

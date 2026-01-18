@@ -112,7 +112,7 @@ export class UIManager {
 
     // Utiliser !! pour convertir en boolean (accepte true, 1, "true", etc.)
     this.unlockedFeatures.team = !!(
-      flags.premier_pokemon || flags.starter_choisi
+      flags.premier_pokemon || flags.starter_choisi || (this.playerData.team && this.playerData.team.length > 0)
     );
     this.unlockedFeatures.pokedex = !!flags.pokedex_obtenu;
     this.unlockedFeatures.map = !!flags.carte_obtenue;
@@ -1228,22 +1228,34 @@ export class UIManager {
   }
 
   showDialogue(text, autoHide = false) {
-    const container = document.getElementById("combat-dialogue-container");
-    const textBox = document.getElementById("combat-dialogue-text");
-    
-    if (container && textBox) {
-        container.style.display = "block";
-        textBox.textContent = text;
-        
-        // Effet de frappe (optionnel, pour l'instant direct)
-        
-        if (autoHide) {
-          setTimeout(() => {
-            container.style.display = "none";
-          }, 2000);
-        }
-    }
+  // FIX: Utiliser le système de dialogue moderne s'il est disponible
+  if (this.modernHUD && this.game && this.game.modernDialogue) {
+      if (autoHide) {
+          this.game.modernDialogue.showQuickMessage(text, 2000);
+      } else {
+          // Utiliser showQuickMessage même pour le non-autohide dans le contexte combat simple
+          // ou implémenter une méthode spécifique pour les logs de combat persistants
+          this.game.modernDialogue.showQuickMessage(text, 3000);
+      }
+      return;
   }
+
+  const container = document.getElementById("combat-dialogue-container");
+  const textBox = document.getElementById("combat-dialogue-text");
+  
+  if (container && textBox) {
+      container.style.display = "block";
+      textBox.textContent = text;
+      
+      // Effet de frappe (optionnel, pour l'instant direct)
+      
+      if (autoHide) {
+        setTimeout(() => {
+          container.style.display = "none";
+        }, 2000);
+      }
+  }
+}
 
   hideDialogue() {
     const container = document.getElementById("combat-dialogue-container");

@@ -153,8 +153,21 @@ export class XPManager {
   }
 
   getLevel(xp) {
-    const level = Math.floor(Math.cbrt(xp));
-    return Math.max(1, level); 
+    // Courbe Medium Slow (la plus commune, utilisée dans SaveManager)
+    // XP = 1.2 * L^3 - 15 * L^2 + 100 * L - 140
+    // L'inverse est complexe, on va faire une itération simple car max Level = 100
+    let level = 1;
+    while (this.calculateXpForLevel(level + 1) <= xp) {
+        level++;
+    }
+    return Math.max(1, level);
+  }
+
+  calculateXpForLevel(level) {
+    // Formule Medium Slow
+    return Math.floor(
+      (6 / 5) * Math.pow(level, 3) - 15 * Math.pow(level, 2) + 100 * level - 140
+    );
   }
 
   recalculateStats(pokemon) {

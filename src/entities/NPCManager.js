@@ -802,15 +802,16 @@ export class NPCManager {
           // En ThreeJS standard, Forward est souvent -Z. Mais ici on teste +Z dans le code original context. 
           // Code orig: playerLocalPos.z > 0. Donc Devant = +Z local.
           
-          const inFront = localZ > 0 && localZ < this.trainerVisionDistance;
-          const inWidth = Math.abs(localX) < 1.5; // Largeur 3m
+          // Debug Orientation
+          // console.log(`📐 ${npc.nom}: Rot=${npc.rotation}, Angle=${angle.toFixed(2)}, Local=(${localX.toFixed(2)}, ${localZ.toFixed(2)})`);
 
-          if (inFront && inWidth) {
-             console.log(`✅ VISION GEOMETRIQUE (World): ${npc.nom} à ${distance.toFixed(1)}m`);
-             
+          // FIX: On vérifie juste la distance et la largeur pour l'instant (360° vision si proche)
+          // Cela corrige le cas où le modèle est orienté à l'envers
+          const inZone = Math.abs(localZ) < this.trainerVisionDistance;
+          const inWidth = Math.abs(localX) < 2.0; 
+
+          if (inZone && inWidth) {
              // --- RAYCAST CHECK (Line of Sight) ---
-             // Vérifier qu'il n'y a pas de mur entre le dresseur et le joueur
-             // On lance un rayon depuis le dresseur vers le joueur (hauteur +1m)
              const eyeHeight = 1.5;
              const start = new THREE.Vector3(npcWorldX, npc.position.y + eyeHeight, npcWorldZ);
              const end = new THREE.Vector3(playerPosition.x, playerPosition.y + eyeHeight, playerPosition.z);
@@ -818,22 +819,55 @@ export class NPCManager {
              
              const raycaster = new THREE.Raycaster(start, direction, 0, distance);
              
-             // On cherhce les collisions avec l'environnement
-             // Note: Cela nécessite l'accès à la scène. On essaie de récupérer la scene active.
              let obstacles = [];
              const activeSceneObj = this.sceneManager.scenes.get(this.sceneManager.activeSceneName);
-             if (activeSceneObj) {
-                  // On suppose que l'environnement statique est dans 'activeSceneObj'
-                  // Idéalement on filtrerait pour ne pas toucher les triggers
-                  obstacles = [activeSceneObj]; 
+             
+             if (this.worldManager && this.sceneManager.activeSceneName === "world") {
+                 if (this.worldManager.worldScene) obstacles.push(this.worldManager.worldScene);
+             } else if (activeSceneObj) {
+                 obstacles.push(activeSceneObj); 
              }
              
-             // TODO: Si on a accès aux colliders physiques c'est mieux.
-             // Pour l'instant on se fit à la scène parity check qui devrait résoudre 99% des cas "maison vs dehors"
+             let visible = true;
              
-             this.lastTrainerSpotted = npc.id;
-             this.trainerSpotCooldown = 3;
-             return npc;
+             if (obstacles.length > 0) {
+                 const intersects = raycaster.intersectObjects(obstacles, true);
+                 
+                 for (const hit of intersects) {
+                     // Ignorer le joueur
+                     if (hit.object.userData.isPlayer) continue;
+
+                     // Ignorer le PNJ lui-même (et ses enfants)
+                     // On remonte la hiérarchie pour voir si l'objet appartient au PNJ
+                     let isSelf = false;
+                     let obj = hit.object;
+                     while(obj) {
+                         if (obj.uuid === npc.mesh?.uuid || obj.userData.isNPC) {
+                             isSelf = true;
+                             break;
+                         }
+                         obj = obj.parent;
+                     }
+                     if (isSelf) continue;
+                     
+                     // Si on touche un obstacle
+                     const name = hit.object.name.toLowerCase();
+                     const isIgnorable = name.includes("grass") || name.includes("water") || name.includes("trigger") || name.includes("zone");
+                     
+                     if (!isIgnorable) {
+                         console.log(`🧱 Vue bloquée par ${hit.object.name} (${hit.distance.toFixed(1)}m)`);
+                         visible = false;
+                         break;
+                     }
+                 }
+             }
+
+             if (visible) {
+                 console.log(`👀 ${npc.nom} vous a vu !`);
+                 this.lastTrainerSpotted = npc.id;
+                 this.trainerSpotCooldown = 3;
+                 return npc;
+             }
           }
         }
     }
@@ -879,6 +913,7 @@ export class NPCManager {
     }
 
     if (!this.storyFlags.has("has_starter") && info.donne_starter) {
+      console.log(`[NPCManager] getDialogueKey: Offering starter (Key: choix_starter)`);
       return "choix_starter";
     }
 

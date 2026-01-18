@@ -22,6 +22,10 @@ export class InputManager {
       menu: false, // Escape
     };
 
+    // Input VR
+    this.vrInput = { x: 0, z: 0 };
+    this.vrInteractPressed = false;
+
     // Configuration
     this.moveSpeed = 0.1;
     this.runMultiplier = 1.8;
@@ -50,6 +54,11 @@ export class InputManager {
       if (this.canLock()) {
         this.controls.lock();
       }
+    });
+
+    // Detecter le verrouillage effectif
+    this.controls.addEventListener("lock", () => {
+        this.lastLockTime = Date.now();
     });
 
     // Keydown
@@ -132,7 +141,42 @@ export class InputManager {
     move.addScaledVector(forward, -direction.z * speed);
     move.addScaledVector(right, direction.x * speed);
 
+    // Ajouter le mouvement VR
+    if (this.vrInput.x !== 0 || this.vrInput.z !== 0) {
+        // Le mouvement VR est déjà calculé en WORLD space dans VRManager
+        // Ou en local ? Dans VRManager j'ai fait applyAxisAngle...
+        // Attendons, si VRManager envoie du world relative to camera, c'est bon.
+        // MAIS ici on doit s'assurer qu'on ne double pas la vitesse.
+        
+        // VRManager envoie des vecteurs normalisés (joystick) mais déjà tournés.
+        // On applique la vitesse ici.
+        // Simplification: VRManager envoie dx, dz (world space, normalized-ish)
+        
+        // Note: Dans VRManager j'ai fait applyAxisAngle, donc vrInput.x/z sont en World Space (absolu)
+        // Mais ils sont "petits" (0 à 1).
+        
+        move.x += this.vrInput.x * speed;
+        move.z += this.vrInput.z * speed;
+    }
+
     return move;
+  }
+
+  /**
+   * Définit l'input de mouvement VR
+   * @param {number} x - Axe X world (après rotation tête)
+   * @param {number} z - Axe Z world (après rotation tête)
+   */
+  setVRInput(x, z) {
+      this.vrInput.x = x;
+      this.vrInput.z = z;
+  }
+
+  /**
+   * Déclenche une interaction (depuis VR Controller)
+   */
+  triggerInteraction() {
+      if (this.onInteract) this.onInteract();
   }
 
   /**

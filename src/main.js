@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { VRButton } from "three/addons/webxr/VRButton.js";
 import { CombatManager } from "./combat/CombatManager.js";
 import { MoveManager } from "./combat/MoveManager.js";
 import { PokeballPhysics } from "./combat/PokeballPhysics.js";
@@ -8,14 +9,15 @@ import { InputManager } from "./core/InputManager.js";
 import { OptimizationManager } from "./core/OptimizationManager.js";
 import { SaveManager } from "./core/SaveManager.js";
 import { SceneManager } from "./core/SceneManager.js";
+import { VRManager } from "./core/VRManager.js";
 import { WorldManager } from "./core/WorldManager.js";
 import { XPManager } from "./core/XPManager.js";
 import { NPCManager } from "./entities/NPCManager.js";
 import { PokemonManager } from "./entities/PokemonManager.js";
 import { ModernDialogueSystem } from "./ui/ModernDialogueSystem.js";
+import { hookCombatUI, initModernUI } from "./ui/ModernUIInit.js";
 import { UIManager } from "./ui/UI.js";
 import { Portal } from "./world/Portal.js";
-import { initModernUI, hookCombatUI } from "./ui/ModernUIInit.js";
 
 function fixAllMaterials(scene, name = "scene") {
   let fixed = 0;
@@ -180,11 +182,18 @@ class PokemonGame {
     this.worldManager = new WorldManager(this.sceneManager);
     this.inputManager = new InputManager(this.camera, this.renderer.domElement);
     this.ui = new UIManager();
+    this.ui.game = this; // Permettre l'accès au jeu depuis l'UI
     this.saveManager = new SaveManager();
     this.typeManager = new TypeManager();
     this.moveManager = new MoveManager();
     this.xpManager = new XPManager(this.ui);
+    this.xpManager = new XPManager(this.ui);
     this.audioManager = new AudioManager();
+
+    // Gestionnaire VR
+    this.vrManager = new VRManager(this);
+    document.body.appendChild(VRButton.createButton(this.renderer));
+    this.vrManager.init();
 
 
 
@@ -936,6 +945,45 @@ class PokemonGame {
       );
     };
 
+    // ✅ FIX: Assigner le callback onCaptureComplete (Manquant précédemment)
+    this.pokeballPhysics.onCaptureComplete = (capturedPokemon) => {
+      console.log(`🎯 Capture confirmée (WorldMap) : ${capturedPokemon.species}`);
+      
+      this.isCaptureSequence = true;
+      this.audioManager.playMusic('capture-success', false, false);  
+      
+      setTimeout(() => {
+          const currentZone = this.worldManager.activeZone ? this.worldManager.activeZone.scene : "world";
+          this.audioManager.playMusic(currentZone);
+      }, 4000);
+
+      if (!this.saveManager) return;
+
+      const newPokemonData = this.saveManager.createPokemon(
+        capturedPokemon.id, 
+        capturedPokemon.level
+      );
+
+      if (newPokemonData) {
+          const addedToTeam = this.saveManager.addToTeam(newPokemonData.uniqueId);
+          if (addedToTeam) {
+            this.ui.showDialogue(`${capturedPokemon.species} a été ajouté à l'équipe !`);
+          } else {
+            this.ui.showDialogue(`${capturedPokemon.species} a été envoyé au PC !`);
+          }
+
+          this.saveManager.save();
+          this.ui.syncFromSaveManager();
+          this.combatManager.endCombatByCapture();
+          
+          if (this.tutorialSystem) {
+            setTimeout(() => {
+              this.tutorialSystem.showIfNotSeen('capture');
+            }, 2000);
+          }
+      }
+    };
+
     // Callback de fin de combat : nettoyer l'état de PokeballPhysics
     this.combatManager.onCombatEndCallback = () => {
       console.log("🔄 Synchronisation fin de combat : Reset activePokemon");
@@ -1053,9 +1101,9 @@ class PokemonGame {
       const addedToTeam = this.saveManager.addToTeam(newPokemonData.uniqueId);
       
       if (addedToTeam) {
-        this.uiManager.showDialogue(`${capturedPokemon.species} a été ajouté à l'équipe !`);
+        this.ui.showDialogue(`${capturedPokemon.species} a été ajouté à l'équipe !`);
       } else {
-        this.uiManager.showDialogue(`${capturedPokemon.species} a été envoyé au PC !`);
+        this.ui.showDialogue(`${capturedPokemon.species} a été envoyé au PC !`);
       }
 
       // 3. Sauvegarder immédiatement ET forcer l'écriture
@@ -1065,7 +1113,7 @@ class PokemonGame {
       });
       
       // 4. Mettre à jour l'interface
-      this.uiManager.updateTeamUI();
+      this.ui.updateTeamUI();
 
       // 5. Nettoyer le combat
       this.combatManager.endCombatByCapture();
@@ -1329,10 +1377,13 @@ class PokemonGame {
     
     // Correction: pnj.json peut utiliser 'id' ou 'pokemon'
     const enemyPokemonID = firstEnemy.pokemon || firstEnemy.id;
-    const baseData = this.pokemonManager.pokemonDatabase.find(p => p.id === enemyPokemonID);
+    console.log(`[Main] startTrainerBattle: Enemy ID=${enemyPokemonID} (Type: ${typeof enemyPokemonID})`);
+
+    const baseData = this.pokemonManager.pokemonDatabase.find(p => p.id == enemyPokemonID);
     
     if (!baseData) {
         console.error("❌ Données du Pokémon adverse introuvables:", enemyPokemonID);
+        console.log("Database sample:", this.pokemonManager.pokemonDatabase.slice(0, 3));
         return;
     }
 
@@ -1430,7 +1481,8 @@ class PokemonGame {
 
     // 4. Lancer le combat
     // On passe l'équipe complète (battleData.equipe) pour gérer les switchs
-    this.combatManager.startCombat(playerPokemon, enemyEntity, playerEntity, npc, battleData.equipe);
+    // FIX: Passer la position de respawn sûre
+    this.combatManager.startCombat(playerPokemon, enemyEntity, playerEntity, npc, battleData.equipe, this.lastSafePosition);
 
     // 5. Connecter la logique de victoire
     // 5. Connecter la logique de victoire
@@ -1457,6 +1509,9 @@ class PokemonGame {
         if (this.ui.combatMenu) {
             this.ui.combatMenu.style.display = 'none';
         }
+        
+        // Cooldown de sécurité (5s) pour ce PNJ spécifique
+        npc.battleCooldown = Date.now() + 5000;
 
         // 4. Argent & Badges
         const money = battleData.argent || 0;
@@ -1497,7 +1552,7 @@ class PokemonGame {
 
         setTimeout(() => {
             // Dialogue "After Defeat"
-            this.uiManager.showDialogue(`${npc.nom}: J'ai perdu... Tu es fort !`);
+            this.ui.showDialogue(`${npc.nom}: J'ai perdu... Tu es fort !`);
             
             // On peut aussi déclencher le dialogue formel via NPCManager si défini
             /*
@@ -1593,8 +1648,8 @@ class PokemonGame {
 
     // RÃ©cupÃ©rer les hauteurs du terrain
     const currentTerrainHeight = this.sceneManager.getTerrainHeight(
-      this.camera.position.x,
-      this.camera.position.z
+      moveTarget.position.x,
+      moveTarget.position.z
     );
     const newTerrainHeight = this.sceneManager.getTerrainHeight(
       newPosition.x,
@@ -1603,8 +1658,8 @@ class PokemonGame {
 
     // Calculer la pente
     const horizontalDistance = Math.sqrt(
-      Math.pow(newPosition.x - this.camera.position.x, 2) +
-        Math.pow(newPosition.z - this.camera.position.z, 2)
+      Math.pow(newPosition.x - moveTarget.position.x, 2) +
+        Math.pow(newPosition.z - moveTarget.position.z, 2)
     );
 
     const heightDifference = newTerrainHeight - currentTerrainHeight;
@@ -1618,7 +1673,7 @@ class PokemonGame {
     const canMoveTo = (pos) => {
       const collision = this.checkCollision(pos);
       const flange = this.sceneManager.checkFlangeCollision(
-        this.camera.position,
+        moveTarget.position,
         pos
       );
       return !collision && !flange;
@@ -1626,61 +1681,66 @@ class PokemonGame {
 
     // VÃ©rifier les collisions ET la pente ET les flanges
     if (canMoveTo(newPosition) && canClimb) {
-      this.camera.position.copy(newPosition);
+      moveTarget.position.copy(newPosition);
     } else {
       // Essayer de glisser sur X
-      const slideX = this.camera.position.clone();
+      const slideX = moveTarget.position.clone();
       slideX.x = newPosition.x;
       const slideXHeight = this.sceneManager.getTerrainHeight(
         slideX.x,
         slideX.z
       );
       const slopeX =
-        Math.abs(newPosition.x - this.camera.position.x) > 0.001
+        Math.abs(newPosition.x - moveTarget.position.x) > 0.001
           ? (slideXHeight - currentTerrainHeight) /
-            Math.abs(newPosition.x - this.camera.position.x)
+            Math.abs(newPosition.x - moveTarget.position.x)
           : 0;
 
       if (canMoveTo(slideX) && slopeX <= maxSlope) {
-        this.camera.position.copy(slideX);
+        moveTarget.position.copy(slideX);
       }
 
       // Essayer de glisser sur Z
-      const slideZ = this.camera.position.clone();
+      const slideZ = moveTarget.position.clone();
       slideZ.z = newPosition.z;
       const slideZHeight = this.sceneManager.getTerrainHeight(
         slideZ.x,
         slideZ.z
       );
       const slopeZ =
-        Math.abs(newPosition.z - this.camera.position.z) > 0.001
+        Math.abs(newPosition.z - moveTarget.position.z) > 0.001
           ? (slideZHeight - currentTerrainHeight) /
-            Math.abs(newPosition.z - this.camera.position.z)
+            Math.abs(newPosition.z - moveTarget.position.z)
           : 0;
 
       if (canMoveTo(slideZ) && slopeZ <= maxSlope) {
-        this.camera.position.copy(slideZ);
+        moveTarget.position.copy(slideZ);
       }
     }
 
     // Ajuster la hauteur du joueur
     const finalTerrainHeight = this.sceneManager.getTerrainHeight(
-      this.camera.position.x,
-      this.camera.position.z
+      moveTarget.position.x,
+      moveTarget.position.z
     );
     const playerEyeHeight = 1.6;
-    this.camera.position.y = finalTerrainHeight + playerEyeHeight;
+    moveTarget.position.y = finalTerrainHeight + playerEyeHeight;
 
     // VÃ©rifier traversÃ©e de portail
     const crossedPortal = this.sceneManager.checkPortalCrossing(
-      this.camera.position,
+      moveTarget.position,
       this.lastPlayerSide
     );
 
     if (crossedPortal) {
       console.log("🚪 TRAVERSÉE DE PORTAIL DÉTECTÉE:", crossedPortal);
-      this.sceneManager.teleportToScene(crossedPortal, this.camera);
+      this.sceneManager.teleportToScene(crossedPortal, moveTarget);
       console.log("✅ Téléportation effectuée vers:", crossedPortal.targetScene);
+      
+      // Sync VR Rig if needed
+      if(this.useVR && this.vrManager) {
+          // Si on téléporte le rig, la caméra suit
+      }
     }
   }
 
@@ -1803,6 +1863,9 @@ class PokemonGame {
         );
         if (spottingTrainer) {
           console.log(`👀 ${spottingTrainer.nom} vous a repéré !`);
+          
+          // FIX: Sauvegarder la position exacte AVANT le dialogue/combat
+          this.lastSafePosition = this.camera.position.clone();
           
           // LOCK IMMÉDIAT pour éviter les déclenchements multiples
           spottingTrainer.isBattling = true;
@@ -2171,7 +2234,14 @@ class PokemonGame {
   }
 
   animate() {
-    requestAnimationFrame(() => this.animate());
+    this.renderer.setAnimationLoop(() => {
+        this.renderFrame();
+    });
+  }
+
+  renderFrame() {
+    // requestAnimationFrame(() => this.animate()); // REMPLACÉ par setAnimationLoop
+
 
     // Consommer le temps pour éviter un gros saut à la reprise
     const delta = this.clock.getDelta();
@@ -2205,6 +2275,11 @@ class PokemonGame {
 
     // Update
     this.update(delta);
+    
+    // Update VR
+    if (this.vrManager) {
+        this.vrManager.update(delta);
+    }
 
     const updateTime = performance.now() - frameStart;
     const renderStart = performance.now();

@@ -360,6 +360,10 @@ Les objets sont vendus à <span class="highlight">la moitié</span> de leur prix
       document.head.appendChild(link);
     }
 
+    // Nettoyer les anciennes instances si elles existent
+    const existingOverlays = document.querySelectorAll('.tutorial-overlay.modern-ui');
+    existingOverlays.forEach(el => el.remove());
+
     this.overlay = document.createElement('div');
     this.overlay.className = 'tutorial-overlay modern-ui';
     this.overlay.style.display = 'none';

@@ -377,4 +377,80 @@ export class ModernHUD {
   refresh() {
     this.updatePokegearButtons();
   }
+  /**
+   * Masque les éléments du HUD pendant le combat
+   */
+  hideForCombat() {
+      if (this.hud) {
+          this.hud.style.opacity = '0';
+          this.hud.style.pointerEvents = 'none';
+          this.hud.style.transition = 'opacity 0.3s ease';
+      }
+      if (this.pokegear) {
+          this.pokegear.style.opacity = '0';
+          this.pokegear.style.pointerEvents = 'none';
+          this.pokegear.style.transition = 'opacity 0.3s ease';
+      }
+  }
+
+  /**
+   * Réaffiche les éléments du HUD après le combat
+   */
+  showAfterCombat() {
+      if (this.hud) {
+          this.hud.style.opacity = '1';
+          this.hud.style.pointerEvents = 'all';
+      }
+      if (this.pokegear) {
+          this.pokegear.style.opacity = '1';
+          this.pokegear.style.pointerEvents = 'all';
+      }
+  }
+
+  showResumeOverlay() {
+      const overlay = document.createElement('div');
+      overlay.id = 'resume-overlay';
+      overlay.style.cssText = `
+          position: fixed;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(0, 0, 0, 0.4);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 99999;
+          cursor: pointer;
+      `;
+      overlay.innerHTML = `
+          <div style="
+              background: rgba(0, 0, 0, 0.8);
+              padding: 20px 40px;
+              border: 2px solid white;
+              border-radius: 10px;
+              color: white;
+              font-family: 'Press Start 2P', monospace;
+              font-size: 16px;
+              text-align: center;
+              animation: blink 1.5s infinite;
+          ">
+              CLIQUEZ POUR REPRENDRE
+          </div>
+      `;
+      
+      const style = document.createElement('style');
+      style.textContent = `@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }`;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(overlay);
+      
+      overlay.addEventListener('click', () => {
+          overlay.remove();
+          style.remove();
+          // FIX: Forcer le lock directement via l'InputManager
+          if (this.ui && this.ui.game && this.ui.game.inputManager) {
+              console.log("🔒 Tentative de verrouillage forcé du pointeur...");
+              this.ui.game.inputManager.controls.lock();
+          }
+      });
+  }
 }
