@@ -121,11 +121,12 @@ export class VRWatchMenu {
 
   createMenuInterface() {
      // Définir les boutons du menu principal
-     const btnHeight = 70;
-     const gap = 15;
-     const startY = 80;
+     const btnHeight = 60; // Un peu plus petit pour tout faire rentrer
+     const gap = 12;
+     const startY = 70;
      
-     const labels = ["ÉQUIPE", "SAC", "POKÉDEX", "SAUVER", "QUITTER"];
+     // Liste des menus
+     const labels = ["ÉQUIPE", "SAC", "STOCKAGE", "POKÉDEX", "SAUVER", "QUITTER"];
      
      this.buttons = labels.map((label, index) => {
          return {
@@ -138,6 +139,20 @@ export class VRWatchMenu {
              action: () => this.handleAction(label)
          };
      });
+  }
+
+  isButtonLocked(label) {
+      // Logique de verrouillage (Starter requis)
+      const starterRequired = ["ÉQUIPE", "SAC", "STOCKAGE", "POKÉDEX"];
+      if (starterRequired.includes(label)) {
+          // Vérifier si on a un starter via SaveManager
+          // Note: game.saveManager.myPokemon est le tableau
+          if (this.game.saveManager && this.game.saveManager.myPokemon && this.game.saveManager.myPokemon.length > 0) {
+              return false; // Débloqué
+          }
+          return true; // Verrouillé
+      }
+      return false;
   }
 
   drawMainMenu() {
@@ -158,24 +173,54 @@ export class VRWatchMenu {
 
       // Boutons
       this.buttons.forEach(btn => {
-          // Style boutton
+          const isLocked = this.isButtonLocked(btn.label);
           const isHover = (this.hoveredButton === btn);
           
-          // Fond bouton (Blanc ou Gris clair si hover)
-          ctx.fillStyle = isHover ? "#ffffff" : "#444444";
-          
-          // Forme arrondie tech
-          this.roundRect(ctx, btn.x, btn.y, btn.w, btn.h, 10, true, true);
-          
-          // Bordure gauche couleur type (Rouge/Bleu)
-          ctx.fillStyle = isHover ? "#cc0000" : "#00d2ff";
-          ctx.fillRect(btn.x, btn.y, 10, btn.h);
-
-          // Texte
-          ctx.fillStyle = isHover ? "#cc0000" : "#ffffff";
-          ctx.font = "bold 28px monospace";
-          ctx.textAlign = "left";
-          ctx.fillText(btn.label, btn.x + 30, btn.y + btn.h / 2 + 10);
+          if (isLocked) {
+              // Style VERROUILLÉ (Gris foncé)
+              ctx.fillStyle = "#333333";
+              this.roundRect(ctx, btn.x, btn.y, btn.w, btn.h, 10, true, false);
+              
+              // Bordure grise
+              ctx.fillStyle = "#555555";
+              ctx.fillRect(btn.x, btn.y, 10, btn.h);
+              
+              // Texte Gris
+              ctx.fillStyle = "#888888";
+              ctx.font = "bold 28px monospace";
+              ctx.textAlign = "left";
+              ctx.fillText(btn.label, btn.x + 30, btn.y + btn.h / 2 + 10);
+              
+              // Cadenas (Simple dessin)
+              ctx.strokeStyle = "#888888";
+              ctx.lineWidth = 3;
+              const lockX = btn.x + btn.w - 40;
+              const lockY = btn.y + btn.h / 2;
+              // Corps
+              ctx.strokeRect(lockX - 10, lockY - 8, 20, 16);
+              // Anse
+              ctx.beginPath();
+              ctx.arc(lockX, lockY - 8, 7, Math.PI, 0);
+              ctx.stroke();
+              
+          } else {
+              // Style DÉBLOQUÉ
+              // Fond bouton (Blanc ou Gris clair si hover)
+              ctx.fillStyle = isHover ? "#ffffff" : "#444444";
+              
+              // Forme arrondie tech
+              this.roundRect(ctx, btn.x, btn.y, btn.w, btn.h, 10, true, true);
+              
+              // Bordure gauche couleur type (Rouge/Bleu)
+              ctx.fillStyle = isHover ? "#cc0000" : "#00d2ff";
+              ctx.fillRect(btn.x, btn.y, 10, btn.h);
+    
+              // Texte
+              ctx.fillStyle = isHover ? "#cc0000" : "#ffffff";
+              ctx.font = "bold 28px monospace";
+              ctx.textAlign = "left";
+              ctx.fillText(btn.label, btn.x + 30, btn.y + btn.h / 2 + 10);
+          }
       });
 
       this.texture.needsUpdate = true;

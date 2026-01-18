@@ -1,5 +1,6 @@
-  import * as THREE from "three";
+import * as THREE from 'three';
 import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFactory.js";
+import { VRDialoguePanel } from '../ui/VRDialoguePanel.js';
 import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
   /**
@@ -62,6 +63,31 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
       // Activer les contrôles de debug pour la montre
       // this.bindDebugKeys();
+      
+      // Initialiser le panneau de dialogue VR
+      this.vrDialoguePanel = new VRDialoguePanel(this.game);
+      
+      // Hook du système de dialogue
+      if (this.game.ui && this.game.ui.dialogueSystem) {
+          const originalStart = this.game.ui.dialogueSystem.start.bind(this.game.ui.dialogueSystem);
+          
+          this.game.ui.dialogueSystem.start = (npc, dialogues, key) => {
+              if (this.session) {
+                  // Mode VR : Utiliser le panneau 3D
+                  console.log("💬 VR Dialogue Triggered for " + npc.nom);
+                  this.vrDialoguePanel.show(npc, dialogues, key);
+              } else {
+                  // Mode Desktop : Original
+                  originalStart(npc, dialogues, key);
+              }
+          };
+      }
+      
+      // Raycaster d'interaction (Laser)
+      this.interactionRaycaster = new THREE.Raycaster();
+      this.lastTriggerState = { left: false, right: false };
+
+      // Helper Laser Visuel (Optionnel, si pas déjà présent dans SetupController)
     }
 
     onSceneChanged(newSceneName) {
@@ -404,7 +430,10 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             }
         }
 
-        // 2. Détection du geste "Regarder la montre"
+        // 2. Gestion des Interactions (Gachettes)
+        this.handleInteraction(delta);
+
+        // 3. Détection du geste "Regarder la montre"
         if (this.controllers.left && this.watchMenu.container.parent) {
             const watchContainer = this.watchMenu.container;
             
@@ -419,13 +448,10 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             // Produit scalaire
             const dot = n.dot(toCam);
             
-            // Logique Rétablie :
-            // La montre est en bas (Rotation PI). Normale Y+ pointe vers le bas.
-            // Quand on tourne le poignet pour regarder, le bas devient le haut.
-            // La normale pointe donc vers la caméra.
-            // Dot doit être POSITIF.
+            // Nouvelle inversion logique selon retour utilisateur
+            // Si le zoom se déclenche quand on ne regarde pas (dot > 0.4), alors quand on regarde, le dot doit être inversé.
             
-            const isLooking = dot > 0.4;
+            const isLooking = dot < -0.4;
             
             this.watchMenu.isVisible = true; // Toujours visible pour tester
             this.watchMenu.setFocus(isLooking);
@@ -548,9 +574,90 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                     break;
             }
             if (updated) {
-                console.log(`⌚ WATCH CONFIG:\n Pos(${c.position.x.toFixed(3)}, ${c.position.y.toFixed(3)}, ${c.position.z.toFixed(3)})\n RotZ(${c.rotation.z.toFixed(2)})`);
+                console.log(`⌚ WATCH CONFIG:\n Pos(${c.position.x.toFixed(3)}, ${c.position.y.toFixed(3)}, ${c.position.z.toFixed(3)}\n RotZ(${c.rotation.z.toFixed(2)})`);
             }
         });
+    }
+
+    handleInteraction(delta) {
+        if (!this.session) return;
+        
+        const session = this.session;
+        let leftGamepad = null, rightGamepad = null;
+        
+        for (const source of session.inputSources) {
+            if (source.gamepad) {
+                if (source.handedness === 'left') leftGamepad = source.gamepad;
+                if (source.handedness === 'right') rightGamepad = source.gamepad;
+            }
+        }
+        
+        // Check Triggers (Button 0 usually)
+        const leftPressed = leftGamepad && leftGamepad.buttons[0] && leftGamepad.buttons[0].pressed;
+        const rightPressed = rightGamepad && rightGamepad.buttons[0] && rightGamepad.buttons[0].pressed;
+        
+        let interactingHand = null;
+        
+        // Détection front montant (Just Pressed)
+        if (leftPressed && !this.lastTriggerState.left) interactingHand = this.controllers.left;
+        if (rightPressed && !this.lastTriggerState.right) interactingHand = this.controllers.right;
+        
+        this.lastTriggerState.left = leftPressed;
+        this.lastTriggerState.right = rightPressed;
+        
+        if (interactingHand) {
+            console.log("🔫 VR Interaction Triggered!");
+            
+            // Si un dialogue est déjà ouvert, avancer
+            if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
+                this.vrDialoguePanel.advance();
+                return;
+            }
+            
+            // Sinon, Raycast pour trouver un PNJ
+            this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
+            this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
+            this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+            
+            // Objets interactifs : On cherche dans la scène active
+            const activeScene = this.game.sceneManager.getActiveScene();
+            if (!activeScene) return;
+            
+            // On veut toucher les meshes des PNJ qui ont userData.isNPC = true
+            // On traverse ou on récupère une liste depuis NPCManager (plus optimisé) if possible.
+            // Pour l'instant, intersectObjects sur children de la scène (peut être lourd)
+            // Mieux: this.game.npcManager.npcs.get(sceneName) -> map to meshes
+            
+            let candidates = [];
+            // Collecter les meshes PNJ
+            activeScene.traverse(obj => {
+                if (obj.userData && obj.userData.isNPC) { // Ou userData.npcData
+                    candidates.push(obj);
+                }
+            });
+            
+            // Ajout indicateurs indicateurs visuels (userData.isNPCIndicator)
+            
+            const intersects = this.interactionRaycaster.intersectObjects(candidates, true); // true = recursive pour les groupes
+            
+            if (intersects.length > 0) {
+                // Trouver le premier objet qui est lié à un PNJ
+                // Le mesh touché peut être un enfant du groupe PNJ
+                let hitObj = intersects[0].object;
+                while(hitObj && !hitObj.userData.npcData && hitObj.parent) {
+                    hitObj = hitObj.parent;
+                }
+                
+                if (hitObj && hitObj.userData.npcData) {
+                    const npc = hitObj.userData.npcData;
+                    console.log("🎯 Hit NPC: " + npc.nom);
+                    
+                    // Déclencher le dialogue via l'UI Manager
+                    // (Cela appellera notre hook start())
+                    this.game.ui.startDialogue(npc, "default");
+                }
+            }
+        }
     }
 
   }
