@@ -267,17 +267,25 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
         // 2. Détection du geste "Regarder la montre"
         if (this.controllers.left && this.watchMenu.container.parent) {
-            // On vérifie le produit scalaire entre la normale de la montre et le regard
-            // Ou simplement la rotation Z du poignet
-            const rotation = this.controllers.left.rotation;
+            const watchContainer = this.watchMenu.container;
             
-            // Debug (à calibrer)
-            // console.log(rotation);
+            // Vecteur normal de la montre (Screen Up)
+            // Container local Y+ est la normale de l'écran (supposons)
+            const n = new THREE.Vector3(0, 1, 0); 
+            n.applyQuaternion(watchContainer.getWorldQuaternion(new THREE.Quaternion()));
             
-            // La montre est visible si on la regarde
-            // Pour l'instant, on la laisse toujours visible pour debug
-            this.watchMenu.isVisible = true; 
+            // Vecteur vers la caméra
+            const toCam = new THREE.Vector3().subVectors(this.camera.position, watchContainer.getWorldPosition(new THREE.Vector3())).normalize();
             
+            // Produit scalaire
+            const dot = n.dot(toCam);
+            
+            // Si dot > 0.7 (env 45 deg), on regarde la montre
+            const isLooking = dot > 0.65;
+            
+            this.watchMenu.isVisible = isLooking || true; // Pour l'instant on laisse visible, mais on focus
+            this.watchMenu.setFocus(isLooking);
+
             // Update Raycaster depuis la main DROITE
             if (this.controllers.right) {
                 // Pos et Dir du controller droit
@@ -318,8 +326,8 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
       // 1. Déplacement (Joystick Gauche)
       if (leftGamepad && leftGamepad.axes.length >= 4) {
-        const x = leftGamepad.axes[2];
-        const y = leftGamepad.axes[3];
+        const x = -leftGamepad.axes[2];
+        const y = -leftGamepad.axes[3];
 
         // Deadzone
         if (Math.abs(x) > 0.1 || Math.abs(y) > 0.1) {

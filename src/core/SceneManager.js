@@ -681,8 +681,16 @@ export class SceneManager {
     console.log("🎯 Scène active changée en:", this.activeSceneName);
 
     const isInterior = portalInfo.targetScene !== "bourg-palette";
-    camera.fov = isInterior ? 85 : 75;
-    camera.updateProjectionMatrix();
+    
+    // Si camera est le VR Rig (Group), on ne peut pas changer le FOV directement
+    // et il n'a pas de updateProjectionMatrix
+    if (camera.isCamera) {
+        camera.fov = isInterior ? 85 : 75;
+        camera.updateProjectionMatrix();
+    } else {
+        // C'est probablement le PlayerRig
+        // On cherche la caméra à l'intérieur si besoin, mais en VR le FOV est géré par le headset
+    }
 
     if (this.onSceneChange) {
       this.onSceneChange(portalInfo.targetScene);

@@ -74,15 +74,21 @@ export class Portal {
 
     this.portalCamera.position.set(
       destPos.x + offset.x,
-      destPos.y,
+      destPos.y + 1.6, // Ajuster hauteur yeux
       destPos.z + offset.z
     );
 
     // Regarder dans la direction OPPOSÉE au côté bleu (dos au portail, face à la pièce)
     this.portalCamera.rotation.set(0, destRot + Math.PI, 0);
+    this.portalCamera.updateMatrixWorld(); // Important pour le rendu
 
     // Render dans le target
     const oldRenderTarget = this.renderer.getRenderTarget();
+    const currentXrEnabled = this.renderer.xr.enabled;
+    
+    // DÉSACTIVER XR POUR LE RENDU DE TEXTURE (sinon crash / écran noir)
+    this.renderer.xr.enabled = false;
+    
     this.portalMesh.visible = false;
 
     this.renderer.setRenderTarget(this.renderTarget);
@@ -90,6 +96,9 @@ export class Portal {
     this.renderer.setRenderTarget(oldRenderTarget);
 
     this.portalMesh.visible = true;
+    
+    // RÉACTIVER XR
+    this.renderer.xr.enabled = currentXrEnabled;
   }
 
   // Vérifier si joueur traverse le portail

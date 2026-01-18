@@ -34,11 +34,21 @@ export class VRWatchMenu {
     // On recule sur Z et on ajuste la rotation pour faire face au visage quand on regarde le poignet.
     
     // Essai position poignet
-    this.container.position.set(0.01, -0.01, 0.15); 
-    // Rotation: pour que l'écran soit sur le dessus du poignet interne
-    this.container.rotation.x = -Math.PI / 2; // Face vers le haut (relativement au grip)
-    this.container.rotation.z = Math.PI / 4;  // Légère rotation intèrne
-    this.container.rotation.y = Math.PI;      // Retourner pour faire face au joueur
+    // Positionner sur le poignet
+    // "vers le controller" -> plus proche (ex: 0.06m au lieu de 0.15m)
+    // "à l'envers" -> rotation X inversée ou Z ajustée.
+    // Essai: X = Math.PI/2 (au lieu de -PI/2)
+    
+    this.container.position.set(0.01, -0.01, 0.06); 
+    
+    // Rotation initiale
+    this.container.rotation.x = Math.PI / 2; // Flip pour l'envers
+    this.container.rotation.z = Math.PI / 4;
+    this.container.rotation.y = Math.PI; 
+    
+    this.baseScale = new THREE.Vector3(1, 1, 1);
+    this.focusedScale = new THREE.Vector3(1.8, 1.8, 1.8); // +80% quand on regarde
+    this.isFocused = false;
     
     parentController.add(this.container);
   }
@@ -226,6 +236,17 @@ export class VRWatchMenu {
       // VÃ©rifier si changement d'Ã©tat pour redraw
       if (this.hoveredButton !== oldHover) {
           this.drawMainMenu();
+      }
+      
+      // Animation Scale
+      const target = this.isFocused ? this.focusedScale : this.baseScale;
+      this.container.scale.lerp(target, 0.1);
+  }
+
+  setFocus(focused) {
+      if (this.isFocused !== focused) {
+          this.isFocused = focused;
+          // Optionnel: petit son ou effet ui ?
       }
   }
 
