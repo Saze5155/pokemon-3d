@@ -294,24 +294,36 @@ export class VRManager {
     if (this.controllers.left) {
         const gamepad = this.controllers.left.userData.gamepad;
         if (gamepad && gamepad.axes) {
-            // Axes standards: [2] = X (gauche/droite), [3] = Y (haut/bas)
-            const x = gamepad.axes[2]; 
-            const y = gamepad.axes[3];
+            let x = 0, y = 0;
+
+            // Essayer d'abord le mapping standard XR (axes 2 & 3)
+            if (gamepad.axes.length >= 4) {
+                 x = gamepad.axes[2];
+                 y = gamepad.axes[3];
+            }
+            
+            // Si pas de signal et qu'on a des axes 0 & 1, essayer (fallback)
+            if (Math.abs(x) < 0.1 && Math.abs(y) < 0.1 && gamepad.axes.length >= 2) {
+                // Certains contrôleurs mapent sur 0 & 1
+                x = gamepad.axes[0]; 
+                y = gamepad.axes[1];
+            }
+            
+            // Debug Log (temporaire pour diag)
+            // if (Math.abs(x) > 0.1 || Math.abs(y) > 0.1) console.log(`Joy Left: ${x.toFixed(2)}, ${y.toFixed(2)}`);
 
             // Deadzone
             if (Math.abs(x) > 0.1 || Math.abs(y) > 0.1) {
                 this.moveVector.set(x, 0, y);
                 
                 // Mouvement relatif à la direction du regard (HMD)
-                // On prend la rotation Y de la caméra (tête)
                 const rotation = this.camera.getWorldDirection(new THREE.Vector3());
                 const theta = Math.atan2(rotation.x, rotation.z);
                 
-                // Appliquer la rotation au vecteur de mouvement
+                // Appliquer la rotation
                 this.moveVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), theta);
                 
-                // Injecter dans l'InputManager ou déplacer directement ?
-                // Le mieux est de passer par InputManager pour les collisions
+                // Envoyer à l'InputManager
                 this.game.inputManager.setVRInput(this.moveVector.x, this.moveVector.z);
             } else {
                 this.game.inputManager.setVRInput(0, 0);
