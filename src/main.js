@@ -1644,7 +1644,13 @@ class PokemonGame {
 
     // Calculer le mouvement
     const move = this.inputManager.getMovementVector();
-    const newPosition = this.camera.position.clone().add(move);
+
+    let moveTarget = this.camera;
+    if (this.useVR && this.vrManager && this.vrManager.playerRig) {
+        moveTarget = this.vrManager.playerRig;
+    }
+
+    const newPosition = moveTarget.position.clone().add(move);
 
     // RÃ©cupÃ©rer les hauteurs du terrain
     const currentTerrainHeight = this.sceneManager.getTerrainHeight(
