@@ -1729,8 +1729,12 @@ class PokemonGame {
       moveTarget.position.x,
       moveTarget.position.z
     );
-    const playerEyeHeight = 1.6;
-    moveTarget.position.y = finalTerrainHeight + playerEyeHeight;
+    
+    // En VR, le Rig est au sol. En Desktop, la Caméra est à 1.6m.
+    const isVRRig = (this.useVR && this.vrManager && moveTarget === this.vrManager.playerRig);
+    const heightOffset = isVRRig ? 0 : 1.6;
+    
+    moveTarget.position.y = finalTerrainHeight + heightOffset;
 
     // VÃ©rifier traversÃ©e de portail
     const crossedPortal = this.sceneManager.checkPortalCrossing(
@@ -1740,12 +1744,14 @@ class PokemonGame {
 
     if (crossedPortal) {
       console.log("🚪 TRAVERSÉE DE PORTAIL DÉTECTÉE:", crossedPortal);
-      this.sceneManager.teleportToScene(crossedPortal, moveTarget);
+      this.sceneManager.teleportToScene(crossedPortal, moveTarget, this);
       console.log("✅ Téléportation effectuée vers:", crossedPortal.targetScene);
-      
-      // Sync VR Rig if needed
-      if(this.useVR && this.vrManager) {
-          // Si on téléporte le rig, la caméra suit
+
+      // Vérifier si on retourne vers le monde (bourg-palette = partie du worldmap)
+      const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foret-jade"];
+      if (worldMapZones.includes(crossedPortal.targetScene) && this.worldManager?.worldScene) {
+          console.log("🌍 Retour vers le monde - Réactivation WorldMap");
+          this.useWorldMap = true;
       }
     }
   }
@@ -2000,46 +2006,20 @@ class PokemonGame {
   );
 
   if (zonePortal) {
+    console.log("🚪 (WorldMap) TRAVERSÉE DE PORTAIL:", zonePortal.name);
+    
     this.lastInteriorScene = zonePortal.targetScene;
-    this.useWorldMap = false;
-    this.sceneManager.activeSceneName = zonePortal.targetScene;
-
-    // FIX: Forcer le chargement des PNJ pour la scène cible
+    this.useWorldMap = false; // Désactiver mode WorldMap car on rentre (souvent)
+    
+    // Utiliser la méthode centralisée du SceneManager
+    this.sceneManager.teleportToScene(zonePortal, moveTarget, this);
+    
+    // FIX: Forcer le chargement des PNJ pour la scène cible (si ce n'est pas déjà fait par teleportToScene -> onSceneChange)
     if (this.npcManager) {
       const targetSceneData = this.sceneManager.sceneData.get(zonePortal.targetScene);
       if (targetSceneData) {
         this.npcManager.loadNPCsForScene(zonePortal.targetScene, targetSceneData).catch(e => console.warn(e));
       }
-    }
-
-    // Chercher le portail de retour dans la scène cible
-    const sourceZoneName = zonePortal.sourceZone || (this.worldManager.activeZone ? this.worldManager.activeZone.scene : "world");
-
-    const destPortal = this.sceneManager.portals.find(
-      (p) =>
-        p.sourceScene === zonePortal.targetScene &&
-        p.targetScene === sourceZoneName
-    );
-
-    if (destPortal?.portal?.portalMesh) {
-      const destPos = destPortal.portal.portalMesh.position.clone();
-      const destRot = destPortal.portal.portalMesh.rotation.y;
-
-      // Offset pour spawner devant le portail
-      const offset = new THREE.Vector3(0, 0, 1.5);
-      offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), destRot);
-      destPos.add(offset);
-      destPos.y = 1.6;
-
-      moveTarget.position.copy(destPos);
-      this.camera.rotation.set(0, destRot + Math.PI, 0);
-    } else if (zonePortal.spawnPosition) {
-      // Fallback
-      moveTarget.position.set(
-        zonePortal.spawnPosition.x || 0,
-        zonePortal.spawnPosition.y || 1.6,
-        zonePortal.spawnPosition.z || 0
-      );
     }
 
     this.camera.fov = 85;

@@ -597,6 +597,11 @@ export class WorldManager {
         position.z + playerRadius
       )
     );
+    
+    // Si près d'un portail, ignore les collisions pour éviter d'être coincé
+    if (this.sceneManager.isNearPortal(position)) {
+        return false;
+    }
 
     // NOUVEAU : Utiliser le cache
     for (const [sceneName, zoneGroup] of this.zoneGroups) {

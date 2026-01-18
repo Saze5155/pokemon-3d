@@ -33,18 +33,23 @@ export class VRWatchMenu {
     // Généralement: +Z est vers l'arrière (vers l'utilisateur), +Y haut.
     // On recule sur Z et on ajuste la rotation pour faire face au visage quand on regarde le poignet.
     
-    // Essai position poignet
-    // Positionner sur le poignet
-    // "vers le controller" -> plus proche (ex: 0.06m au lieu de 0.15m)
-    // "à l'envers" -> rotation X inversée ou Z ajustée.
-    // Essai: X = Math.PI/2 (au lieu de -PI/2)
+    // Positionner sur le poignet (Main Gauche)
+    // "Face gauche" -> Côté extérieur du poignet gauche (côté petit doigt)
+    // Coordonnées locales GripSpace: +Y Haut, +X Droite (Intérieur), -Z Avant
     
-    this.container.position.set(0.01, -0.01, 0.06); 
+    // Position: X négatif (Gauche), Y centré, Z un peu en arrière
+    this.container.position.set(-0.04, 0.01, 0.08); 
     
-    // Rotation initiale
-    this.container.rotation.x = Math.PI / 2; // Flip pour l'envers
-    this.container.rotation.z = Math.PI / 4;
-    this.container.rotation.y = Math.PI; 
+    // Rotation:
+    // Le mesh de base a l'écran vers +Y (Haut).
+    // On veut qu'il regarde vers la gauche (-X).
+    // Donc on fait une rotation sur Z de +90 degrés (Math.PI / 2).
+    // Et on ajuste X/Y pour qu'il soit bien orienté vers le joueur quand il tourne le poignet.
+    
+    this.container.rotation.set(0, 0, Math.PI / 2);
+    
+    // Ajustement fin pour l'angle de vue
+    this.container.rotateY(Math.PI / 8); // Un peu incliné vers le haut/visage 
     
     this.baseScale = new THREE.Vector3(1, 1, 1);
     this.focusedScale = new THREE.Vector3(1.8, 1.8, 1.8); // +80% quand on regarde

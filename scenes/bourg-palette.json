@@ -129,7 +129,7 @@
   "objects": [],
   "portals": [
     {
-      "name": "portal_1",
+      "name": "portal_maison",
       "position": {
         "x": 22.97009813610229,
         "y": 1.5,
@@ -146,7 +146,7 @@
       },
       "color": "#6366f1",
       "targetScene": "maison",
-      "linkedPortalName": "",
+      "linkedPortalName": "portal_1",
       "spawnPosition": {
         "x": 0,
         "y": 1.6,
@@ -172,7 +172,7 @@
       },
       "color": "#6366f1",
       "targetScene": "labo",
-      "linkedPortalName": "maison",
+      "linkedPortalName": "portal_2",
       "spawnPosition": {
         "x": 0,
         "y": 1.6,

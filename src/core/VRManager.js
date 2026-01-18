@@ -53,6 +53,137 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       
       // Ajouter le rig à la scène
       // Note: Cela sera fait dans init()
+      
+      // écouter les changements de scène pour déplacer le Rig
+      // On utilise une méthode interne pour s'assurer qu'on ne se fait pas écraser
+      this.game.sceneManager.addSceneChangeListener((newSceneName) => {
+          this.onSceneChanged(newSceneName);
+      });
+    }
+
+    onSceneChanged(newSceneName) {
+        console.log(`🔍 VRManager: onSceneChanged called for ${newSceneName}. Enabled? ${this.enabled}`);
+        if (!this.enabled) return;
+
+        console.log(`🔄 VRManager: Déplacement du Rig vers ${newSceneName}`);
+        console.log(`📍 VRManager: Position AVANT changement: (${this.playerRig.position.x.toFixed(2)}, ${this.playerRig.position.y.toFixed(2)}, ${this.playerRig.position.z.toFixed(2)})`);
+        console.log(`📍 VRManager: Enfants du rig: ${this.playerRig.children.length} (controllers + camera)`);
+
+        // Retirer de l'ancienne scène (le parent actuel)
+        if (this.playerRig.parent) {
+            this.playerRig.parent.remove(this.playerRig);
+        }
+
+        // Liste des zones WorldMap
+        const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foret-jade", "jadielle", "route2nord", "world"];
+
+        // Ajouter à la nouvelle scène
+        let targetScene = null;
+
+        if (worldMapZones.includes(newSceneName)) {
+            // C'est une zone WorldMap - utiliser la worldScene
+            targetScene = this.game.worldManager?.worldScene;
+            console.log(`🗺️ VRManager: ${newSceneName} est une zone WorldMap, utilisation de worldScene`);
+        } else {
+            // Scène intérieure - chercher dans les scènes enregistrées
+            targetScene = this.game.sceneManager.scenes.get(newSceneName);
+            console.log(`🏠 VRManager: ${newSceneName} est un intérieur`);
+        }
+
+        if (targetScene) {
+            targetScene.add(this.playerRig);
+            console.log(`✅ VRManager: Rig ajouté à la scène ${newSceneName}`);
+        } else {
+            // Fallback: essayer la scène active du sceneManager
+            const activeScene = this.game.sceneManager.getActiveScene();
+            if (activeScene) {
+                activeScene.add(this.playerRig);
+                console.log(`✅ VRManager: Rig ajouté à la scène active (fallback)`);
+            } else {
+                console.warn(`⚠️ VRManager: Scène ${newSceneName} introuvable pour le Rig`);
+            }
+        }
+
+        // S'assurer que la caméra est bien dans le rig (peut avoir été détachée)
+        if (this.camera.parent !== this.playerRig) {
+            console.log(`⚠️ VRManager: Caméra détachée, réattachement au rig`);
+            this.playerRig.add(this.camera);
+        }
+        
+        // Réattacher explicitement les contrôleurs et grips
+        if (this.controllersArr) {
+            this.controllersArr.forEach((c, i) => {
+                if (c) {
+                    // Toujours réattacher pour être sûr
+                    this.playerRig.add(c);
+                    console.log(`🔧 VRManager: Controller ${i} réattaché au Rig`);
+                }
+            });
+        }
+        if (this.gripsArr) {
+            this.gripsArr.forEach((g, i) => {
+                if (g) {
+                    this.playerRig.add(g);
+                    console.log(`🔧 VRManager: Grip ${i} réattaché au Rig`);
+                }
+            });
+        }
+        
+        // S'assurer que le Raycaster (laser) est toujours sur le controller droit
+        if (this.controllers.right && this.laserLine && !this.laserLine.parent) {
+             this.controllers.right.add(this.laserLine);
+        }
+
+        // Réattacher la montre si nécessaire (si elle a été orpheline)
+        if (this.watchMenu && this.watchMenu.container) {
+             if (!this.watchMenu.container.parent && this.controllers.left) {
+                 // Retrouver le grip gauche
+                 const index = this.controllersArr.indexOf(this.controllers.left);
+                 if (index >= 0 && this.gripsArr[index]) {
+                     this.gripsArr[index].add(this.watchMenu.container);
+                     console.log("⌚ Montre réattachée après changement de scène");
+                 }
+             }
+        }
+
+        // Vérifier que les contrôleurs sont toujours dans le rig
+
+        // Vérifier que les contrôleurs sont toujours dans le rig
+        console.log(`📍 VRManager: Enfants du rig APRÈS changement: ${this.playerRig.children.length}`);
+        this.playerRig.children.forEach((child, i) => {
+            console.log(`   [${i}] ${child.type} - ${child.name || 'unnamed'}`);
+        });
+
+        // Forcer une mise à jour de la matrice monde après changement de parent
+        this.playerRig.updateMatrixWorld(true);
+
+        console.log(`📍 VRManager: Position du Rig après changement de scène: (${this.playerRig.position.x.toFixed(2)}, ${this.playerRig.position.y.toFixed(2)}, ${this.playerRig.position.z.toFixed(2)})`);
+    }
+
+    /**
+     * Synchronise la position du playerRig avec la caméra
+     * En VR, la caméra est relative au rig, donc on déplace le rig pour que
+     * la position absolue de la caméra corresponde à la position souhaitée
+     */
+    syncRigToCamera() {
+        if (!this.enabled) return;
+
+        // La caméra desktop a été positionnée, on doit mettre le Rig au même endroit
+        // En VR, la caméra (headset) est relative au Rig
+        // Donc on copie la position de la caméra dans le Rig, et on ajuste pour la hauteur
+        const cameraWorldPos = new THREE.Vector3();
+        this.camera.getWorldPosition(cameraWorldPos);
+
+        console.log(`🎯 VRManager: Syncing Rig to camera at (${cameraWorldPos.x.toFixed(2)}, ${cameraWorldPos.y.toFixed(2)}, ${cameraWorldPos.z.toFixed(2)})`);
+
+        // Le Rig doit être au sol (position Y = hauteur du sol)
+        // La caméra est à 1.6m au-dessus du Rig
+        this.playerRig.position.set(cameraWorldPos.x, cameraWorldPos.y - 1.6, cameraWorldPos.z);
+
+        // Forcer une mise à jour de la matrice monde
+        this.playerRig.updateMatrixWorld(true);
+
+        console.log(`✅ VRManager: Rig repositionné à (${this.playerRig.position.x.toFixed(2)}, ${this.playerRig.position.y.toFixed(2)}, ${this.playerRig.position.z.toFixed(2)})`);
     }
 
     async init() {
@@ -210,18 +341,23 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
       // Synchroniser la position du Rig avec la caméra desktop
       this.playerRig.position.copy(this.camera.position);
-      this.playerRig.position.y = this.camera.position.y; // Ajuster hauteur min ?
-      
-      // La camera Three.js est maintenant contrôlée par le headset
-      // Elle est RELATIVE au playerRig (car WebXR met sa propre matrice de vue)
-      // Mais nous ne devons PAS la parenter physiquement si on utilise le système de cam par défaut three.js XR
-      // Three.js gère la caméra XR automatiquement, elle "devient" les yeux.
-      // Cependant pour la locomotion, on déplace le "Rig" (un Group qui contient la camera LOGIQUE si on le voulait, mais ici on déplace juste un conteneur et on mettra à jour la cam)
-      
-      // En three.js standard, 'camera' est déplacée par le device. Si on veut bouger le joueur, il faut soit déplacer tout le monde, soit utiliser un wrapper.
-      // La méthode recommandée est souvent: Scene -> UserGroup -> Camera.
-      // On va déplacer la caméra, donc on "attache" la caméra au rig au démarrage ?
+      // La caméra desktop est à 1.6m du sol. Le Rig doit être au SOL.
+      // Donc on baisse le Rig de 1.6m (ou on le met au niveau du sol détecté)
+      this.playerRig.position.y = Math.max(0, this.camera.position.y - 1.6);
+
+      this.playerRig.rotation.y = 0; // Reset rotation Y pour aligner avec la vue initiale
+
+      // IMPORTANT: En Three.js WebXR, la caméra et les contrôleurs sont automatiquement
+      // mis à jour par le système XR. Si on veut les déplacer dans le monde, on doit:
+      // 1. Soit utiliser setReferenceSpaceOffset (complexe)
+      // 2. Soit ajouter la caméra au playerRig (Three.js gère le reste)
+      //
+      // L'approche recommandée: ajouter la caméra au rig. Three.js appliquera
+      // les transformations du rig aux positions XR automatiquement.
       this.playerRig.add(this.camera);
+
+      console.log(`📍 VR Session: Rig position = (${this.playerRig.position.x.toFixed(2)}, ${this.playerRig.position.y.toFixed(2)}, ${this.playerRig.position.z.toFixed(2)})`);
+      console.log(`📍 VR Session: Camera added to rig, controllers count = ${this.playerRig.children.length}`);
     }
 
     onSessionEnd() {

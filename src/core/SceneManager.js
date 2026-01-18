@@ -31,6 +31,13 @@ export class SceneManager {
 
     // === OPTIMISATION: Cache des objets de collision par scÃ¨ne ===
     this.collisionCache = new CollisionCache();
+
+    // Gestionnaires d'événements multiples
+    this.sceneChangeListeners = [];
+  }
+
+  addSceneChangeListener(callback) {
+      this.sceneChangeListeners.push(callback);
   }
 
   createScene(name, config = {}) {
@@ -635,66 +642,156 @@ export class SceneManager {
     return null;
   }
 
-  teleportToScene(portalInfo, camera) {
+  teleportToScene(portalInfo, camera, game = null) {
     console.log("🚀 DÉBUT TÉLÉPORTATION:", portalInfo.name, "->", portalInfo.targetScene);
-    let destPortal = null;
+    console.log("📋 Portal info:", JSON.stringify({
+      name: portalInfo.name,
+      sourceScene: portalInfo.sourceScene,
+      targetScene: portalInfo.targetScene,
+      linkedPortalName: portalInfo.linkedPortalName,
+      sourceZone: portalInfo.sourceZone
+    }));
 
-    if (portalInfo.linkedPortalName) {
+    let destPortal = null;
+    let needsZoneOffset = false;
+
+    // Liste des zones WorldMap pour savoir si on doit appliquer l'offset
+    const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foret-jade", "jadielle", "route2nord"];
+
+    // DEBUG: Lister les portails disponibles qui pourraient correspondre
+    console.log("🔎 Portails disponibles pour target=" + portalInfo.targetScene + ":");
+    this.portals.forEach(p => {
+      if (p.targetScene === portalInfo.sourceScene || p.sourceScene === portalInfo.targetScene || p.sourceZone === portalInfo.targetScene) {
+        console.log(`   - ${p.name}: sourceScene=${p.sourceScene}, sourceZone=${p.sourceZone}, targetScene=${p.targetScene}, zoneOffset=${JSON.stringify(p.zoneOffset)}`);
+      }
+    });
+
+    // PRIORITÉ 1: Si on sort d'un intérieur vers une zone WorldMap,
+    // chercher le portail WorldMap (sourceScene="world", sourceZone=targetScene)
+    if (!destPortal) {
+      destPortal = this.portals.find(
+        (p) =>
+          p.sourceScene === "world" &&
+          p.sourceZone === portalInfo.targetScene &&
+          p.targetScene === portalInfo.sourceScene
+      );
+      if (destPortal) console.log("🔍 Trouvé via WorldMap sourceZone");
+    }
+
+    // PRIORITÉ 2: Recherche par linkedPortalName
+    if (!destPortal && portalInfo.linkedPortalName) {
       destPortal = this.portals.find(
         (p) =>
           p.sourceScene === portalInfo.targetScene &&
           p.name === portalInfo.linkedPortalName
       );
+      if (destPortal) {
+        console.log("🔍 Trouvé via linkedPortalName");
+        // Si c'est un portail classique mais qu'on va vers une zone WorldMap, on doit appliquer l'offset
+        if (destPortal.sourceScene !== "world" && worldMapZones.includes(portalInfo.targetScene)) {
+          needsZoneOffset = true;
+        }
+      }
     }
 
+    // PRIORITÉ 3: chercher un portail qui revient vers la scène source
     if (!destPortal) {
       destPortal = this.portals.find(
         (p) =>
           p.sourceScene === portalInfo.targetScene &&
           p.targetScene === portalInfo.sourceScene
       );
+      if (destPortal) {
+        console.log("🔍 Trouvé via sourceScene/targetScene match");
+        // Si c'est un portail classique mais qu'on va vers une zone WorldMap, on doit appliquer l'offset
+        if (destPortal.sourceScene !== "world" && worldMapZones.includes(portalInfo.targetScene)) {
+          needsZoneOffset = true;
+        }
+      }
     }
 
-    console.log("📍 Portail destination trouvé:", destPortal ? destPortal.name : "AUCUN");
+    // PRIORITÉ 4: Fallback pour les portails WorldMap (sourceZone)
+    if (!destPortal && portalInfo.sourceZone) {
+      destPortal = this.portals.find(
+        (p) =>
+          p.sourceScene === portalInfo.targetScene &&
+          p.targetScene === portalInfo.sourceZone
+      );
+      if (destPortal) console.log("🔍 Trouvé via portalInfo.sourceZone");
+    }
 
+    console.log("📍 Portail destination trouvé:", destPortal ? `${destPortal.name} (sourceScene: ${destPortal.sourceScene}, sourceZone: ${destPortal.sourceZone})` : "AUCUN");
+    console.log("📍 needsZoneOffset:", needsZoneOffset);
+
+    // Calculer la position de destination
+    let destPos, destRot;
     if (destPortal?.portal?.portalMesh) {
-      const destPos = destPortal.portal.portalMesh.position.clone();
-      const destRot = destPortal.portal.portalMesh.rotation.y;
+      // Utiliser getWorldPosition pour obtenir la position en coordonnées monde
+      destPos = new THREE.Vector3();
+      destPortal.portal.portalMesh.getWorldPosition(destPos);
+      destRot = destPortal.portal.portalMesh.rotation.y;
+
+      console.log(`📍 Position brute du portail: (${destPos.x.toFixed(2)}, ${destPos.y.toFixed(2)}, ${destPos.z.toFixed(2)})`);
+
+      // Si on a trouvé un portail classique mais qu'on est en mode WorldMap,
+      // on doit appliquer le zoneOffset manuellement
+      if (needsZoneOffset && game?.worldManager?.worldMapData) {
+        const zone = game.worldManager.zones.find(z => z.scene === portalInfo.targetScene);
+        if (zone) {
+          console.log(`📍 Application du zoneOffset pour ${portalInfo.targetScene}: (${zone.worldX}, ${zone.worldZ})`);
+          destPos.x += zone.worldX;
+          destPos.z += zone.worldZ;
+        }
+      }
 
       const offset = new THREE.Vector3(0, 0, 1.5);
       offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), destRot);
       destPos.add(offset);
-      destPos.y = 1.6;
 
+      // En mode VR, camera est le playerRig qui doit être au sol (Y=0)
+      // En mode desktop, camera est la vraie caméra qui doit être à hauteur des yeux (Y=1.6)
+      const isVRRig = camera.isGroup || !camera.isCamera;
+      destPos.y = isVRRig ? 0 : 1.6;
 
-      camera.position.copy(destPos);
-      camera.rotation.set(0, destRot + Math.PI, 0);
+      console.log(`📍 Position destination finale: (${destPos.x.toFixed(2)}, ${destPos.y.toFixed(2)}, ${destPos.z.toFixed(2)}) [VR Rig: ${isVRRig}]`);
     } else {
-      camera.position.set(0, 1.6, 0);
-      camera.rotation.set(0, 0, 0);
+      // Position par défaut si pas de portail retour
+      const isVRRig = camera.isGroup || !camera.isCamera;
+      destPos = new THREE.Vector3(0, isVRRig ? 0 : 1.6, 0);
+      destRot = 0;
       console.warn(
         `Aucun portail de destination trouvé pour "${portalInfo.name}"`
       );
     }
 
+    // Appliquer la position
+    camera.position.copy(destPos);
+    camera.rotation.set(0, destRot + Math.PI, 0);
+
+    console.log(`📍 Position appliquée à ${camera.isGroup ? 'playerRig' : 'camera'}: (${camera.position.x.toFixed(2)}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)})`);
+
+    // Mettre à jour la scène active AVANT le callback
     this.activeSceneName = portalInfo.targetScene;
     console.log("🎯 Scène active changée en:", this.activeSceneName);
 
-    const isInterior = portalInfo.targetScene !== "bourg-palette";
-    
+    const isInterior = !worldMapZones.includes(portalInfo.targetScene);
+
     // Si camera est le VR Rig (Group), on ne peut pas changer le FOV directement
-    // et il n'a pas de updateProjectionMatrix
     if (camera.isCamera) {
         camera.fov = isInterior ? 85 : 75;
         camera.updateProjectionMatrix();
-    } else {
-        // C'est probablement le PlayerRig
-        // On cherche la caméra à l'intérieur si besoin, mais en VR le FOV est géré par le headset
     }
 
+
+
+    // Appeler le callback de changement de scène (Legacy)
+    console.log("📞 Calling onSceneChange callback if exists. Callback is:", this.onSceneChange ? "FUNCTION" : "NULL");
     if (this.onSceneChange) {
       this.onSceneChange(portalInfo.targetScene);
     }
+    
+    // NOUVEAU : Appeler les listeners
+    this.sceneChangeListeners.forEach(cb => cb(portalInfo.targetScene));
   }
 
   getActiveScene() {
