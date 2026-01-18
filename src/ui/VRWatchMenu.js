@@ -206,37 +206,7 @@ export class VRWatchMenu {
 
       // Check intersection
       const intersects = raycaster.intersectObject(this.menuMesh);
-         if (gamepad && gamepad.axes) {
-            // WebXR Gamepad mapping peut varier. 'xr-standard' utilise souvent 2/3 pour le joystick.
-            // Mais parfois c'est 0/1 si c'est mapé comme un gamepad classique.
-            
-            let x = 0, y = 0;
-            
-            if (gamepad.mapping === 'xr-standard') {
-                // Joystick principal
-                x = gamepad.axes[2] || 0;
-                y = gamepad.axes[3] || 0;
-            } else {
-                // Fallback / autre mapping
-                x = gamepad.axes[0] || 0;
-                y = gamepad.axes[1] || 0;
-            }
 
-            // Debug logs tous les 100 frames ou si mouvement fort
-            if (Math.abs(x) > 0.5 || Math.abs(y) > 0.5) {
-                // console.log(`🕹️ VR Input: ${x.toFixed(2)}, ${y.toFixed(2)}`);
-            }
-
-            // Deadzone
-            if (Math.abs(x) > 0.1 || Math.abs(y) > 0.1) {
-                // This part of the provided snippet was malformed.
-                // Assuming it was intended to be a new way to determine hoveredButton based on gamepad axes,
-                // but without clear instructions on how to map axes to UI elements,
-                // and given the existing raycaster logic, I'm leaving the original raycaster logic intact
-                // and only adding the gamepad axes reading part as it was provided.
-                // The original `buttons.forEach` logic is kept within the `if (intersects.length > 0)` block.
-            }
-         }
       
       if (intersects.length > 0) {
           const uv = intersects[0].uv;
