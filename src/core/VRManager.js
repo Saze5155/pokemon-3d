@@ -59,6 +59,9 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       this.game.sceneManager.addSceneChangeListener((newSceneName) => {
           this.onSceneChanged(newSceneName);
       });
+
+      // Activer les contrôles de debug pour la montre
+      // this.bindDebugKeys();
     }
 
     onSceneChanged(newSceneName) {
@@ -509,4 +512,45 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
         }
       }
     }
+
+    // === DEBUG MODE: AJUSTEMENT MONTRE ===
+    // PAVÉ NUMÉRIQUE :
+    // 4/6 = X (Gauche/Droite)
+    // 8/2 = Y (Haut/Bas)
+    // 7/9 = Z (Profondeur)
+    // 1/3 = Rotation Z
+    // 5 = Flip Screen
+    bindDebugKeys() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.watchMenu || !this.watchMenu.container) return;
+            const c = this.watchMenu.container;
+            const step = 0.005; // 5mm
+            const rotStep = 0.1; // ~5 deg
+
+            let updated = false;
+            // Support Numpad and Digit keys
+            switch(e.code) {
+                case "Numpad4": case "Digit4": c.position.x -= step; updated=true; break;
+                case "Numpad6": case "Digit6": c.position.x += step; updated=true; break;
+                
+                case "Numpad8": case "Digit8": c.position.y += step; updated=true; break;
+                case "Numpad2": case "Digit2": c.position.y -= step; updated=true; break;
+                
+                case "Numpad9": case "Digit9": c.position.z -= step; updated=true; break; // Eloigner
+                case "Numpad7": case "Digit7": c.position.z += step; updated=true; break; // Rapprocher
+                
+                case "Numpad3": case "Digit3": c.rotation.z += rotStep; updated=true; break;
+                case "Numpad1": case "Digit1": c.rotation.z -= rotStep; updated=true; break;
+                
+                case "Numpad5": case "Digit5": 
+                    if (this.watchMenu.menuMesh) this.watchMenu.menuMesh.rotation.z += Math.PI; 
+                    console.log("⌚ Flip Screen");
+                    break;
+            }
+            if (updated) {
+                console.log(`⌚ WATCH CONFIG:\n Pos(${c.position.x.toFixed(3)}, ${c.position.y.toFixed(3)}, ${c.position.z.toFixed(3)})\n RotZ(${c.rotation.z.toFixed(2)})`);
+            }
+        });
+    }
+
   }

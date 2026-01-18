@@ -47,14 +47,14 @@ export class VRWatchMenu {
     
     // Nouvelle position : Plus vers "nous" (+Z) et décalé
     // On rapproche un peu du poignet (X: -0.03 au lieu de -0.04) pour éviter l'effet flottant "au dessus"
-    this.container.position.set(-0.03, -0.02, 0.09); 
+    // Nouvelle position : Plus bas et plus à l'écart pour éviter le clipping
+    this.container.position.set(-0.135, -0.050, 0.095); 
     
-    // Rotation: On tourne encore plus ("un cran")
-    // Z: Math.PI (180 deg) -> Complètement à l'envers/extérieur
-    this.container.rotation.set(0, 0, Math.PI);
+    // Rotation: Z = 2.04 (Calibré par user)
+    this.container.rotation.set(0, 0, 2.04);
     
-    // Ajustement fin
-    this.container.rotateY(Math.PI / 6); 
+    // On enlève la rotation Y 'fine' qui causait peut-être le clipping
+    // this.container.rotateY(Math.PI / 6); 
     
     this.baseScale = new THREE.Vector3(1, 1, 1);
     this.focusedScale = new THREE.Vector3(1.8, 1.8, 1.8);
@@ -112,7 +112,7 @@ export class VRWatchMenu {
     this.menuMesh = new THREE.Mesh(screenGeo, screenMat);
     this.menuMesh.position.y = 0.048; // Légèrement au dessus du boîtier
     this.menuMesh.rotation.x = -Math.PI / 2;
-    this.menuMesh.rotation.z = Math.PI; // Inverser l'écran (Haut -> Bas)
+    this.menuMesh.rotation.z = Math.PI / 2; // Quart de tour (90°) au lieu de flip
     this.container.add(this.menuMesh);
 
     // Initialiser l'UI par défaut
