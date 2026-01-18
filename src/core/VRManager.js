@@ -98,26 +98,18 @@ export class VRManager {
   }
 
   setupControllers() {
-    // --- Controller 0 : Gauche (par défaut souvent) ---
-    // Note: On vérifiera les profils/handedness dynamiquement
-    
-    // Ray Space (Ligne de visée)
+    this.controllerModelFactory = new XRControllerModelFactory();
+
+    // 1. Ray Space (Pointage)
     const controller1 = this.renderer.xr.getController(0);
-    controller1.addEventListener('selectstart', () => this.onSelectStart(controller1));
-    controller1.addEventListener('selectend', () => this.onSelectEnd(controller1));
-    controller1.addEventListener('connected', (e) => this.onControllerConnected(e, controller1));
-    controller1.addEventListener('disconnected', (e) => this.onControllerDisconnected(e, controller1));
+    this.setupRayController(controller1);
     this.playerRig.add(controller1);
-    
-    // Ray Space 2
+
     const controller2 = this.renderer.xr.getController(1);
-    controller2.addEventListener('selectstart', () => this.onSelectStart(controller2));
-    controller2.addEventListener('selectend', () => this.onSelectEnd(controller2));
-    controller2.addEventListener('connected', (e) => this.onControllerConnected(e, controller2));
-    controller2.addEventListener('disconnected', (e) => this.onControllerDisconnected(e, controller2));
+    this.setupRayController(controller2);
     this.playerRig.add(controller2);
 
-    // Grip Space (Modèle 3D de la manette)
+    // 2. Grip Space (Modèle physique / Main)
     const controllerGrip1 = this.renderer.xr.getControllerGrip(0);
     controllerGrip1.add(this.controllerModelFactory.createControllerModel(controllerGrip1));
     this.playerRig.add(controllerGrip1);
@@ -125,15 +117,20 @@ export class VRManager {
     const controllerGrip2 = this.renderer.xr.getControllerGrip(1);
     controllerGrip2.add(this.controllerModelFactory.createControllerModel(controllerGrip2));
     this.playerRig.add(controllerGrip2);
-    
+
     this.controllersArr = [controller1, controller2];
     this.gripsArr = [controllerGrip1, controllerGrip2];
     
-    // Attacher la montre au GRIP gauche (pour qu'elle suive le poignet visuel)
-    // Note: On ne sait pas encore lequel est gauche/droite avant la connection
-    // On le fera dans l'update ou via un check constant
+    // Note: On attachera la montre une fois qu'on saura quelle main est gauche/droite
   }
+
+  setupRayController(controller) {
+      controller.addEventListener('selectstart', () => this.onSelectStart(controller));
+      controller.addEventListener('selectend', () => this.onSelectEnd(controller));
+      controller.addEventListener('connected', (e) => this.onControllerConnected(e, controller));
+      controller.addEventListener('disconnected', (e) => this.onControllerDisconnected(e, controller));
   }
+  
 
   onControllerConnected(event, controller) {
     const handedness = event.data.handedness; // 'left' ou 'right'
@@ -169,8 +166,7 @@ export class VRManager {
       // Cette méthode n'existait pas vraiment, j'ai tout mis dans setupControllers
       // Je vais modifier setupControllers pour injecter la montre
   }
-  }
-
+  
   onControllerDisconnected(event, controller) {
     console.log(`🔌 Contrôleur déconnecté`);
     if (controller === this.controllers.left) this.controllers.left = null;

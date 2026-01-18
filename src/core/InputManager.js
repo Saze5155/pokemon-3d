@@ -43,6 +43,7 @@ export class InputManager {
     this.controls.pointerSpeed = this.mouseSensitivity;
 
     // Condition pour bloquer le lock (ex: menu ouvert)
+    // Modifié pour VR : En VR, on considère toujours "locked" pour le mouvement si on est en session
     this.canLock = () => true;
 
     this.initEventListeners();
@@ -197,6 +198,10 @@ export class InputManager {
    * @returns {boolean}
    */
   isLocked() {
+    // En VR, on est toujours considéré comme "locked" pour permettre le mouvement
+    if (this.vrInput.x !== 0 || this.vrInput.z !== 0 || (this.camera && this.camera.parent && this.camera.parent.type === 'Group')) {
+         return true;
+    }
     return this.controls.isLocked;
   }
 
