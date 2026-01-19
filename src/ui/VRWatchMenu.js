@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { VRBagPanel } from './VRBagPanel.js';
 import { VROptionsPanel } from './VROptionsPanel.js';
+import { VRPokedexPanel } from './VRPokedexPanel.js';
+import { VRStoragePanel } from './VRStoragePanel.js';
 import { VRTeamPanel } from './VRTeamPanel.js';
 
 export class VRWatchMenu {
@@ -27,6 +29,8 @@ export class VRWatchMenu {
     // Panneaux de menus VR
     this.teamPanel = new VRTeamPanel(game);
     this.bagPanel = new VRBagPanel(game);
+    this.storagePanel = new VRStoragePanel(game);
+    this.pokedexPanel = new VRPokedexPanel(game);
     this.optionsPanel = new VROptionsPanel(game);
     this.currentPanel = null;
   }
@@ -285,6 +289,14 @@ export class VRWatchMenu {
               
           case "SAC":
               this.openPanel(this.bagPanel);
+              break;
+              
+          case "STOCKAGE":
+              this.openPanel(this.storagePanel);
+              break;
+              
+          case "POKÉDEX":
+              this.openPanel(this.pokedexPanel);
               break;
           
           case "OPTIONS":
