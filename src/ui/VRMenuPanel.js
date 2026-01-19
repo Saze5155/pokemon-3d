@@ -118,34 +118,23 @@ export class VRMenuPanel {
   
   hide() {
     if (!this.isVisible) return;
-    
+
     console.log(`[VRMenuPanel] Hiding ${this.constructor.name}`);
-    
-    // Animation de disparition
-    const startTime = Date.now();
-    const duration = 150;
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      const scale = 1 - progress;
-      this.mesh.scale.set(scale, scale, scale);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        this.mesh.visible = false;
-        this.isVisible = false;
-        
-        // Retirer de la scène
-        if (this.mesh.parent) {
-          this.mesh.parent.remove(this.mesh);
-        }
-      }
-    };
-    
-    animate();
+
+    // IMPORTANT: Cacher immédiatement pour que ça fonctionne sur Quest
+    // requestAnimationFrame ne fonctionne pas bien en session XR sur Quest
+    this.mesh.visible = false;
+    this.isVisible = false;
+
+    // Retirer de la scène immédiatement
+    if (this.mesh.parent) {
+      this.mesh.parent.remove(this.mesh);
+    }
+
+    // Reset scale pour la prochaine ouverture
+    this.mesh.scale.set(1, 1, 1);
+
+    console.log(`[VRMenuPanel] ${this.constructor.name} hidden - mesh.visible=${this.mesh.visible}, isVisible=${this.isVisible}`);
   }
   
   /**
