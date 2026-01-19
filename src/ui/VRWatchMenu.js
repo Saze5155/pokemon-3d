@@ -310,6 +310,9 @@ export class VRWatchMenu {
           this.currentPanel.hide();
       }
       
+      // Désactiver le zoom de la montre quand un panneau est ouvert
+      this.isFocused = false;
+      
       // Ouvrir le nouveau panneau
       this.currentPanel = panel;
       panel.show(this.container);
