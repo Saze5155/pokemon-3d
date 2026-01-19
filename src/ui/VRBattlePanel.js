@@ -293,10 +293,9 @@ export class VRBattlePanel extends VRMenuPanel {
               if (this.pokemonSelectCallback) {
                    this.pokemonSelectCallback(i); // Pass index
                    this.pokemonSelectCallback = null;
-              } else {
-                   // Default behavior: user clicked "Pokemon" in menu
-                   // Just switch? Need combat turn logic.
-                   // TODO: Connect this to CombatManager switch
+              } else if (this.game.combatManager) {
+                   // Direct switch if no callback (fail-safe)
+                   this.game.combatManager.switchPokemon(i);
               }
           });
       });

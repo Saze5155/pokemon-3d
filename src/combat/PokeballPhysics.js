@@ -721,9 +721,13 @@ export class PokeballPhysics {
           this.onCombatEnd("capture");
       }
 
-      // Message de succès
+      // Message de succès (VR Friendly)
       setTimeout(() => {
-        alert(`${wildPokemon.species} a été ajouté à votre équipe !`);
+        if (this.uiManager && this.uiManager.showNotification) {
+             this.uiManager.showNotification(`${wildPokemon.species} intègre l'équipe !`, "success");
+        } else {
+             console.log(`${wildPokemon.species} capture success notification.`);
+        }
       }, 100);
     } else {
       // CAPTURE RATÉE

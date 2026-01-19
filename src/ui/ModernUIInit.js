@@ -265,10 +265,102 @@ function startTrainerBattle(game, npc) {
   // Afficher l'alerte
   game.modernDialogue?.showTrainerAlert();
 
-  // Déclencher le combat après un délai
-  setTimeout(() => {
-    // Logique de combat dresseur à implémenter selon le jeu
-    console.log('[Battle] Combat dresseur:', npc.nom);
+    // Déclencher le combat après un délai
+  setTimeout(async () => { // Async pour spawn
+    console.log('[Battle] Démarrage combat dresseur:', npc.nom);
+    
+    // 1. Préparer l'équipe du joueur
+    // On prend le premier Pokémon non-KO
+    const playerTeam = game.saveManager.getTeam();
+    const playerPokemon = playerTeam.find(p => (p.hp || p.stats.hp) > 0);
+    
+    if (!playerPokemon) {
+        game.modernHUD?.showNotification("Ton équipe est K.O. !", "error");
+        return;
+    }
+    
+    // 2. Préparer l'équipe adverse
+    // npc.info.pokemon est censé être un tableau d'IDs ou d'objets {id, level}
+    const enemyTeamIds = npc.info.pokemon || npc.info.equipe || [19]; // Fallback Rattata
+    
+    // 3. Spawner le premier Pokémon adverse
+    if (game.combatManager && game.combatManager.pokemonManager) {
+        const firstEnemyData = enemyTeamIds[0];
+        let firstEnemyId = (typeof firstEnemyData === 'object') ? (firstEnemyData.id || firstEnemyData.pokemon) : firstEnemyData;
+        let firstEnemyLevel = (typeof firstEnemyData === 'object') ? (firstEnemyData.level || firstEnemyData.niveau || 5) : 5;
+        
+        // Charger les données de base
+        const baseData = game.combatManager.pokemonManager.pokemonDatabase.find(p => p.id == firstEnemyId);
+        
+        if (baseData) {
+            // Créer l'entité visuelle
+            const spawnPos = npc.mesh.position.clone().add(new THREE.Vector3(2, 0, 2)); // Position temporaire
+            
+            // Créer l'objet Pokémon complet
+            const firstEnemyPokemon = {
+                ...baseData,
+                level: firstEnemyLevel,
+                stats: game.combatManager.pokemonManager.calculateStats(baseData.stats, firstEnemyLevel)
+            };
+            // Init HP
+            firstEnemyPokemon.stats.hp = firstEnemyPokemon.stats.hpMax;
+            firstEnemyPokemon.hp = firstEnemyPokemon.stats.hpMax;
+            firstEnemyPokemon.maxHp = firstEnemyPokemon.stats.hpMax;
+
+            // Spawn
+            const enemyEntity = await game.combatManager.pokemonManager.spawnPokemon(spawnPos, firstEnemyPokemon, true);
+            
+            if (enemyEntity) {
+                enemyEntity.isTrainerPokemon = true;
+                
+                // 4. Lancer le combat via CombatManager
+                // startCombat(playerPokemon, wildPokemon, playerPokemonEntity, trainer, enemyTeam)
+                // Note: playerPokemonEntity sera géré/spawn par le CombatManager s'il est null ici, 
+                // mais idéalement on devrait avoir l'entité du joueur déjà là ou recréée.
+                // CombatManager s'attend à recevoir 'wildPokemon' comme entité active (enemyEntity)
+                
+                // On doit récupérer l'entité du joueur s'il en a une sortie ?
+                // Sinon null, CombatManager la créera
+                const playerEntity = null; 
+                
+                // Marquer le PNJ comme étant en combat pour éviter le spam de détection
+                npc.isBattling = true;
+
+                // Attacher le callback de victoire pour marquer le dresseur vaincu
+                game.combatManager.onVictory = () => {
+                     console.log(`🏆 Victoire contre ${npc.nom} !`);
+                     npc.isDefeated = true;
+                     npc.isBattling = false;
+                     npc.isTrainer = false; // Plus de combat
+                     
+                     // Mettre à jour le NPCManager
+                     if (game.npcManager) {
+                         game.npcManager.defeatedTrainers.add(npc.id);
+                         game.saveManager?.setFlag(`trainer_${npc.id}_defeated`, true);
+                         game.npcManager.updateNPCIndicator(npc);
+                     }
+                     
+                     // Nettoyer le callback
+                     game.combatManager.onVictory = null;
+                };
+                
+                // Attacher un callback de défaite/fuite pour reset le flag isBattling
+                // Note: CombatManager n'a pas forcément de onDefeat exposé de la même manière,
+                // mais on peut hooker endCombat si besoin. Pour l'instant on suppose que
+                // si on perd, on respawn/reload.
+                
+                game.combatManager.startCombat(
+                    playerPokemon, 
+                    enemyEntity, 
+                    playerEntity, 
+                    npc, 
+                    enemyTeamIds
+                );
+            }
+        } else {
+             console.error("Impossible de trouver les données du Pokémon ID:", firstEnemyId);
+        }
+    }
   }, 800);
 }
 
