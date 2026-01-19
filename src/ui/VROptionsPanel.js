@@ -45,7 +45,13 @@ export class VROptionsPanel extends VRMenuPanel {
     // Volume Principal
     this.drawSlider('Volume Principal', this.options.volume, 50, currentY, (value) => {
       this.options.volume = value;
-      // TODO: Appliquer le volume
+      if (this.game.audioManager) {
+          this.game.audioManager.volume = value / 100;
+          // Apply to current music immediately
+          if (this.game.audioManager.currentMusic) {
+              this.game.audioManager.currentMusic.volume = value / 100;
+          }
+      }
     });
     currentY += lineHeight;
     
@@ -56,10 +62,10 @@ export class VROptionsPanel extends VRMenuPanel {
     });
     currentY += lineHeight;
     
-    // Volume SFX
+    // Volume Effets Sonores
     this.drawSlider('Effets Sonores', this.options.sfxVolume, 50, currentY, (value) => {
       this.options.sfxVolume = value;
-      // TODO: Appliquer le volume SFX
+      // TODO: SFX Volume implementation
     });
     currentY += lineHeight;
     
@@ -79,6 +85,32 @@ export class VROptionsPanel extends VRMenuPanel {
     this.drawToggle('Sauvegarde Automatique', this.options.autoSave, 50, currentY, (value) => {
       this.options.autoSave = value;
     });
+    currentY += lineHeight;
+
+    // Main de la Montre
+    const currentHand = this.game.vrManager ? (this.game.vrManager.watchHand === 'left' ? 'Gauche' : 'Droite') : 'Gauche';
+    this.drawSelector('Main Montre', ['Gauche', 'Droite'], currentHand === 'Gauche' ? 0 : 1, 50, currentY, (index) => {
+        const hand = index === 0 ? 'left' : 'right';
+        if (this.game.vrManager) this.game.vrManager.switchWatchHand(hand);
+    });
+    
+    // Bouton SAUVEGARDER
+    const saveBtn = {
+        x: this.width - 350, // Gauche du bouton fermer
+        y: this.height - 80,
+        w: 150,
+        h: 60,
+        label: 'SAUVER',
+        action: () => {
+            if (this.game.saveManager) {
+                this.game.saveManager.save();
+                console.log("[VROptions] Game Saved");
+                // Feedback visuel optionnel (TODO)
+            }
+        }
+    };
+    this.drawButton(saveBtn, this.hoveredButton === saveBtn);
+    this.buttons.push(saveBtn);
     
     // Bouton Fermer
     const closeBtn = {

@@ -64,6 +64,31 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       this.vrDialoguePanel = null;
       this.interactionRaycaster = new THREE.Raycaster();
       this.lastTriggerState = { left: false, right: false };
+      
+      this.watchHand = 'left'; // Default
+    }
+    
+    switchWatchHand(hand) {
+        if (hand === this.watchHand || !['left', 'right'].includes(hand)) return;
+        
+        console.log(`[VRManager] Switching watch to ${hand} hand`);
+        this.watchHand = hand;
+        
+        if (this.watchMenu && this.watchMenu.container) {
+             // Detach
+             if (this.watchMenu.container.parent) {
+                 this.watchMenu.container.parent.remove(this.watchMenu.container);
+             }
+             
+             // Attach to new hand grip
+             const grip = this.controllerGrips[hand];
+             if (grip) {
+                 grip.add(this.watchMenu.container);
+                 console.log(`[VRManager] Watch attached to ${hand} grip`);
+             } else {
+                 console.warn(`[VRManager] Cannot attach watch: ${hand} grip not found`);
+             }
+        }
     }
 
 
