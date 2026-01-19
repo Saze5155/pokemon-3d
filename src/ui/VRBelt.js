@@ -27,11 +27,10 @@ export class VRBelt {
         this.container.add(this.rightHolster);
 
         // Position relative au centre du corps
-        this.leftHolster.position.set(-0.35, -0.2, 0.2); // Gauche, Hauteur Hanche, Légèrement devant
-        this.rightHolster.position.set(0.35, -0.2, 0.2); // Droite
-
-        this.leftHolster.position.set(-0.35, -0.2, 0.2); // Gauche
-        this.rightHolster.position.set(0.35, -0.2, 0.2); // Droite
+        // Position relative au centre du corps
+        // Z négatif = Devant le joueur
+        this.leftHolster.position.set(-0.3, -0.2, -0.35); // Ajusté (-0.35)
+        this.rightHolster.position.set(0.3, -0.2, -0.35); // Ajusté (-0.35)
 
         // Rotation pour orienter vers l'avant et le haut (meilleur accès)
         // Y = Orientation générale (vers l'intérieur pour suivre la courbe du corps)
