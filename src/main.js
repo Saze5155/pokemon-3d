@@ -1142,9 +1142,12 @@ class PokemonGame {
           if (success) console.log("💾 Sauvegarde post-capture réussie");
           else console.error("❌ Echec de la sauvegarde post-capture");
       });
-      
+
       // 4. Mettre à jour l'interface
       this.ui.updateTeamUI();
+
+      // 5. Mettre à jour la ceinture VR si active
+      this.vrManager?.vrBelt?.refreshData();
 
       // 5. Nettoyer le combat
       this.combatManager.endCombatByCapture();
@@ -1274,6 +1277,9 @@ class PokemonGame {
               this.saveManager.setFlag("pokedex_obtenu", true);
 
               this.ui.syncFromSaveManager();
+
+              // Mettre à jour la ceinture VR si active
+              this.vrManager?.vrBelt?.refreshData();
             }
 
             // 5. SAUVEGARDER !
@@ -1886,6 +1892,26 @@ class PokemonGame {
 
       if (this.pokeballPhysics) {
         this.pokeballPhysics.update(delta);
+      }
+
+      // Update VR Pokeballs physics
+      if (this.activePhysicsObjects && this.activePhysicsObjects.length > 0) {
+        for (let i = this.activePhysicsObjects.length - 1; i >= 0; i--) {
+          const vrPokeball = this.activePhysicsObjects[i];
+          vrPokeball.update(delta);
+
+          // Nettoyer les pokeballs qui ont atterri après un délai
+          if (vrPokeball.state === 'LANDED') {
+            if (!vrPokeball.landedTime) vrPokeball.landedTime = 0;
+            vrPokeball.landedTime += delta;
+
+            // Supprimer après 3 secondes au sol
+            if (vrPokeball.landedTime > 3) {
+              this.sceneManager.getActiveScene()?.remove(vrPokeball.mesh);
+              this.activePhysicsObjects.splice(i, 1);
+            }
+          }
+        }
       }
 
       if (this.combatManager) {

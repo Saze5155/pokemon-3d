@@ -109,9 +109,9 @@ export class VRBelt {
      */
     checkRespawn(delta) {
         // Respawn des balles de capture
-        // On vérifie s'il reste des balles VISIBLES
-        // (VRInteractionManager cache les originales quand on les prend)
-        const activeCount = this.captureBalls.filter(b => b.visible).length;
+        // On vérifie s'il reste des balles VISIBLES et non cachées
+        // (VRInteractionManager cache les originales quand on les prend via userData.isHidden)
+        const activeCount = this.captureBalls.filter(b => b.visible && !b.userData.isHidden).length;
         const totalCount = this.captureBalls.length;
 
         // Si on avait des balles (total > 0) mais qu'elles sont toutes cachées/prises
@@ -120,7 +120,10 @@ export class VRBelt {
              if (!this.respawnTimer) this.respawnTimer = 0;
              this.respawnTimer += delta;
 
-             if (this.respawnTimer > 2.0) { // 2 secondes après avoir vidé le holster
+             // Mode illimité: respawn plus rapide (1 seconde)
+             const respawnDelay = this.captureBalls.some(b => b.userData.isUnlimited) ? 1.0 : 2.0;
+
+             if (this.respawnTimer > respawnDelay) {
                  console.log("[VRBelt] Respawning capture balls...");
                  this.updateInventory();
                  this.respawnTimer = 0;

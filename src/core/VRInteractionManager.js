@@ -123,94 +123,124 @@ export class VRInteractionManager {
 
     grabObject(handName, mesh) {
         console.log(`[Interaction] ${handName} attrape ${mesh.uuid}`);
-        
+
+        // Sauvegarder le parent et la position AVANT toute manipulation
+        const originalParent = mesh.parent;
+        const originalPosition = mesh.position.clone();
+
         // 1. Créer l'entité logique si pas déjà présente
         let pokeball = mesh.userData.vrPokeball;
         if (!pokeball) {
             // C'est une ball brute de la ceinture, on doit la "convertir" en VRPokeball dynamique
             // On clone le mesh pour le détacher de la ceinture sans casser l'UI ceinture
-            const newMesh = mesh.clone();
-            
-            // On cache l'original sur la ceinture (on le réaffichera si on lache sans lancer ?)
-            // Pour l'instant on le laisse ou on le cache ? 
-            // Mieux: On le cache.
+            const newMesh = mesh.clone(true); // true = recursive clone pour les enfants (bouton, ceinture)
+
+            // S'assurer que le clone et ses enfants sont visibles
+            newMesh.visible = true;
+            newMesh.traverse(child => { child.visible = true; });
+
+            // On cache l'original sur la ceinture
             mesh.visible = false;
             mesh.userData.isHidden = true; // Flag pour VRBelt
-            
-            // TODO: Dire à VRBelt que ce slot est vide temporairement
-            
-            // Init VRPokeball
-            // On assume que userData du mesh original avait des infos (type, pokemon...)
-            // VRBelt doit mettre ces infos. Pour l'instant c'est vide.
-            pokeball = new VRPokeball(this.game, newMesh, { isTeamBall: true }); // Mock data
-            
+
+            // Init VRPokeball avec les vraies données du mesh original
+            newMesh.userData = { ...mesh.userData };
+            pokeball = new VRPokeball(this.game, newMesh, mesh.userData);
+
             this.game.sceneManager.getActiveScene().add(newMesh); // Ajouter au monde d'abord
         }
 
+        // Toujours sauvegarder les infos de restauration (même si pokeball existait déjà)
+        pokeball.originalBeltMesh = mesh;
+        pokeball.originalParent = originalParent;
+        pokeball.originalPosition = originalPosition;
+
         // 2. Attacher à la main
-        // Reparenter au controller GRIP pour un suivi physique parfait
-        // On doit trouver le Grip Controller correspondant
-        // VRManager ne stocke pas grip par nom facilement, on va tricher et attacher au RaySpace ou chercher le grip
-        // Utilisons le RaySpace stocké dans controllers[handName] pour simplifier au début
         const controller = this.vrManager.controllers[handName];
-        
+
         controller.add(pokeball.mesh);
         pokeball.mesh.position.set(0, -0.02, 0); // Ajuster position dans la main
         pokeball.mesh.rotation.set(0, 0, 0);
-        
+
         pokeball.grab(controller);
-        
-        this.hands[handName].heldObject = pokeball;
-        // Reference vers l'original pour le restaurer si besoin
-        pokeball.originalBeltMesh = mesh; 
+
+        this.hands[handName].heldObject = pokeball; 
     }
 
     handleRelease(handName) {
         const hand = this.hands[handName];
         if (!hand.heldObject) return;
-        
+
         console.log(`[Interaction] ${handName} relache...`);
         const pokeball = hand.heldObject;
-        
+
         // Calcul vitesse
         const velocity = this.getThrowVelocity(handName);
         console.log(`[Interaction] Velocity: ${velocity.length().toFixed(2)}`);
-        
+
         const THROW_THRESHOLD = 1.0; // Vitesse minimale pour considérer un lancer
-        
-        // Détacher de la main
-        // Attacher à la scène MDI (Monde)
-        const scene = this.game.sceneManager.getActiveScene();
-        scene.add(pokeball.mesh);
-        
-        // Conserver position monde
+
+        // IMPORTANT: Récupérer la position monde AVANT de détacher du controller
         const worldPos = new THREE.Vector3();
         pokeball.mesh.getWorldPosition(worldPos);
-        pokeball.mesh.position.copy(worldPos);
-        pokeball.mesh.rotation.set(0,0,0); // Reset rotation locale ? ou garder monde ?
-        
+
+        // Récupérer la rotation monde aussi
+        const worldQuat = new THREE.Quaternion();
+        pokeball.mesh.getWorldQuaternion(worldQuat);
+
+        // Détacher de la main (le controller)
+        const controller = this.vrManager.controllers[handName];
+        if (controller) {
+            controller.remove(pokeball.mesh);
+        }
+
+        const scene = this.game.sceneManager.getActiveScene();
+
         if (velocity.length() > THROW_THRESHOLD) {
             // LANCER
+            // Ajouter à la scène avec position monde
+            scene.add(pokeball.mesh);
+            pokeball.mesh.position.copy(worldPos);
+            pokeball.mesh.quaternion.copy(worldQuat);
+
+            // S'assurer que la ball est visible
+            pokeball.mesh.visible = true;
+            pokeball.mesh.traverse(child => { child.visible = true; });
+
             pokeball.throw(velocity);
-            
+
             // Ajouter à la liste des objets actifs de la scène pour physics update
             if (!this.game.activePhysicsObjects) this.game.activePhysicsObjects = [];
             this.game.activePhysicsObjects.push(pokeball);
-            
+
+            console.log("[Interaction] Ball lancée!", worldPos);
+
         } else {
             // LÂCHER (Drop) -> Retour ceinture
             console.log("[Interaction] Drop detected (vitesse faible), retour ceinture");
-            
-            // Détruire le clone
-            scene.remove(pokeball.mesh);
-            
-            // Réafficher l'original
-            if (pokeball.originalBeltMesh) {
-                pokeball.originalBeltMesh.visible = true;
-                pokeball.originalBeltMesh.userData.isHidden = false;
+
+            // Ne pas ajouter à la scène, juste détruire le clone
+            // (déjà détaché du controller ci-dessus)
+            if (pokeball.mesh.geometry) pokeball.mesh.geometry.dispose();
+
+            // Réafficher l'original sur la ceinture
+            if (pokeball.originalBeltMesh && pokeball.originalParent) {
+                const original = pokeball.originalBeltMesh;
+
+                // Réattacher au parent original (holster) si nécessaire
+                if (!original.parent) {
+                    pokeball.originalParent.add(original);
+                    original.position.copy(pokeball.originalPosition);
+                }
+
+                original.visible = true;
+                original.userData.isHidden = false;
+                // S'assurer que tous les enfants sont aussi visibles
+                original.traverse(child => { child.visible = true; });
+                console.log("[Interaction] Ball originale restaurée sur ceinture");
             }
         }
-        
+
         hand.heldObject = null;
     }
 }

@@ -87,19 +87,19 @@
       "xp": 135,
       "xpNextLevel": 179,
       "stats": {
-        "hp": 20,
-        "hpMax": 20,
+        "hp": 19,
+        "hpMax": 19,
         "attack": 10,
         "defense": 10,
-        "special": 11,
-        "speed": 12
-      },
-      "ivs": {
-        "hp": 13,
-        "attack": 10,
-        "defense": 5,
         "special": 12,
         "speed": 11
+      },
+      "ivs": {
+        "hp": 5,
+        "attack": 9,
+        "defense": 2,
+        "special": 11,
+        "speed": 6
       },
       "evs": {
         "hp": 0,
@@ -132,11 +132,11 @@
       "pokeball": "pokeball",
       "isShiny": false,
       "DO": "RED",
-      "idDO": 15478,
+      "idDO": 33844,
       "rencontre": {
         "lieu": "Inconnu",
         "niveau": 5,
-        "date": "2026-01-18T23:19:44.156Z"
+        "date": "2026-01-19T06:16:48.076Z"
       },
       "name": "Salamèche"
     }

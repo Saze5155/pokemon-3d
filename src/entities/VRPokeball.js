@@ -7,15 +7,18 @@ export class VRPokeball {
     constructor(game, mesh, data = {}) {
         this.game = game;
         this.mesh = mesh;
-        this.data = data; // { type, pokemonId, level, etc. }
+        this.data = data; // { type, pokemonId, isTeamBall, pokemonName, etc. }
 
         this.state = 'ATTACHED'; // ATTACHED, HELD, THROWN, LANDED
-        
+
         // Physique
         this.velocity = new THREE.Vector3();
         this.gravity = -9.8;
         this.radius = 0.04; // 4cm
-        
+
+        // Pour le respawn
+        this.hasHitTarget = false;
+
         // Setup initial
         this.mesh.userData.interactable = true;
         this.mesh.userData.vrPokeball = this;
@@ -45,87 +48,145 @@ export class VRPokeball {
 
     checkCollisions() {
         if (!this.game.pokemonManager || !this.game.pokemonManager.pokemons) return;
+        if (this.hasHitTarget) return; // Déjà touché quelque chose
 
         const pokeballPos = this.mesh.position;
-        // Optimization: Ne pas checker trop souvent ?
-        // Pour l'instant on check à chaque frame car c'est critique
 
         for (const pokemon of this.game.pokemonManager.pokemons) {
             if (!pokemon.model || pokemon.inCombat) continue;
 
-            // Simple Bounding Sphere Check
-            // On pourrait utiliser la logique plus complexe de PokeballPhysics mais on simplifie pour la perf VR
-            const pokemonPos = pokemon.model.position;
-            const dist = pokeballPos.distanceTo(pokemonPos);
-            
-            // Rayon collision approximatif (Pokemon = 0.5 ~ 1m + Ball 0.1m)
-            if (dist < 1.0) {
+            // Calculer la bounding box du pokemon pour une meilleure précision
+            const pokemonPos = pokemon.model.position.clone();
+
+            // Estimer la taille du pokemon
+            let collisionRadius = 1.0;
+            if (pokemon.model.userData?.boundingBox) {
+                const box = pokemon.model.userData.boundingBox;
+                collisionRadius = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) / 2 + 0.5;
+            }
+
+            // Distance horizontale (ignorer Y pour plus de tolérance)
+            const dx = pokeballPos.x - pokemonPos.x;
+            const dz = pokeballPos.z - pokemonPos.z;
+            const horizontalDist = Math.sqrt(dx * dx + dz * dz);
+
+            // Vérifier aussi la hauteur (la ball doit être à peu près à la bonne hauteur)
+            const heightDiff = Math.abs(pokeballPos.y - (pokemonPos.y + 0.5));
+
+            if (horizontalDist < collisionRadius && heightDiff < 2.0) {
                 this.onHitPokemon(pokemon);
-                break; // Une seule collision
+                break;
             }
         }
     }
 
     onHitPokemon(pokemon) {
         if (this.state !== 'THROWN') return;
-        
+        if (this.hasHitTarget) return;
+
+        this.hasHitTarget = true;
         console.log(`🎯 VR Hit: ${pokemon.species} !`, this.data);
-        this.state = 'LANDED'; // Stop physics temporarily
+        this.state = 'LANDED';
         this.velocity.set(0, 0, 0);
 
-        // Capture ou Combat ?
+        // Positionner la ball près du pokemon
+        this.mesh.position.set(
+            pokemon.model.position.x,
+            pokemon.model.position.y + 0.5,
+            pokemon.model.position.z
+        );
+
         if (this.data.isTeamBall) {
-             // C'est un Pokémon de l'équipe -> Combat
-             // TODO: Trigger Combat
-             console.log("⚔️ TODO: Lancer le combat !");
+            // C'est un Pokémon de l'équipe -> Lancer le combat
+            this.triggerCombat(pokemon);
         } else {
-             // C'est une Ball vide -> Capture
-             // Adapter pour utiliser PokeballPhysics
-             if (this.game.pokeballPhysics) {
-                 // On passe 'this' (VRPokeball) mais PokeballPhysics attend une structure un peu différente
-                 // On va mocker ce qu'il attend ou appeler attemptCapture avec les bonnes données
-                 
-                 // PokeballPhysics.attemptCapture(wildPokemon, pokeball)
-                 // pokeball.pokemon doit être null pour capture
-                 // pokeball.mesh sert pour la position
-                 
-                 const mockPokeball = {
-                     pokemon: null, // Vide
-                     mesh: this.mesh
-                 };
-                 
-                 this.game.pokeballPhysics.attemptCapture(pokemon, mockPokeball);
-                 
-                 // Détruire notre balle VR car PokeballPhysics va gérer la suite (ou pas ?)
-                 // PokeballPhysics ne détruit pas la mesh, il la fait rebondir si raté
-                 // Sauf qu'ici c'est NOTRE mesh. 
-                 
-                 // Si capture réussie, PokeballPhysics supprime le Pokemon et notifie.
-                 // Si raté, il fait rebondir la ball.
-                 // Le souci est que PokeballPhysics manipule sa propre physique. 
-                 // On va laisser PokeballPhysics gérer le succès/échec LOGIQUE, mais on doit gérer le visuel ici.
-                 
-                 // Pour l'instant, on détruit la balle VR pour éviter les conflits, 
-                 // et on laisse PokeballPhysics gérer le feedback (il loggue pour l'instant)
-                 // ATTENTION: PokeballPhysics fait des anims sur 'pokeball.mesh'. 
-                 // Donc si on passe 'this.mesh', il va l'animer. C'est parfait.
-             }
+            // C'est une Ball vide -> Tenter la capture
+            this.attemptCapture(pokemon);
+        }
+    }
+
+    triggerCombat(wildPokemon) {
+        console.log("⚔️ VR Combat: Envoi de", this.data.pokemonName || "Pokemon", "contre", wildPokemon.species);
+
+        // Récupérer les données du pokemon de l'équipe
+        const teamPokemonId = this.data.pokemonId;
+        if (!teamPokemonId || !this.game.saveManager) {
+            console.error("❌ Pas de pokemon d'équipe valide !");
+            return;
+        }
+
+        // Récupérer le pokemon depuis SaveManager
+        const playerPokemonData = this.game.saveManager.getPokemonById(teamPokemonId);
+        if (!playerPokemonData) {
+            console.error("❌ Pokemon non trouvé dans l'équipe:", teamPokemonId);
+            return;
+        }
+
+        // Utiliser PokeballPhysics pour spawn le pokemon et démarrer le combat
+        if (this.game.pokeballPhysics) {
+            // Créer un mock pokeball avec les données du pokemon d'équipe
+            const mockPokeball = {
+                pokemon: playerPokemonData,
+                mesh: this.mesh
+            };
+
+            // PokeballPhysics.startCombat va spawner le pokemon et appeler onCombatStart
+            this.game.pokeballPhysics.startCombat(wildPokemon, mockPokeball);
+        }
+
+        // Cacher la ball VR (le pokemon est sorti)
+        this.mesh.visible = false;
+    }
+
+    attemptCapture(wildPokemon) {
+        console.log("🔴 VR Capture: Tentative sur", wildPokemon.species);
+
+        if (this.game.pokeballPhysics) {
+            // Mock pokeball pour PokeballPhysics
+            const mockPokeball = {
+                pokemon: null, // Vide = capture
+                mesh: this.mesh
+            };
+
+            // attemptCapture gère la logique de capture et les callbacks
+            this.game.pokeballPhysics.attemptCapture(wildPokemon, mockPokeball);
         }
     }
 
     onLand() {
+        if (this.hasHitTarget) return; // Déjà géré par onHitPokemon
+
         this.state = 'LANDED';
         this.mesh.position.y = this.radius; // Poser au sol
         this.velocity.set(0, 0, 0);
-        
-        // Effet ou Logique de jeu
-        console.log("🔴 Pokéball a atterri !", this.data);
-        
-        // TODO: Déclencher l'ouverture si c'est une PokemonBall
-        if (this.data.isTeamBall) {
-             // this.game.combatManager.startBattle(...) ?
-             // Ou juste spawn le pokemon pour le voir
+
+        console.log("🔴 Pokéball a atterri sans toucher de cible", this.data);
+
+        // Si c'est une ball d'équipe qui touche le sol, spawn le pokemon quand même
+        if (this.data.isTeamBall && this.data.pokemonId) {
+            this.spawnTeamPokemon();
         }
+    }
+
+    spawnTeamPokemon() {
+        // Spawn le pokemon de l'équipe au sol (hors combat)
+        const teamPokemonId = this.data.pokemonId;
+        if (!teamPokemonId || !this.game.saveManager) return;
+
+        const pokemonData = this.game.saveManager.getPokemonById(teamPokemonId);
+        if (!pokemonData) return;
+
+        console.log("🐾 Spawn pokemon d'équipe:", pokemonData.name || pokemonData.species);
+
+        // Utiliser PokeballPhysics.spawnPlayerPokemon si disponible
+        if (this.game.pokeballPhysics?.spawnPlayerPokemon) {
+            const spawnPos = this.mesh.position.clone();
+            spawnPos.y = 0; // Au sol
+            this.game.pokeballPhysics.spawnPlayerPokemon(pokemonData, spawnPos);
+        }
+
+        // Cacher la ball
+        this.mesh.visible = false;
     }
 
     grab(controller) {
