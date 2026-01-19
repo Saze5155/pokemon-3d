@@ -4,14 +4,17 @@ export class VRStoragePanel extends VRMenuPanel {
   constructor(game) {
     super(game, 1024, 768);
     this.selectedPokemon = null;
+    this.selectedSource = null; // 'team' ou 'pc'
     this.page = 0;
     this.itemsPerPage = 30; // 6x5 grid
   }
   
   draw() {
     const ctx = this.ctx;
+    const sm = this.game.saveManager;
+    const playerName = sm.saveData?.joueur?.nom || 'JOUEUR';
     
-    // Fond
+    // Fond général
     ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, 0, this.width, this.height);
     
@@ -22,21 +25,20 @@ export class VRStoragePanel extends VRMenuPanel {
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 40px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('PC DE LÉO', this.width / 2, 55);
+    ctx.fillText(`PC DE ${playerName.toUpperCase()}`, this.width / 2, 55);
     
     // Reset buttons
     this.buttons = [];
     
-    // Récupérer les données
-    const pcIds = this.game.saveManager?.saveData?.pc || [];
+    // --- ZONE GAUCHE : ÉQUIPE ---
+    this.drawTeamColumn(0, 80, 250, this.height - 80);
     
-    // Zone de gauche: Grille PC
-    const leftW = this.width * 0.6;
-    this.drawPCGrid(pcIds, 0, 80, leftW, this.height - 80);
+    // --- ZONE CENTRE : GRILLE PC ---
+    const centerW = this.width - 250 - 300; // Total - Left - Right
+    this.drawPCGrid(250, 80, centerW, this.height - 80);
     
-    // Zone de droite: Détails
-    const rightW = this.width * 0.4;
-    this.drawDetails(leftW, 80, rightW, this.height - 80);
+    // --- ZONE DROITE : DÉTAILS ---
+    this.drawDetails(this.width - 300, 80, 300, this.height - 80);
     
     // Bouton Fermer (Header)
     const closeBtn = {
@@ -62,33 +64,113 @@ export class VRStoragePanel extends VRMenuPanel {
     this.texture.needsUpdate = true;
   }
   
-  drawPCGrid(pcIds, x, y, w, h) {
-    const ctx = this.ctx;
-    
-    // Fond zone grille
-    ctx.fillStyle = '#16213e';
-    ctx.fillRect(x, y, w, h);
-    
-    if (pcIds.length === 0) {
-        ctx.fillStyle = '#666';
-        ctx.font = '30px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText("Boîte Vide", x + w/2, y + h/2);
-        return;
-    }
-    
-    const cols = 5;
-    const startX = x + 30;
-    const startY = y + 30;
-    const itemW = 100;
-    const itemH = 100;
-    const gap = 15;
-    
-    // Pagination (si besoin, pour l'instant simple)
-    const startIndex = this.page * this.itemsPerPage;
-    const endIndex = Math.min(startIndex + this.itemsPerPage, pcIds.length);
-    
-    for (let i = startIndex; i < endIndex; i++) {
+  drawTeamColumn(x, y, w, h) {
+      const ctx = this.ctx;
+      
+      // Fond colonne
+      ctx.fillStyle = '#16213e';
+      ctx.fillRect(x, y, w, h);
+      
+      // Titre
+      ctx.fillStyle = '#aaa';
+      ctx.font = 'bold 24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText("ÉQUIPE", x + w/2, y + 40);
+      
+      // Liste Équipe
+      const myPokemon = this.game.saveManager?.myPokemon || {};
+      const startY = y + 60;
+      const itemH = 90;
+      const gap = 10;
+      
+      for (let i = 0; i < 6; i++) {
+          const pokemon = myPokemon[i + 1];
+          const iy = startY + i * (itemH + gap);
+          
+          if (!pokemon) {
+              // Slot vide
+              ctx.fillStyle = '#252540';
+              this.roundRect(ctx, x + 10, iy, w - 20, itemH, 10, true);
+              ctx.fillStyle = '#444';
+              ctx.font = 'italic 16px Arial';
+              ctx.fillText("Vide", x + w/2, iy + itemH/2 + 5);
+              continue;
+          }
+          
+          const btn = {
+              x: x + 10, y: iy, w: w - 20, h: itemH,
+              label: `TEAM_${i}`,
+              action: () => {
+                  this.selectedPokemon = pokemon;
+                  this.selectedSource = 'team';
+                  this.draw();
+              }
+          };
+          
+          const isSelected = this.selectedPokemon === pokemon;
+          const isHovered = this.hoveredButton === btn;
+          
+          // Fond
+          ctx.fillStyle = isSelected ? '#cc0000' : (isHovered ? '#2a2a4e' : '#1f1f35');
+          this.roundRect(ctx, btn.x, btn.y, btn.w, btn.h, 10, true);
+          
+          // Nom
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 18px Arial';
+          let name = pokemon.surnom || pokemon.name || pokemon.nom || '???';
+          if (name.length > 12) name = name.substring(0, 10) + '..';
+          ctx.fillText(name, btn.x + btn.w/2, iy + 30);
+          
+          // Niveau
+          ctx.fillStyle = '#ffd700';
+          ctx.font = '14px Arial';
+          ctx.fillText(`Niv. ${pokemon.niveau}`, btn.x + btn.w/2, iy + 55);
+          
+          // HP Bar (Mini)
+          const hpPct = (pokemon.stats?.hp || 10) / (pokemon.stats?.hpMax || 10);
+          ctx.fillStyle = '#333';
+          this.roundRect(ctx, btn.x + 20, iy + 65, btn.w - 40, 8, 4, true);
+          ctx.fillStyle = hpPct > 0.5 ? '#4ade80' : '#ef4444';
+          this.roundRect(ctx, btn.x + 20, iy + 65, (btn.w - 40) * hpPct, 8, 4, true);
+          
+          this.buttons.push(btn);
+      }
+  }
+  
+  drawPCGrid(x, y, w, h) {
+      const ctx = this.ctx;
+      
+      // Fond
+      ctx.fillStyle = '#1a1a2e'; // Un peu plus clair que le fond général ? non, même.
+      // ctx.fillRect(x, y, w, h);
+      
+      // Titre Boîte
+      ctx.fillStyle = '#aaa';
+      ctx.font = 'bold 24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(`BOÎTE 1 (PC)`, x + w/2, y + 40);
+      
+      const pcIds = this.game.saveManager?.saveData?.pc || [];
+      
+      if (pcIds.length === 0) {
+          ctx.fillStyle = '#444';
+          ctx.font = 'italic 24px Arial';
+          ctx.fillText("Boîte Vide", x + w/2, y + h/2);
+          return;
+      }
+      
+      const cols = 5;
+      const startX = x + 30;
+      const startY = y + 60;
+      const itemW = 80; // Plus petit pour en mettre plus
+      const itemH = 80; 
+      const gap = 12;
+      
+      // Pagination simple
+      const startIndex = this.page * this.itemsPerPage;
+      const endIndex = Math.min(startIndex + this.itemsPerPage, pcIds.length);
+      
+      for (let i = startIndex; i < endIndex; i++) {
         const id = pcIds[i];
         const pokemon = this.game.saveManager.getPokemon(id);
         if (!pokemon) continue;
@@ -105,126 +187,154 @@ export class VRStoragePanel extends VRMenuPanel {
             label: `PC_${id}`,
             action: () => {
                 this.selectedPokemon = pokemon;
-                this.draw();
+                this.selectedSource = 'pc';
+                this.draw(); // Refresh details
             }
         };
         
-        const isSelected = this.selectedPokemon && this.selectedPokemon.uniqueId === pokemon.uniqueId;
+        const isSelected = this.selectedPokemon === pokemon;
         const isHovered = this.hoveredButton === btn;
         
-        // Fond Slot
+        // Slot
         ctx.fillStyle = isSelected ? '#cc0000' : (isHovered ? '#333355' : '#252540');
-        this.roundRect(ctx, bx, by, itemW, itemH, 10, true, false);
+        this.roundRect(ctx, bx, by, itemW, itemH, 8, true);
         
-        // Placeholder Sprite
+        // Sprite Placeholder
         ctx.fillStyle = '#fff';
         ctx.beginPath();
-        ctx.arc(bx + itemW/2, by + itemH/2 - 10, 30, 0, Math.PI*2);
+        ctx.arc(bx + itemW/2, by + itemH/2 - 10, 20, 0, Math.PI*2);
         ctx.fill();
         
-        // Nom (tronqué)
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 12px Arial';
+        // Nom
+        ctx.font = 'bold 10px Arial';
         ctx.textAlign = 'center';
         let name = pokemon.surnom || pokemon.name || pokemon.nom || '???';
-        if (name.length > 10) name = name.substring(0, 8) + '..';
-        ctx.fillText(name, bx + itemW/2, by + itemH - 10);
-        
-        // Niveau
-        ctx.fillStyle = '#ffd700';
-        ctx.font = '10px Arial';
-        ctx.fillText(`Lv.${pokemon.niveau}`, bx + itemW - 15, by + 15);
+        if (name.length > 8) name = name.substring(0, 6) + '..';
+        ctx.fillText(name, bx + itemW/2, by + itemH - 8);
         
         this.buttons.push(btn);
-    }
+      }
   }
   
   drawDetails(x, y, w, h) {
       const ctx = this.ctx;
-      const p = this.selectedPokemon;
       
-      // Fond details
-      ctx.fillStyle = '#1f1f35';
+      // Fond
+      ctx.fillStyle = '#16213e';
       ctx.fillRect(x, y, w, h);
+      
+      const p = this.selectedPokemon;
       
       if (!p) {
           ctx.fillStyle = '#666';
-          ctx.font = 'italic 24px Arial';
+          ctx.font = 'italic 20px Arial';
           ctx.textAlign = 'center';
-          ctx.fillText("Sélectionnez un Pokémon", x + w/2, y + h/2);
+          ctx.fillText("Sélection...", x + w/2, y + h/2);
           return;
       }
       
-      // Info Pokémon
-      const name = p.surnom || p.name || p.nom || '???';
-      
+      // Info
+      let name = p.surnom || p.name || p.nom || '???';
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 36px Arial';
+      ctx.font = 'bold 30px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(name, x + w/2, y + 80);
+      ctx.fillText(name, x + w/2, y + 60);
       
-      ctx.font = '24px Arial';
+      ctx.font = '20px Arial';
       ctx.fillStyle = '#ffd700';
-      ctx.fillText(`Niveau ${p.niveau}`, x + w/2, y + 120);
+      ctx.fillText(`Niveau ${p.niveau}`, x + w/2, y + 90);
       
-      // TODO: Stats, etc.
+      // Action Button
+      let actionLabel = "";
+      let actionFn = null;
+      let btnColor = '#22c55e';
       
-      // Bouton RETIRER
-      const withdrawBtn = {
-          x: x + w/2 - 100,
-          y: y + h - 100,
-          w: 200,
-          h: 60,
-          label: "RETIRER",
-          action: () => this.validerRetrait(p)
-      };
+      if (this.selectedSource === 'pc') {
+          // Action: Retirer
+          // Check équipe pleine
+          const equipe = this.game.saveManager.saveData.equipe;
+          const isTeamFull = !equipe.some(id => id === null) && equipe.length >= 6;
+          
+          actionLabel = isTeamFull ? "ÉQUIPE PLEINE" : "RETIRER";
+          btnColor = isTeamFull ? '#555' : '#22c55e';
+          
+          if (!isTeamFull) {
+              actionFn = () => this.validerRetrait(p);
+          }
+      } else if (this.selectedSource === 'team') {
+          // Action: Déposer
+          // Check si dernier pokemon (interdit de vider équipe complètement)
+          const equipe = this.game.saveManager.saveData.equipe;
+          const aliveCount = equipe.filter(id => id !== null).length;
+          
+          actionLabel = aliveCount <= 1 ? "IMPOSSIBLE" : "DÉPOSER";
+          btnColor = aliveCount <= 1 ? '#555' : '#3b82f6'; // Bleu pour déposer
+          
+          if (aliveCount > 1) {
+              actionFn = () => this.validerDepot(p);
+          }
+      }
       
-      const isHovered = this.hoveredButton === withdrawBtn;
-      ctx.fillStyle = isHovered ? '#4ade80' : '#22c55e';
-      this.roundRect(ctx, withdrawBtn.x, withdrawBtn.y, withdrawBtn.w, withdrawBtn.h, 15, true);
+      if (actionLabel) {
+          const btn = {
+              x: x + 40,
+              y: y + h - 100,
+              w: w - 80,
+              h: 60,
+              label: actionLabel,
+              action: actionFn || (() => {})
+          };
+          
+          const isHovered = this.hoveredButton === btn;
+          // Si désactivé (gris), pas d'effet hover
+          const isDisabled = btnColor === '#555';
+          ctx.fillStyle = isDisabled ? '#555' : (isHovered ? this.darken(btnColor) : btnColor);
+          
+          this.roundRect(ctx, btn.x, btn.y, btn.w, btn.h, 10, true);
+          
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 22px Arial';
+          ctx.fillText(actionLabel, btn.x + btn.w/2, btn.y + 38);
+          
+          if (!isDisabled) this.buttons.push(btn);
+      }
       
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 24px Arial';
-      ctx.fillText("RETIRER", withdrawBtn.x + withdrawBtn.w/2, withdrawBtn.y + 40);
-      
-      this.buttons.push(withdrawBtn);
+      // Bouton RELÂCHER (Optionnel, rouge)
+      // On évite pour l'instant pour ne pas supprimer par erreur en VR
+  }
+  
+  darken(color) {
+      // Helper simple pour assombrir couleur hex (approx)
+      return color === '#22c55e' ? '#16a34a' : (color === '#3b82f6' ? '#2563eb' : color);
   }
   
   validerRetrait(pokemon) {
-      // Vérifier place équipe
-      // Note: addToTeam gère déjà le check mais renvoie false si plein
-      // Idéalement on check avant pour feedback UI
-      
-      // Hack: On accède à saveData.equipe via saveManager
-      const equipe = this.game.saveManager.saveData.equipe;
-      const freeSlot = equipe.findIndex(id => id === null);
-      
-      if (freeSlot === -1 && equipe.length >= 6) {
-          console.log("[VRStorage] Équipe pleine !");
-          // TODO: Message UI "Équipe pleine"
-          return;
-      }
-      
       console.log(`[VRStorage] Retrait de ${pokemon.name}`);
-      
-      // Retirer du PC
-      // SaveManager n'a pas de méthode atomique "withdrawFromPC", on doit combiner
-      // 1. removeFromPC (manque dans SaveManager, il y a juste addToPC)
-      // On va le faire manuellement pour l'instant en manipulant les tableaux via SaveManager si possible, 
-      // ou on ajoute la méthode au SaveManager. 
-      // Pour l'instant on suppose que l'utilisateur va implémenter la méthode manquante ou on hack.
-      
-      // Check if SaveManager has removeFromPC or update it manually
       const sm = this.game.saveManager;
-      const pcIndex = sm.saveData.pc.indexOf(pokemon.uniqueId);
       
+      // Hack retrait PC (manque méthode dans SaveManager)
+      const pcIndex = sm.saveData.pc.indexOf(pokemon.uniqueId);
       if (pcIndex > -1) {
-          sm.saveData.pc.splice(pcIndex, 1); // Retrait du tableau PC
-          sm.addToTeam(pokemon.uniqueId); // Ajout équipe
-          sm.save(); // Sauvegarder
+          sm.saveData.pc.splice(pcIndex, 1);
+          sm.addToTeam(pokemon.uniqueId);
+          sm.save();
           
-          this.selectedPokemon = null; // Deselect
-          this.draw(); // Refresh
+          this.selectedPokemon = null; 
+          this.draw(); 
+      }
+  }
+  
+  validerDepot(pokemon) {
+      console.log(`[VRStorage] Dépôt de ${pokemon.name}`);
+      const sm = this.game.saveManager;
+      
+      // Retirer de l'équipe et envoyer au PC
+      if (sm.removeFromTeam(pokemon.uniqueId)) {
+          sm.addToPC(pokemon.uniqueId);
+          sm.save();
+          
+          this.selectedPokemon = null;
+          this.draw();
       }
   }
 }
