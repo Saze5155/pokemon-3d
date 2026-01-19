@@ -42,11 +42,14 @@ export class PokemonManager {
     if (this.scene && this.scene.userData?.zoneData) {
         const zoneData = this.scene.userData.zoneData;
         const spawnZones = zoneData.entities?.spawnZones || zoneData.spawnZones || [];
-        
+
         if (spawnZones.length > 0) {
-             for (const spawnZone of spawnZones) {
-                 await this.spawnInZone(spawnZone, this.scene, "active_scene", playerPosition);
-             }
+            console.log(`🌿 PokemonManager: Tentative de spawn dans scène autonome (${zoneData.name || 'unknown'}), ${spawnZones.length} zones de spawn`);
+            for (const spawnZone of spawnZones) {
+                await this.spawnInZone(spawnZone, this.scene, "active_scene", playerPosition);
+            }
+        } else {
+            console.log(`⚠️ PokemonManager: Scène autonome (${zoneData.name || 'unknown'}) n'a pas de zones de spawn`);
         }
     }
   }
