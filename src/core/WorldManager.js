@@ -105,8 +105,8 @@ export class WorldManager {
     this.worldScene.background = new THREE.Color(0x87ceeb);
     this.worldScene.fog = new THREE.Fog(0x87ceeb, 50, 200); // Fog réduit
 
-    // Lumières
-    this.setupWorldLights();
+    // Lumières - Géré par WeatherManager maintenant
+    // this.setupWorldLights();
 
     // Trouver la zone de départ
     let startZone = this.zones[0];
@@ -129,8 +129,10 @@ export class WorldManager {
 
   /**
    * Configure les lumières de la scène monde
+   * DÉSACTIVÉ: Géré par WeatherManager
    */
   setupWorldLights() {
+    /*
     const ambient = new THREE.AmbientLight(0xffffff, 0.8); // Plus de lumière ambiante
     this.worldScene.add(ambient);
 
@@ -150,6 +152,7 @@ export class WorldManager {
 
     // Stocker pour ajuster dynamiquement
     this.sunLight = sun;
+    */
   }
 
   /**

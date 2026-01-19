@@ -11,6 +11,7 @@ import { OptimizationManager } from "./core/OptimizationManager.js";
 import { SaveManager } from "./core/SaveManager.js";
 import { SceneManager } from "./core/SceneManager.js";
 import { VRManager } from "./core/VRManager.js";
+import { WeatherManager } from "./core/WeatherManager.js";
 import { WorldManager } from "./core/WorldManager.js";
 import { XPManager } from "./core/XPManager.js";
 import { NPCManager } from "./entities/NPCManager.js";
@@ -216,7 +217,9 @@ class PokemonGame {
     this.moveManager = new MoveManager();
     this.itemManager = new ItemManager(this);
     this.xpManager = new XPManager(this.ui);
+    this.xpManager = new XPManager(this.ui);
     this.audioManager = new AudioManager();
+    this.weatherManager = new WeatherManager(this);
 
     // Gestionnaire VR
     this.vrManager = new VRManager(this);
@@ -647,6 +650,9 @@ class PokemonGame {
         // On initialise sans zone de départ spécifique pour l'instant
         await this.worldManager.initWorld();
         console.log("🌍 WorldScene initialisée prématurément pour le NPCManager");
+        
+        // Initialiser la météo pour le monde extérieur
+        this.weatherManager.init(this.worldManager.worldScene, this.camera);
     }
 
     // Toujours charger les scènes en mode classique d'abord
@@ -1336,6 +1342,7 @@ class PokemonGame {
           this.ui.syncFromSaveManager();
           this.showNotification("💗 Vos Pokémon sont en pleine forme !");
           break;
+
 
         case "receive_starter":
           // ============================================
@@ -2426,6 +2433,15 @@ class PokemonGame {
     // Update VR
     if (this.vrManager) {
         this.vrManager.update(delta);
+    }
+
+    // Update Météo (Seulement si WorldMap active)
+    if (this.weatherManager && this.useWorldMap) {
+        let playerPos = this.camera.position;
+        if (this.vrManager && this.vrManager.playerRig) {
+            playerPos = this.vrManager.playerRig.position;
+        }
+        this.weatherManager.update(delta, playerPos);
     }
 
     const updateTime = performance.now() - frameStart;
