@@ -119,6 +119,10 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             // C'est une zone WorldMap - utiliser la worldScene
             targetScene = this.game.worldManager?.worldScene;
             console.log(`🗺️ VRManager: ${newSceneName} est une zone WorldMap, utilisation de worldScene`);
+            
+            // FIX: Forcer la hauteur au sol (0) pour éviter d'être un géant ou dans le ciel
+            // On ignore la hauteur de la caméra desktop
+            this.playerRig.position.y = 0;
         } else {
             // Scène intérieure - chercher dans les scènes enregistrées
             targetScene = this.game.sceneManager.scenes.get(newSceneName);
@@ -486,11 +490,25 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 if (bButton && bButton.pressed) {
                     if (!this.lastBButtonState) {
                         this.lastBButtonState = true;
-                        // Action: Close Menu
+                        // Action: Close Menu (Watch or Dialogue)
+                        let closedSomething = false;
+
+                        if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
+                             console.log("[VRManager] B Button pressed: Closing Dialogue");
+                             this.vrDialoguePanel.hide();
+                             closedSomething = true;
+                        }
+
                         if (this.watchMenu && this.watchMenu.currentPanel && this.watchMenu.currentPanel.isVisible) {
-                            console.log("[VRManager] B Button pressed: Closing Menu");
+                            console.log("[VRManager] B Button pressed: Closing Watch Menu");
                             this.watchMenu.currentPanel.hide();
                             this.watchMenu.currentPanel = null;
+                            closedSomething = true;
+                        }
+                        
+                        if (!closedSomething && this.watchMenu && this.watchMenu.isVisible) {
+                             // Force close watch menu container if it's open but no panel
+                             this.watchMenu.isVisible = false;
                         }
                     }
                 } else {

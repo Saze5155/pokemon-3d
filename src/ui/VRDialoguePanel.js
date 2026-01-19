@@ -204,9 +204,9 @@ export class VRDialoguePanel {
             
             ctx.fillStyle = "#ffffff";
             ctx.font = "bold 32px Arial";
-            ctx.fillText("Fais ton choix :", 60, 160);
+            ctx.fillText("Fais ton choix :", 60, 90);
             
-            let startY = 200;
+            let startY = 120; // Center buttons vertically (Btn 1 at ~260)
             const btnHeight = 80;
             const gap = 20;
             
