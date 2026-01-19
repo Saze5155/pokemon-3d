@@ -3,6 +3,7 @@
  * Tutoriels contextuels pour les combats, équipe, capture, etc.
  */
 
+import { VRTutorialPanel } from './VRTutorialPanel.js';
 
 export class TutorialSystem {
   constructor(uiManager) {
