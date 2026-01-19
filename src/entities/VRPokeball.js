@@ -52,8 +52,27 @@ export class VRPokeball {
 
         const pokeballPos = this.mesh.position;
 
+        // FIX: En VR pendant un combat, on veut pouvoir capturer le Pokémon ADVERSE
+        // On doit donc aussi vérifier le wildPokemon du CombatManager
+        const combatManager = this.game.combatManager;
+        const isInCombat = combatManager?.isInCombat;
+        const wildPokemonInCombat = isInCombat ? combatManager.wildPokemon : null;
+
         for (const pokemon of this.game.pokemonManager.pokemons) {
-            if (!pokemon.model || pokemon.inCombat) continue;
+            if (!pokemon.model) continue;
+
+            // Skip les Pokémon en combat SAUF si c'est le wildPokemon qu'on combat (capture possible)
+            // ET que c'est une ball vide (pas une ball d'équipe)
+            if (pokemon.inCombat) {
+                // Si c'est le wildPokemon et qu'on lance une ball vide, on autorise la collision
+                const isWildPokemonTarget = wildPokemonInCombat &&
+                    (pokemon === wildPokemonInCombat || pokemon.uuid === wildPokemonInCombat.uuid);
+                const isEmptyBall = !this.data.isTeamBall;
+
+                if (!(isWildPokemonTarget && isEmptyBall)) {
+                    continue; // Skip ce Pokémon
+                }
+            }
 
             const pokemonPos = pokemon.model.position.clone();
 
@@ -135,12 +154,31 @@ export class VRPokeball {
     attemptCapture(wildPokemon) {
         console.log("🔴 VR Capture: Tentative sur", wildPokemon.species);
 
+        // FIX: Vérifier si on est en combat pour gérer la fin de combat après capture
+        const combatManager = this.game.combatManager;
+        const isInCombat = combatManager?.isInCombat;
+
         if (this.game.pokeballPhysics) {
             // Mock pokeball pour PokeballPhysics
             const mockPokeball = {
                 pokemon: null, // Vide = capture
                 mesh: this.mesh
             };
+
+            // Sauvegarder le callback original pour le restaurer après
+            const originalOnCombatEnd = this.game.pokeballPhysics.onCombatEnd;
+
+            // Si on est en combat VR, on ajoute un callback spécial pour terminer le combat
+            if (isInCombat) {
+                this.game.pokeballPhysics.onCombatEnd = (reason) => {
+                    console.log("🎮 VR: Capture réussie pendant combat, fin du combat...");
+                    if (combatManager) {
+                        combatManager.endCombat(false);
+                    }
+                    // Restaurer le callback original
+                    this.game.pokeballPhysics.onCombatEnd = originalOnCombatEnd;
+                };
+            }
 
             // attemptCapture gère la logique de capture et les callbacks
             this.game.pokeballPhysics.attemptCapture(wildPokemon, mockPokeball);

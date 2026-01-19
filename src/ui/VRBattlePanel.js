@@ -257,53 +257,76 @@ export class VRBattlePanel extends VRMenuPanel {
       });
   }
 
-  showPokemonSelection(callbackSelect) {
+  showPokemonSelection(callbackSelect, isForced = false) {
       this.menuState = "POKEMON_SELECT";
       this.pokemonSelectCallback = callbackSelect;
-      this.combatMessage = "Choisis un Pokémon";
+      this.isForcedSwitch = isForced; // FIX: Sauvegarder si c'est un switch forcé (pas d'annulation possible)
+      if (!this.combatMessage) {
+          this.combatMessage = "Choisis un Pokémon";
+      }
       this.draw();
   }
 
   drawPokemonSelection(x, y, w, h) {
       // List team members
-      // Simple vertical list
-      const team = this.game.saveManager.getTeam(); // Need access to full team
-      // Or from this.combatData.playerTeam if available?
-      // Use this.game.saveManager.myPokemon usually has 'equipe'
-      
-      // We need to fetch current team status (HP)
       const currentTeam = this.game.saveManager.getTeam();
-      
+
       const btnH = 60;
       const gap = 10;
-      
+
+      // FIX: Récupérer le Pokémon actuellement actif pour ne pas le montrer comme option
+      const currentPokemonName = this.combatData?.playerPokemon?.name ||
+                                  this.combatData?.playerPokemon?.surnom || "";
+
+      let validCount = 0;
       currentTeam.forEach((pId, i) => {
           if (i >= 6) return;
           const pokemon = this.game.saveManager.getPokemon(pId);
           if (!pokemon) return;
-          
-          const by = y + i * (btnH + gap);
-          const color = pokemon.hp > 0 ? "#444" : "#222"; // Dim if fainted
-          const label = `${pokemon.surnom || pokemon.name} ${Math.floor(pokemon.hp)}/${pokemon.maxHp}`;
-          
+
+          // FIX: Utiliser les helpers pour les HP (gère stats.hp vs hp)
+          const currentHp = this.getPokemonHp(pokemon);
+          const maxHp = this.getPokemonMaxHp(pokemon);
+          const pokemonName = this.getPokemonName(pokemon);
+
+          // FIX: Skip le Pokémon actuellement en combat
+          const isCurrentPokemon = pokemonName === currentPokemonName;
+          if (isCurrentPokemon) return;
+
+          const by = y + validCount * (btnH + gap);
+          validCount++;
+
+          // Couleur selon état
+          let color = "#444";
+          if (currentHp <= 0) {
+              color = "#222"; // KO
+          }
+
+          const label = `${pokemonName} ${Math.floor(currentHp)}/${maxHp}`;
+
           this.drawButton(this.ctx, x, by, w, btnH, label, color, () => {
-              if (pokemon.hp <= 0) return; // Can't switch to fainted
-              if (pokemon === this.combatData.playerPokemon) return; // Already active
+              if (currentHp <= 0) return; // Can't switch to fainted
 
               if (this.pokemonSelectCallback) {
                    this.pokemonSelectCallback(i); // Pass index
                    this.pokemonSelectCallback = null;
+                   this.isForcedSwitch = false;
+                   this.setMenuState("MAIN");
               } else if (this.game.combatManager) {
                    // Direct switch if no callback (fail-safe)
                    this.game.combatManager.switchPokemon(i);
+                   this.setMenuState("MAIN");
               }
           });
       });
-      
-      // Cancel button at bottom
-      this.drawButton(this.ctx, x, y + h - 60, w, 60, "ANNULER", "#666", () => {
-          this.setMenuState("MAIN");
-      });
+
+      // FIX: Cancel button at bottom SEULEMENT si ce n'est pas un switch forcé
+      if (!this.isForcedSwitch) {
+          this.drawButton(this.ctx, x, y + h - 60, w, 60, "ANNULER", "#666", () => {
+              this.pokemonSelectCallback = null;
+              this.setMenuState("MAIN");
+          });
+      }
   }
   
   setMenuState(state) {

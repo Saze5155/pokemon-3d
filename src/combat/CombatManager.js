@@ -556,6 +556,16 @@ export class CombatManager {
 
     this.combatState = "SELECTING_POKEMON";
 
+    // VR: Utiliser VRBattlePanel pour la sélection
+    const isVR = this.uiManager?.game?.renderer?.xr?.isPresenting;
+    if (isVR && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+        console.log("🎮 VR: Affichage du menu de changement de Pokémon");
+        this.uiManager.game.vrManager.vrBattlePanel.showPokemonSelection((index) => {
+            this.switchPokemon(index);
+        });
+        return;
+    }
+
     // Masquer le menu de combat
     const combatMenu = document.getElementById("combat-menu");
     if (combatMenu) {
@@ -940,6 +950,17 @@ export class CombatManager {
   // FIX: Menu de changement forcé (quand le Pokémon est KO)
   showForcedSwitchMenu(availablePokemon) {
     this.combatState = "SELECTING_POKEMON";
+
+    // VR: Utiliser VRBattlePanel pour la sélection forcée
+    const isVR = this.uiManager?.game?.renderer?.xr?.isPresenting;
+    if (isVR && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+        console.log("🎮 VR: Affichage du menu de changement forcé (KO)");
+        this.uiManager.game.vrManager.vrBattlePanel.combatMessage = "Pokémon K.O. ! Choisissez un remplaçant !";
+        this.uiManager.game.vrManager.vrBattlePanel.showPokemonSelection((index) => {
+            this.forcedSwitchPokemon(index);
+        }, true); // true = isForced, pas de bouton ANNULER
+        return;
+    }
 
     // Masquer le menu de combat
     const combatMenu = document.getElementById("combat-menu");
@@ -1511,8 +1532,11 @@ export class CombatManager {
 
   // Menu de switch volontaire après KO ennemi (ne coûte pas de tour)
   showVoluntarySwitchForEnemyKO(availablePokemon, nextEnemyIndex) {
-    // VR Hook
-    if (this.uiManager.game.vrManager && this.uiManager.game.vrManager.isVR && this.uiManager.game.vrManager.vrBattlePanel) {
+    // VR Hook - utiliser isPresenting au lieu de isVR
+    const isVR = this.uiManager?.game?.renderer?.xr?.isPresenting;
+    if (isVR && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+         console.log("🎮 VR: Affichage du menu de changement après KO ennemi");
+         this.uiManager.game.vrManager.vrBattlePanel.combatMessage = "Changer de Pokémon ?";
          this.uiManager.game.vrManager.vrBattlePanel.showPokemonSelection(
              (index) => {
                   this.doVoluntarySwitchThenEnemySwitches(index, nextEnemyIndex);
