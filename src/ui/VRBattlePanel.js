@@ -275,10 +275,9 @@ export class VRBattlePanel extends VRMenuPanel {
       const btnH = 60;
       const gap = 10;
 
-      // FIX: Récupérer le Pokémon actuellement actif pour ne pas le montrer comme option
-      const currentPokemonName = this.combatData?.playerPokemon?.name ||
-                                  this.combatData?.playerPokemon?.surnom || "";
-      console.log(`[VRBattlePanel] Current Pokemon: ${currentPokemonName}`);
+      // FIX: Récupérer l'ID du Pokémon actuellement actif (plus fiable que le nom)
+      const currentPokemonId = this.combatData?.playerPokemon?.id || null;
+      console.log(`[VRBattlePanel] Current Pokemon ID: ${currentPokemonId}`);
 
       let validCount = 0;
       currentTeam.forEach((pId, i) => {
@@ -294,10 +293,10 @@ export class VRBattlePanel extends VRMenuPanel {
           const maxHp = this.getPokemonMaxHp(pokemon);
           const pokemonName = this.getPokemonName(pokemon);
 
-          // FIX: Skip le Pokémon actuellement en combat
-          const isCurrentPokemon = pokemonName === currentPokemonName;
+          // FIX: Skip le Pokémon actuellement en combat (comparaison par ID)
+          const isCurrentPokemon = (pId === currentPokemonId);
           if (isCurrentPokemon) {
-              console.log(`[VRBattlePanel] Skipping current Pokemon: ${pokemonName}`);
+              console.log(`[VRBattlePanel] Skipping current Pokemon: ${pokemonName} (ID: ${pId})`);
               return;
           }
 
