@@ -818,21 +818,22 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
         
         if (interactingHand) {
             console.log("🔫 VR Interaction Triggered!");
-            
+
+            // Setup raycaster depuis la main qui interagit
+            this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
+            this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
+            this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+
             // Vérifier si un panneau de menu est ouvert
             if (this.watchMenu && this.watchMenu.currentPanel && this.watchMenu.currentPanel.isVisible) {
                 console.log(`[VR] Menu panel visible: ${this.watchMenu.currentPanel.constructor.name}`);
-                
-                this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
-                this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
-                this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
-                
+
                 const intersects = this.interactionRaycaster.intersectObject(this.watchMenu.currentPanel.mesh);
-                
+
                 if (intersects.length > 0) {
                     const uv = intersects[0].uv;
                     const button = this.watchMenu.currentPanel.checkClick(uv);
-                    
+
                     if (button) {
                         console.log(`[VR] Menu button clicked: ${button.label || 'unnamed'}`);
                         button.action();
@@ -841,12 +842,38 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 }
             }
 
+            // Vérifier clic sur la montre (si visible et pas de panel ouvert)
+            if (this.watchMenu && this.watchMenu.isVisible && this.watchMenu.menuMesh) {
+                const watchIntersects = this.interactionRaycaster.intersectObject(this.watchMenu.menuMesh);
+
+                if (watchIntersects.length > 0) {
+                    console.log(`[VR] Watch menu clicked!`);
+                    // Mettre à jour le hover avant de cliquer
+                    const uv = watchIntersects[0].uv;
+                    const x = uv.x * this.watchMenu.width;
+                    const y = (1 - uv.y) * this.watchMenu.height;
+
+                    // Trouver le bouton sous le pointeur
+                    let clickedButton = null;
+                    for (const btn of this.watchMenu.buttons) {
+                        if (x >= btn.x && x <= btn.x + btn.w &&
+                            y >= btn.y && y <= btn.y + btn.h) {
+                            clickedButton = btn;
+                            break;
+                        }
+                    }
+
+                    if (clickedButton) {
+                        console.log(`[VR] Watch button clicked: ${clickedButton.label}`);
+                        clickedButton.action();
+                        return;
+                    }
+                }
+            }
+
             // Si Combat Panel ouvert
             if (this.vrBattlePanel && this.vrBattlePanel.isVisible) {
                  console.log("[VR] Battle panel visible");
-                 this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
-                 this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
-                 this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
 
                  const intersects = this.interactionRaycaster.intersectObject(this.vrBattlePanel.mesh);
                  if (intersects.length > 0) {
@@ -868,9 +895,6 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 // Raycast sur le panel pour les choix
                 if (this.vrDialoguePanel.isShowingChoices) {
                      console.log(`[VR] Checking raycast on dialogue panel...`);
-                     this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
-                     this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
-                     this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
 
                      const intersects = this.interactionRaycaster.intersectObject(this.vrDialoguePanel.mesh);
                      console.log(`[VR] Raycast intersects: ${intersects.length}`);
@@ -943,9 +967,7 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             }
 
             // Sinon, Raycast pour trouver un PNJ
-            this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
-            this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
-            this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+            // (raycaster déjà configuré au début de handleInteraction)
 
             // Objets interactifs : On cherche dans la scène active
             const activeScene = this.game.sceneManager.getActiveScene();
