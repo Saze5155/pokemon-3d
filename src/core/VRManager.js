@@ -633,23 +633,75 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             
             // Si un dialogue est déjà ouvert
             if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
+                console.log(`[VR] Dialogue panel visible. isShowingChoices=${this.vrDialoguePanel.isShowingChoices}`);
+                
                 // Raycast sur le panel pour les choix
                 if (this.vrDialoguePanel.isShowingChoices) {
+                     console.log(`[VR] Checking raycast on dialogue panel...`);
                      this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
                      this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
                      this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
                      
                      const intersects = this.interactionRaycaster.intersectObject(this.vrDialoguePanel.mesh);
+                     console.log(`[VR] Raycast intersects: ${intersects.length}`);
+                     
                      if (intersects.length > 0) {
                          const uv = intersects[0].uv;
+                         console.log(`[VR] Hit UV: (${uv.x.toFixed(3)}, ${uv.y.toFixed(3)})`);
                          const choiceIndex = this.vrDialoguePanel.checkClick(uv);
+                         console.log(`[VR] Choice index: ${choiceIndex}`);
+                         
                          if (choiceIndex >= 0) {
                              const choice = this.vrDialoguePanel.choices[choiceIndex];
                              console.log("✅ VR Choice Selected:", choice);
-                             // Propager au système principal
-                             if (this.game.modernDialogue) {
-                                  this.game.modernDialogue.selectChoice(choiceIndex, choice);
+                             
+                             // Immediately hide choices to prevent re-selection
+                             this.vrDialoguePanel.isShowingChoices = false;
+                             this.vrDialoguePanel.draw(); // Redraw to hide buttons immediately
+                             
+                             // Add cooldown to prevent immediate re-trigger
+                             this.vrDialoguePanel.lastInputTime = Date.now();
+                             
+                             // Handle choice directly in VR
+                             // 1. Call the onChoiceMade callback if it exists (this sets the starter_choisi flag)
+                             if (this.game.dialogueSystem && this.game.dialogueSystem.onChoiceMade) {
+                                 this.game.dialogueSystem.onChoiceMade(choiceIndex, choice, this.vrDialoguePanel.npc);
                              }
+                             
+                             // 2. After flag is set, re-fetch dialogue based on new game state
+                             setTimeout(() => {
+                                 const npc = this.vrDialoguePanel.npc;
+                                 
+                                 // Verify the flag was actually set
+                                 const hasStarter = this.game.saveManager?.saveData?.drapeaux?.starter_choisi;
+                                 console.log(`[VR] After choice, starter_choisi flag: ${hasStarter}`);
+                                 
+                                 if (hasStarter) {
+                                     // Flag is set, show post-starter dialogue
+                                     const dialogueData = this.game.npcManager.startDialogue(npc);
+                                     console.log(`[VR] Re-fetched dialogue key: ${dialogueData?.key}`);
+                                     
+                                     if (dialogueData && dialogueData.dialogues && dialogueData.dialogues.length > 0) {
+                                         this.vrDialoguePanel.dialogues = dialogueData.dialogues;
+                                         this.vrDialoguePanel.currentIndex = 0;
+                                         this.vrDialoguePanel.key = dialogueData.key;
+                                         this.vrDialoguePanel.showDialogue(dialogueData.dialogues[0]);
+                                     } else {
+                                         this.vrDialoguePanel.hide();
+                                     }
+                                 } else {
+                                     // Flag not set yet, use the choice's nextDialogues as fallback
+                                     console.warn(`[VR] Flag not set, using fallback dialogues`);
+                                     if (choice.nextDialogues && choice.nextDialogues.length > 0) {
+                                         this.vrDialoguePanel.dialogues = choice.nextDialogues;
+                                         this.vrDialoguePanel.currentIndex = 0;
+                                         this.vrDialoguePanel.showDialogue(choice.nextDialogues[0]);
+                                     } else {
+                                         this.vrDialoguePanel.hide();
+                                     }
+                                 }
+                             }, 500); // Increased delay to ensure flag propagation
+                             
                              return;
                          }
                      }

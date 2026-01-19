@@ -908,11 +908,11 @@ export class NPCManager {
       return "after_defeat";
     }
 
-    if (info.donne_starter && this.storyFlags.has("has_starter")) {
+    if (info.donne_starter && this.storyFlags.has("starter_choisi")) {
       return "apres_starter";
     }
 
-    if (!this.storyFlags.has("has_starter") && info.donne_starter) {
+    if (!this.storyFlags.has("starter_choisi") && info.donne_starter) {
       console.log(`[NPCManager] getDialogueKey: Offering starter (Key: choix_starter)`);
       return "choix_starter";
     }

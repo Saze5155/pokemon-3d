@@ -25,11 +25,6 @@ export class PokemonManager {
         ...pokemon,
       }));
 
-      console.log(
-        "✅ Base de données Pokémon chargée:",
-        this.pokemonDatabase.length,
-        "Pokémon"
-      );
     } catch (error) {
       console.error("❌ Erreur chargement pokemons.json:", error);
       this.pokemonDatabase = [];
@@ -39,14 +34,7 @@ export class PokemonManager {
     if (!this.worldManager || !this.worldManager.loadedZones) return;
     if (!this.pokemonDatabase) return;
 
-    // console.log("Current Loaded Zones:", Array.from(this.worldManager.loadedZones));
-
     for (const zoneName of this.worldManager.loadedZones) {
-       // Debug specific zone existence
-       if (zoneName === 'route2') {
-           const grp = this.worldManager.zoneGroups.get(zoneName);
-           console.log(`[PokemonManager] Route 2 found in loadedZones. Group exists? ${!!grp} HasData? ${!!grp?.userData?.zoneData}`);
-       }
       await this.spawnPokemonInZone(zoneName, playerPosition);
     }
 
@@ -75,7 +63,6 @@ export class PokemonManager {
 
     if (spawnZones.length === 0) return;
 
-    // console.log(`Checking spawn for ${zoneName} (${spawnZones.length} zones)...`);
 
     for (const spawnZone of spawnZones) {
       await this.spawnInZone(spawnZone, zoneGroup, zoneName, playerPosition);
@@ -90,9 +77,7 @@ export class PokemonManager {
         const cZ = zgPos.z + (spawnZone.center?.z || 0);
         const dist = Math.sqrt(Math.pow(playerPosition.x - cX, 2) + Math.pow(playerPosition.z - cZ, 2));
         
-        // Debug distance
-        console.log(`[PokemonManager] Zone ${zoneName} Check - Dist: ${Math.round(dist)}m (Max: 50m)`);
-
+        
         if (dist > 50) {
              return;
         }
@@ -118,8 +103,6 @@ export class PokemonManager {
     const countToSpawn = Math.min(pokemonCount, MAX_POKEMON_PER_ZONE) - existing;
 
     if (countToSpawn <= 0) return;
-
-    console.log(`[PokemonManager] 🥚 Trying to spawn ${countToSpawn} in ${zoneName} (Offset: ${Math.round(zoneOffset.x)}, ${Math.round(zoneOffset.z)})`);
 
     let spawned = 0;
     let attempts = 0;
@@ -161,7 +144,6 @@ export class PokemonManager {
       }
     }
     
-    if (spawned > 0) console.log(`[PokemonManager] ✅ Spawned ${spawned} in ${zoneName}`);
   }
 
   countPokemonsInZone(spawnZone, zoneGroup) {
@@ -187,7 +169,6 @@ export class PokemonManager {
   }
 
   static cleanScene(scene) {
-    console.log("🧹 Nettoyage des Pokémon orphelins dans la scène...");
     const toRemove = [];
     scene.traverse((child) => {
       if (child.userData?.isPokemon) {
@@ -203,7 +184,6 @@ export class PokemonManager {
         else mesh.material.dispose();
       }
     });
-    console.log(`✨ ${toRemove.length} Pokémon supprimés.`);
   }
 
   selectPokemon(pokemonList) {
@@ -394,14 +374,14 @@ export class PokemonManager {
       const distance = pokemon.getDistanceToPlayer(playerPosition);
 
       if (distance < this.encounterDistance && !pokemon.inCombat) {
-        this.triggerEncounter(pokemon);
+        // TODO: triggerEncounter should be provided as a callback
+        // this.triggerEncounter(pokemon);
+        if (this.onEncounter) {
+          this.onEncounter(pokemon);
+        }
         break;
       }
     }
-  }
-
-  triggerEncounter(pokemon) {
-    console.log(`⚔️ Rencontre avec ${pokemon.species} Lv.${pokemon.level}!`);
   }
 
   removePokemon(pokemon) {
@@ -589,7 +569,6 @@ class WildPokemon {
           };
 
           this.scene.add(this.model);
-          console.log(`✅ ${this.species} Lv.${this.level} spawné`);
           resolve(this);
         },
         undefined,

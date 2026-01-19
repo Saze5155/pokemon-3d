@@ -1256,6 +1256,7 @@ class PokemonGame {
 
           // Flags NPCManager (pour les dialogues)
           this.npcManager?.addStoryFlag("has_starter");
+          this.npcManager?.addStoryFlag("starter_choisi"); // Sync with SaveManager flag
           this.npcManager?.addStoryFlag("has_pokedex");
 
           this.dialogueSystem.setVariable("POKEMON", starterData.name);
