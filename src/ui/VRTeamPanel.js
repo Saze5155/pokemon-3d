@@ -70,7 +70,7 @@ export class VRTeamPanel extends VRMenuPanel {
           x, y,
           w: cardWidth,
           h: cardHeight,
-          label: pokemon.surnom || pokemon.nom,
+          label: pokemon.surnom || pokemon.name || pokemon.nom,
           action: () => this.showPokemonDetails(pokemon)
         });
       } else {
@@ -117,7 +117,7 @@ export class VRTeamPanel extends VRMenuPanel {
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 28px Arial';
     ctx.textAlign = 'center';
-    const displayName = pokemon.surnom || pokemon.nom || `Pokémon #${pokemon.speciesId}`;
+    const displayName = pokemon.surnom || pokemon.name || pokemon.nom || `Pokémon #${pokemon.speciesId}`;
     ctx.fillText(displayName, x + w / 2, y + 70);
     
     // Niveau
@@ -136,7 +136,9 @@ export class VRTeamPanel extends VRMenuPanel {
     this.roundRect(ctx, hpBarX, hpBarY, hpBarW, hpBarH, 10, true, false);
     
     // HP actuel
-    const hpPercent = (pokemon.pv || pokemon.hp || 100) / (pokemon.pvMax || pokemon.hpMax || 100);
+    const currentHP = pokemon.stats?.hp || pokemon.pv || pokemon.hp || 100;
+    const maxHP = pokemon.stats?.hpMax || pokemon.pvMax || pokemon.hpMax || 100;
+    const hpPercent = currentHP / maxHP;
     const hpColor = hpPercent > 0.5 ? '#4ade80' : hpPercent > 0.2 ? '#fbbf24' : '#ef4444';
     
     ctx.fillStyle = hpColor;
@@ -146,7 +148,7 @@ export class VRTeamPanel extends VRMenuPanel {
     ctx.fillStyle = '#fff';
     ctx.font = '16px monospace';
     ctx.textAlign = 'center';
-    const hpText = `${pokemon.pv || pokemon.hp || '?'} / ${pokemon.pvMax || pokemon.hpMax || '?'}`;
+    const hpText = `${currentHP} / ${maxHP}`;
     ctx.fillText(hpText, x + w / 2, hpBarY + 15);
     
     // Types (si disponibles)
