@@ -62,14 +62,14 @@ export class VRMenuPanel {
   
   show(parentObject) {
     if (this.isVisible) return;
-    
+
     console.log(`[VRMenuPanel] Showing ${this.constructor.name}`);
-    
+
     // Ajouter à la scène si pas déjà fait
     if (!this.mesh.parent) {
       parentObject.add(this.mesh);
     }
-    
+
     // Positionner au-dessus de la montre
     // Position relative au container de la montre
     this.mesh.position.set(
@@ -77,43 +77,27 @@ export class VRMenuPanel {
       0.15,   // 15cm au-dessus
       0.05    // Légèrement vers l'avant
     );
-    
+
     // Rotation pour faire face au joueur ET matcher l'orientation de la montre
     // La montre a rotation.z = PI/2, donc on fait pareil
     this.mesh.rotation.x = -Math.PI / 2; // Couché à plat
     this.mesh.rotation.z = Math.PI / 2;  // Tourné 90° comme la montre
-    
-    // Animation d'apparition
-    this.mesh.scale.set(0.01, 0.01, 0.01);
+
+    // IMPORTANT: Afficher immédiatement à taille normale pour Quest
+    // requestAnimationFrame ne fonctionne pas en session XR sur Quest
+    this.mesh.scale.set(1, 1, 1);
     this.mesh.visible = true;
     this.isVisible = true;
-    
+
     // Dessiner le contenu
     this.draw();
-    
-    // Animer l'apparition
-    this.animateShow();
+
+    console.log(`[VRMenuPanel] ${this.constructor.name} shown - mesh.visible=${this.mesh.visible}, isVisible=${this.isVisible}`);
   }
-  
+
   animateShow() {
-    const startTime = Date.now();
-    const duration = 200; // ms
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Easing out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      
-      this.mesh.scale.set(eased, eased, eased);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    animate();
+    // Animation désactivée pour compatibilité Quest
+    // requestAnimationFrame ne fonctionne pas en session XR
   }
   
   hide() {
