@@ -94,11 +94,36 @@ export class VRBelt {
         
         const euler = new THREE.Euler().setFromQuaternion(this.camera.quaternion, 'YXZ');
         this.container.rotation.y = euler.y;
+
+        // 3. Gestion réapparition
+        this.checkRespawn(delta);
     }
 
     refreshData() {
         this.updateTeam();
         this.updateInventory();
+    }
+
+    /**
+     * Vérifie si les balles doivent réapparaître après avoir été lancées
+     */
+    checkRespawn(delta) {
+        // Respawn des balles de capture
+        if (this.captureBalls.length === 0) {
+             // Si plus de balles (lancées), on attend un peu et on refresh
+             if (!this.respawnTimer) this.respawnTimer = 0;
+             this.respawnTimer += delta;
+
+             if (this.respawnTimer > 2.0) { // 2 secondes après avoir vidé le holster
+                 this.updateInventory();
+                 this.respawnTimer = 0;
+             }
+        }
+        
+        // Respawn des balles d'équipe (si remises à la ceinture ?)
+        // Pour l'instant, on suppose qu'elles reviennent tout le temps via refreshData()
+        // Mais si on veut un retour physique, c'est plus complexe.
+        // Simplification: refresh périodique si l'équipe a changé ou si un slot est vide inattendu
     }
 
     /**
@@ -109,53 +134,51 @@ export class VRBelt {
         this.teamBalls.forEach(b => this.rightHolster.remove(b));
         this.teamBalls = [];
 
-        const team = this.game.saveManager?.myPokemon || {};
-        console.log(`[VRBelt] updateTeam: Found ${Object.keys(team).length} pokemons`, team);
+        // ✅ FIX: Utiliser getTeam() qui retourne un array ordonné des Pokémon
+        const team = this.game.saveManager?.getTeam() || [];
+        console.log(`[VRBelt] updateTeam: Found ${team.length} pokemons`, team);
         
         // Configuration Grille 2 colonnes x 3 lignes
-        // Col 1 = Arrière, Col 2 = Avant (ou inversement selon préférence)
-        // Lignes = Haut (0), Milieu (1), Bas (2)
-        
         const cols = 2;
-        // Espacements
-        const sepX = 0.08; // Espacement horizontal (profondeur)
-        const sepY = 0.08; // Espacement vertical (hauteur)
+        const sepX = 0.08;
+        const sepY = 0.08;
 
+        // On affiche toujours 6 slots pour la symétrie
         for (let i = 0; i < 6; i++) {
-            // Calcul position grille
-            // i=0 -> col 0, row 0
-            // i=1 -> col 1, row 0
-            // i=2 -> col 0, row 1...
             const col = i % cols; 
             const row = Math.floor(i / cols);
 
-            // Slot occupé ?
-            if (team[i+1]) {
-                const pokemon = team[i+1];
-                const ball = this.createPokeballMesh('pokeball');
+            // Slot occupé par un pokémon ?
+            // L'array 'team' ne contient QUE les pokemons valides (pas de null), 
+            // donc on affiche les pokemons trouvés, puis des vides.
+            if (i < team.length) {
+                const pokemon = team[i];
+                const ball = this.createPokeballMesh('pokeball'); // TODO: Utiliser pokemon.pokeball si dispo
                 
                 // Positionnement
-                // X : Décalage en largeur (vers l'extérieur du corps) -> Non, c'est depth sur le holster ?
-                // Le holster est rotaté de -0.3rad.
-                // Disons:
-                // X (Local) = Profondeur le long de la hanche
-                // Y (Local) = Hauteur verticale
-                // Z (Local) = Ecartement du corps
-                
-                // On arrange en 2 colonnes le long de la hanche (X) et en hauteur (Y) ?
-                // Ou 2 colonnes en Z (épaisseur) ?
-                // "2 colonnes de 3" sur une surface plane verticale type plaque de cuisse.
-                
-                // Centrage
-                const x = (col * sepX) + 0.05; // Décalage vers l'arrière
-                const y = -(row * sepY) + 0.1; // Part du haut vers le bas
+                const x = (col * sepX) + 0.05; 
+                const y = -(row * sepY) + 0.1;
                 const z = 0;
 
                 ball.position.set(x, y, z);
                 
+                // Metadata
+                ball.userData = {
+                    type: 'team',
+                    ballId: 'pokeball',
+                    isTeamBall: true,
+                    pokemonId: pokemon.uniqueId,
+                    pokemonName: pokemon.surnom || pokemon.name || pokemon.species
+                };
+                
                 this.rightHolster.add(ball);
                 this.teamBalls.push(ball);
+                
+                // Wrapper Physique
+                new VRPokeball(this.game, ball, ball.userData);
+
             } else {
+                // Slot vide (visuel)
                 const empty = this.createPokeballMesh('vide');
                 empty.scale.setScalar(0.5);
                 
