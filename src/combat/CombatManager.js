@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { StatusManager } from "./StatusManager.js";
 // FORCE REBUILD: 2026-01-19 05:08
 
 export class CombatManager {
@@ -10,6 +11,7 @@ export class CombatManager {
     this.typeManager = typeManager;
     this.moveManager = moveManager;
     this.xpManager = xpManager;
+    this.statusManager = new StatusManager(); // Initialize StatusManager
 
     // FIX: Fallback si MoveManager est mal injecté
     if (!this.moveManager || typeof this.moveManager.getMove !== 'function') {
@@ -34,7 +36,8 @@ export class CombatManager {
         typeManager,
         moveManager,
         moveManagerHasGetMove: moveManager?.getMove ? "YES" : "NO",
-        xpManager
+        xpManager,
+        statusManager: this.statusManager
     });
 
     this.isInCombat = false;
@@ -68,6 +71,7 @@ export class CombatManager {
     this.onCombatEndCallback = null;
   }
 
+
   startCombat(playerPokemon, wildPokemon, playerPokemonEntity, trainer = null, enemyTeam = [], respawnPosition = null) {
     console.log(
       `⚔️ Combat started: ${playerPokemon.name} vs ${wildPokemon.name} (Trainer: ${trainer?.nom})`
@@ -87,10 +91,15 @@ export class CombatManager {
     // Bloquer le Pokémon sauvage
     this.wildPokemon.inCombat = true;
 
+
     // Bloquer le Pokémon du joueur
     if (this.playerPokemonEntity) {
       this.playerPokemonEntity.inCombat = true;
     }
+
+    // INITIALISATION STATS & STATUS
+    this.initializeCombatStats(this.playerPokemon);
+    this.initializeCombatStats(this.wildPokemon);
 
     // FIX: Sauvegarder la position ORIGINALE du joueur
     if (respawnPosition) {
@@ -805,8 +814,15 @@ export class CombatManager {
     const move = this.moveManager.getMove(moveId);
     
     if (move) {
-        // Menu reste visible
-        // this.showMainMenu(false); 
+        // 1. Check Status (Paralysis/Sleep/Freeze)
+        const canAct = this.canPokemonAttack(this.wildPokemon);
+        if (!canAct.canMove) {
+            this.uiManager.showDialogue(canAct.message);
+            setTimeout(() => {
+                this.nextTurn();
+            }, 1500);
+            return;
+        }
 
         console.log(`Ennemi utilise ${move.nom}`);
         this.uiManager.showDialogue(`${this.getPokemonName(this.wildPokemon)} utilise ${move.nom} !`);
@@ -815,17 +831,26 @@ export class CombatManager {
             const damageInfo = this.calculateDamage(this.wildPokemon, this.playerPokemon, move);
             
             setTimeout(() => {
-                this.applyDamage(this.playerPokemon, damageInfo.damage);
-                
-                if (damageInfo.effectiveness > 1) this.uiManager.showNotification("C'est super efficace !");
-                if (damageInfo.effectiveness < 1 && damageInfo.effectiveness > 0) this.uiManager.showNotification("Ce n'est pas très efficace...");
-                if (damageInfo.critical) this.uiManager.showNotification("Coup critique !");
+                // Check Accuracy (Précision)
+                const random = Math.random() * 100;
+                if (move.precision && move.precision < 100 && random > move.precision) {
+                     this.uiManager.showDialogue(`${this.getPokemonName(this.wildPokemon)} rate son attaque !`);
+                } else {
+                    this.applyDamage(this.playerPokemon, damageInfo.damage);
+                    
+                    if (damageInfo.effectiveness > 1) this.uiManager.showNotification("C'est super efficace !");
+                    if (damageInfo.effectiveness < 1 && damageInfo.effectiveness > 0) this.uiManager.showNotification("Ce n'est pas très efficace...");
+                    if (damageInfo.critical) this.uiManager.showNotification("Coup critique !");
+
+                    // Effets secondaires
+                    this.handleMoveEffects(this.wildPokemon, this.playerPokemon, move);
+                }
 
                 this.nextTurn();
             }, 1000);
         } else {
             setTimeout(() => {
-                this.uiManager.showNotification("L'ennemi rate son statut !");
+                this.handleMoveEffects(this.wildPokemon, this.playerPokemon, move);
                 this.nextTurn();
             }, 1000);
         }
@@ -1257,6 +1282,15 @@ export class CombatManager {
 
     // Mettre à jour l'UI
     this.updateCombatUI();
+
+    // FIX: Mettre à jour le VR Battle Panel si en VR
+    if (this.uiManager?.game?.renderer?.xr?.isPresenting && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+      console.log("🎮 VR: Updating battle panel after Pokemon switch");
+      this.uiManager.game.vrManager.updateBattlePanel({
+        playerPokemon: this.playerPokemon,
+        wildPokemon: this.wildPokemon
+      });
+    }
 
     // Tour de l'ennemi (le changement coûte un tour)
     setTimeout(() => {
@@ -2100,11 +2134,19 @@ export class CombatManager {
       const move = this.moveManager.getMove(moveId);
       if (!move) return;
 
+      // 1. Check Status (Paralysis/Sleep/Freeze)
+      const canAct = this.canPokemonAttack(this.playerPokemon);
+      if (!canAct.canMove) {
+          this.isActionInProgress = true;
+          this.uiManager.showNotification(canAct.message);
+          setTimeout(() => {
+              this.nextTurn();
+              this.isActionInProgress = false;
+          }, 1000);
+          return;
+      }
+
       this.isActionInProgress = true;
-
-      // Cacher le menu pendant l'attaque
-      // this.showMainMenu(false);
-
       console.log(`Joueur utilise ${move.nom}`);
       this.uiManager.showNotification(`${this.getPokemonName(this.playerPokemon)} utilise ${move.nom} !`);
 
@@ -2112,21 +2154,31 @@ export class CombatManager {
       if (move.categorie !== "statut") {
         const damageInfo = this.calculateDamage(this.playerPokemon, this.wildPokemon, move);
         
-        // Appliquer les dégâts (Animation TODO)
+        // Appliquer les dégâts
         setTimeout(() => {
-            this.applyDamage(this.wildPokemon, damageInfo.damage);
-            
-            if (damageInfo.effectiveness > 1) this.uiManager.showNotification("C'est super efficace !");
-            if (damageInfo.effectiveness < 1 && damageInfo.effectiveness > 0) this.uiManager.showNotification("Ce n'est pas très efficace...");
-            if (damageInfo.critical) this.uiManager.showNotification("Coup critique !");
+            // Check Accuracy (Précision)
+            const random = Math.random() * 100;
+            // TODO: Ajouter modificateur précision/esquive
+            if (move.precision && move.precision < 100 && random > move.precision) {
+                this.uiManager.showNotification(`${this.getPokemonName(this.playerPokemon)} rate son attaque !`);
+            } else {
+                this.applyDamage(this.wildPokemon, damageInfo.damage);
+                
+                if (damageInfo.effectiveness > 1) this.uiManager.showNotification("C'est super efficace !");
+                if (damageInfo.effectiveness < 1 && damageInfo.effectiveness > 0) this.uiManager.showNotification("Ce n'est pas très efficace...");
+                if (damageInfo.critical) this.uiManager.showNotification("Coup critique !");
+
+                // Effets secondaires (Statuts/Stats)
+                this.handleMoveEffects(this.playerPokemon, this.wildPokemon, move);
+            }
 
             this.nextTurn();
             this.isActionInProgress = false;
         }, 1000);
       } else {
-        // Logique Statut (TODO)
+        // Logique Statut pur
         setTimeout(() => {
-            this.uiManager.showNotification("Mais cela échoue ! (Statut non implémenté)");
+            this.handleMoveEffects(this.playerPokemon, this.wildPokemon, move);
             this.nextTurn();
             this.isActionInProgress = false;
         }, 1000);
@@ -2176,15 +2228,17 @@ export class CombatManager {
       // Choix stats (Physique vs Spécial)
       let A, D;
       if (move.categorie === "physique") {
-          A = attacker.stats?.attack || 10;
-          D = defender.stats?.defense || 10;
+          A = this.getEffectiveStat(attacker, 'attack');
+          D = this.getEffectiveStat(defender, 'defense');
       } else {
-          A = attacker.stats?.special || 10;
-          D = defender.stats?.special || 10;
+          A = this.getEffectiveStat(attacker, 'special');
+          D = this.getEffectiveStat(defender, 'special');
       }
 
       // 1. Coup Critique (Base Vitesse / 512)
-      const isCritical = Math.random() < ((attacker.stats?.speed || 50) / 512);
+      // 1. Coup Critique (Base Vitesse / 512)
+      const speed = this.getEffectiveStat(attacker, 'speed');
+      const isCritical = Math.random() < (speed / 512);
       const critMultiplier = isCritical ? 2 : 1;
       
       // 2. Random (0.85 à 1.0)
@@ -2223,12 +2277,27 @@ export class CombatManager {
       return;
     }
     if (this.getPokemonHp(this.playerPokemon) <= 0) {
-      this.handlePlayerPokemonFainted(); // Utiliser la méthode dédiée pour gérer le switch
+      this.handlePlayerPokemonFainted();
       return;
     }
 
     if (this.combatState === "PLAYER_TURN") {
       this.combatState = "OPPONENT_TURN";
+      
+      // Fin du tour du joueur : Dégâts de statut (Poison/Brûlure)
+      const statusEffect = this.applyEndTurnStatuses(this.playerPokemon);
+      if (statusEffect && statusEffect.message) {
+          this.uiManager.showNotification(statusEffect.message);
+          // Appliquer dégâts de statut
+          if (statusEffect.damage > 0) {
+              this.applyDamage(this.playerPokemon, statusEffect.damage);
+              if (this.getPokemonHp(this.playerPokemon) <= 0) {
+                  this.handlePlayerPokemonFainted();
+                  return;
+              }
+          }
+      }
+
       if (this.uiManager) {
         this.uiManager.showNotification(`À l'ennemi !`);
       }
@@ -2236,12 +2305,211 @@ export class CombatManager {
       setTimeout(() => {
         this.enemyTurn();
       }, 1500);
+
     } else {
       this.combatState = "PLAYER_TURN";
+
+      // Fin du tour de l'ennemi : Dégâts de statut
+      const statusEffect = this.applyEndTurnStatuses(this.wildPokemon);
+      if (statusEffect && statusEffect.message) {
+          this.uiManager.showNotification(statusEffect.message);
+          if (statusEffect.damage > 0) {
+              this.applyDamage(this.wildPokemon, statusEffect.damage);
+              if (this.getPokemonHp(this.wildPokemon) <= 0) {
+                  this.handleEnemyFaint();
+                  return;
+              }
+          }
+      }
+
       if (this.uiManager) {
         this.uiManager.showNotification(`À vous !`);
       }
       this.showMainMenu();
     }
+  }
+
+  // --- STATS & STATUS SYSTEM ---
+
+  initializeCombatStats(pokemon) {
+    if (!pokemon) return;
+    
+    // Initialiser les modificateurs de stats s'ils n'existent pas
+    if (!pokemon.statModifiers) {
+        pokemon.statModifiers = {
+            attack: 0,
+            defense: 0,
+            special: 0,
+            speed: 0,
+            accuracy: 0,
+            evasion: 0
+        };
+    }
+    
+    // Initialiser le statut s'il n'existe pas
+    if (!pokemon.status) {
+        pokemon.status = null;
+        pokemon.statusTurn = 0;
+    }
+  }
+
+  applyStatChange(pokemon, stat, stages) {
+    if (!pokemon || !pokemon.statModifiers) {
+        this.initializeCombatStats(pokemon);
+    }
+    
+    // Limiter entre -6 et +6
+    const currentStage = pokemon.statModifiers[stat] || 0;
+    const newStage = Math.max(-6, Math.min(6, currentStage + stages));
+    
+    // Si pas de changement (ex: déjà au max)
+    if (currentStage === newStage) {
+        return {
+            success: false,
+            message: stages > 0 
+                ? `${pokemon.name} ne peut pas aller plus haut !`
+                : `${pokemon.name} ne peut pas aller plus bas !`
+        };
+    }
+    
+    pokemon.statModifiers[stat] = newStage;
+    
+    let message = "";
+    if (stages > 1) message = `${pokemon.name} : ${stat} augmente beaucoup !`;
+    else if (stages === 1) message = `${pokemon.name} : ${stat} augmente !`;
+    else if (stages === -1) message = `${pokemon.name} : ${stat} diminue !`;
+    else if (stages < -1) message = `${pokemon.name} : ${stat} diminue beaucoup !`;
+    
+    return { success: true, message };
+  }
+
+  getStatStageMultiplier(stage) {
+    if (stage >= 0) {
+        return (2 + stage) / 2;
+    } else {
+        return 2 / (2 - stage);
+    }
+  }
+
+  getEffectiveStat(pokemon, statName) {
+    if (!pokemon) return 0;
+    this.initializeCombatStats(pokemon);
+
+    // 1. Stat de base (approximation si pas dispo)
+    let baseStat = 0;
+    
+    // Mapping des noms de stats
+    const statMap = {
+        'attack': 'attaque',
+        'defense': 'defense',
+        'special': 'special', // À voir si séparé en atk spe/def spe dans ton modèle
+        'speed': 'vitesse',
+        'maxHp': 'maxHp'
+    };
+    
+    const dataKey = statMap[statName] || statName;
+    baseStat = pokemon[dataKey] || pokemon.stats?.[dataKey] || 50;
+
+    // 2. Modificateur de combat (stages)
+    const stage = pokemon.statModifiers[statName] || 0;
+    let multiplier = this.getStatStageMultiplier(stage);
+
+    // 3. Modificateurs de statut (paralysie, brûlure)
+    if (this.statusManager) {
+        multiplier *= this.statusManager.getStatMultiplier(pokemon, statName);
+    }
+
+    return Math.floor(baseStat * multiplier);
+  }
+
+  // Vérifier si le Pokemon peut attaquer (Sleep, Freeze, Paralysis)
+  canPokemonAttack(pokemon) {
+      if (!this.statusManager) return { canMove: true };
+      return this.statusManager.canMove(pokemon);
+  }
+
+  // Appliquer les dégâts de statut (Poison, Burn)
+  applyEndTurnStatuses(pokemon) {
+      if (!this.statusManager) return null;
+      return this.statusManager.processEndTurn(pokemon);
+  }
+
+  // Gérer les effets secondaires des attaques (Statuts, Stats)
+  handleMoveEffects(attacker, defender, move) {
+      if (!move.effet && !move.statut) return; 
+
+      const chance = move.chanceEffet || 100;
+      if (Math.random() * 100 > chance) return;
+
+      let target = defender; // Par défaut sur l'ennemi
+      if (move.target === 'self' || move.effet === 'defense_up' || move.effet === 'evasion_up' || move.effet === 'speed_up_2' || move.effet === 'attack_up_2' || move.effet === 'focus' || move.effet === 'heal_50') {
+          target = attacker;
+      }
+
+      // Effets de Statut
+      const statusMap = {
+          'poison': this.statusManager.STATUS.POISON,
+          'paralysie': this.statusManager.STATUS.PARALYSIS,
+          'sleep': this.statusManager.STATUS.SLEEP,
+          'burn': this.statusManager.STATUS.BURN,
+          'gel': this.statusManager.STATUS.FREEZE,
+          'glace': this.statusManager.STATUS.FREEZE
+      };
+
+      let statusToApply = null;
+      if (move.categorie === 'statut' && statusMap[move.effet]) {
+          statusToApply = statusMap[move.effet];
+      } else if (move.effet && statusMap[move.effet]) {
+          statusToApply = statusMap[move.effet];
+      }
+
+      if (statusToApply) {
+          if (this.statusManager.applyStatus(target, statusToApply)) {
+              let msg = "";
+              switch(statusToApply) {
+                  case this.statusManager.STATUS.POISON: msg = `${target.name} est empoisonné !`; break;
+                  case this.statusManager.STATUS.PARALYSIS: msg = `${target.name} est paralysé !`; break;
+                  case this.statusManager.STATUS.SLEEP: msg = `${target.name} s'endort !`; break;
+                  case this.statusManager.STATUS.BURN: msg = `${target.name} brûle !`; break;
+                  case this.statusManager.STATUS.FREEZE: msg = `${target.name} est gelé !`; break;
+              }
+              this.uiManager.showNotification(msg);
+          } else {
+              this.uiManager.showNotification(`Cela n'affecte pas ${target.name}...`);
+          }
+      }
+
+      // Effets de Stats
+      const statEffects = {
+          'attack_down': { stat: 'attack', stages: -1 },
+          'defense_down': { stat: 'defense', stages: -1 },
+          'speed_down': { stat: 'speed', stages: -1 },
+          'accuracy_down': { stat: 'accuracy', stages: -1 },
+          'attack_up': { stat: 'attack', stages: 1 },
+          'defense_up': { stat: 'defense', stages: 1 },
+          'speed_up': { stat: 'speed', stages: 1 },
+          'evasion_up': { stat: 'evasion', stages: 1 },
+          'attack_up_2': { stat: 'attack', stages: 2 },
+          'speed_up_2': { stat: 'speed', stages: 2 },
+          'defense_down_2': { stat: 'defense', stages: -2 }
+      };
+
+      if (statEffects[move.effet]) {
+          const effect = statEffects[move.effet];
+          const result = this.applyStatChange(target, effect.stat, effect.stages);
+          if (result.message) {
+              this.uiManager.showNotification(result.message);
+          }
+      }
+      
+      // Soin
+      if (move.effet === 'heal_50') {
+          const healAmount = Math.floor(target.maxHp / 2);
+          const oldHp = this.getPokemonHp(target);
+          const newHp = Math.min(target.maxHp, oldHp + healAmount);
+          this.setPokemonHp(target, newHp);
+          this.uiManager.showNotification(`${target.name} récupère de l'énergie !`);
+          this.updateCombatUI();
+      }
   }
 }
