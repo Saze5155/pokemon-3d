@@ -118,6 +118,11 @@ export class VRInteractionManager {
 
         if (closest) {
             this.grabObject(handName, closest);
+            
+            // Trigger vrPokeballs tutorial on first grab
+            if (this.game.ui && this.game.ui.tutorialSystem) {
+                this.game.ui.tutorialSystem.showIfNotSeen('vrPokeballs');
+            }
         }
     }
 

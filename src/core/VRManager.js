@@ -475,6 +475,12 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
           console.log("🔄 VRManager: Refreshing Belt Data...");
           this.vrBelt.refreshData();
       }
+
+      // Trigger VR Welcome Tutorial (first time only)
+      if (this.game.ui && this.game.ui.tutorialSystem) {
+          console.log("🎓 VRManager: Triggering VR Welcome Tutorial");
+          this.game.ui.tutorialSystem.showIfNotSeen('vrWelcome');
+      }
     }
 
     onSessionEnd() {
@@ -518,6 +524,11 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
               this.game.activePhysicsObjects.forEach(obj => obj.update(delta));
               // Nettoyage objets finis ?
           }
+      }
+
+      // Update VR Tutorial Panel if active
+      if (this.game.ui && this.game.ui.tutorialSystem && this.game.ui.tutorialSystem.vrTutorialPanel) {
+          this.game.ui.tutorialSystem.vrTutorialPanel.update();
       }
       
       // Gestion Input Gauche (Grip)
@@ -803,6 +814,11 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
             
             this.watchMenu.isVisible = true; // Toujours visible pour tester
             this.watchMenu.setFocus(isLooking);
+
+            // Trigger vrWatch tutorial on first look
+            if (isLooking && this.game.ui && this.game.ui.tutorialSystem) {
+                this.game.ui.tutorialSystem.showIfNotSeen('vrWatch');
+            }
 
             // Update Raycaster depuis la main DROITE
             if (this.controllers.right) {

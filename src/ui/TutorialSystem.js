@@ -3,6 +3,7 @@
  * Tutoriels contextuels pour les combats, équipe, capture, etc.
  */
 
+
 export class TutorialSystem {
   constructor(uiManager) {
     this.ui = uiManager;
@@ -11,10 +12,13 @@ export class TutorialSystem {
     this.isActive = false;
     this.completedTutorials = new Set();
 
+    // VR Tutorial Panel (initialized lazily when needed)
+    this.vrTutorialPanel = null;
+
     // Charger les tutoriels déjà complétés depuis le localStorage
     this.loadProgress();
 
-    // Créer le conteneur du tutoriel
+    // Créer le conteneur du tutoriel (desktop)
     this.createContainer();
 
     // Définir tous les tutoriels
@@ -343,6 +347,182 @@ Les objets sont vendus à <span class="highlight">la moitié</span> de leur prix
             tip: 'Vends les objets dont tu n\'as pas besoin pour gagner de l\'argent.'
           }
         ]
+      },
+
+      // ==================== TUTORIELS VR ====================
+
+      // Tutoriel VR - Bienvenue
+      vrWelcome: {
+        id: 'vrWelcome',
+        title: 'Bienvenue en VR !',
+        icon: '🥽',
+        subtitle: 'Contrôles VR',
+        canSkip: true,
+        isVR: true,
+        steps: [
+          {
+            title: 'Bienvenue en Réalité Virtuelle !',
+            content: `Tu es maintenant dans le monde de <span class="highlight">Kanto en VR</span> !
+
+Ce tutoriel va t'expliquer les contrôles spécifiques à la VR.`,
+            tip: 'Tu peux revoir ce tutoriel dans les options.'
+          },
+          {
+            title: 'Se déplacer',
+            content: `Utilise les manettes pour te déplacer :`,
+            controls: [
+              { key: 'Joystick Gauche', desc: 'Se déplacer' },
+              { key: 'Joystick Droit', desc: 'Tourner (snap turn)' }
+            ],
+            tip: 'Le déplacement suit la direction de ton regard.'
+          },
+          {
+            title: 'Interagir',
+            content: `Pour interagir avec le monde :`,
+            controls: [
+              { key: 'Gâchette Droite', desc: 'Sélectionner / Interagir' },
+              { key: 'Laser Bleu', desc: 'Pointe vers les objets interactifs' }
+            ],
+            tip: 'Un laser bleu part de ta main droite pour viser.'
+          }
+        ]
+      },
+
+      // Tutoriel VR - La Montre
+      vrWatch: {
+        id: 'vrWatch',
+        title: 'La Montre Pokégear',
+        icon: '⌚',
+        subtitle: 'Menu VR',
+        canSkip: true,
+        isVR: true,
+        steps: [
+          {
+            title: 'Ta Montre',
+            content: `En VR, le <span class="highlight">Pokégear</span> est sur ton poignet gauche !
+
+<span class="highlight">Regarde ton poignet gauche</span> pour voir ta montre.`,
+            tip: 'La montre se zoome automatiquement quand tu la regardes.'
+          },
+          {
+            title: 'Les Menus',
+            content: `Sur la montre tu trouveras :`,
+            actions: [
+              { icon: '👥', name: 'ÉQUIPE', desc: 'Gérer tes Pokémon' },
+              { icon: '🎒', name: 'SAC', desc: 'Ton inventaire' },
+              { icon: '📦', name: 'STOCKAGE', desc: 'PC Pokémon' },
+              { icon: '📖', name: 'POKÉDEX', desc: 'Pokémon vus/capturés' }
+            ]
+          },
+          {
+            title: 'Navigation',
+            content: `Pour utiliser la montre :
+
+1. <span class="highlight">Regarde</span> ton poignet gauche
+2. <span class="highlight">Pointe</span> avec le laser de la main droite
+3. Appuie sur la <span class="highlight">Gâchette</span> pour sélectionner`,
+            tip: 'Appuie sur B pour fermer un menu.'
+          }
+        ]
+      },
+
+      // Tutoriel VR - Les Pokéballs
+      vrPokeballs: {
+        id: 'vrPokeballs',
+        title: 'Lancer des Pokéballs',
+        icon: '🔴',
+        subtitle: 'Capture VR',
+        canSkip: true,
+        isVR: true,
+        steps: [
+          {
+            title: 'Ta Ceinture',
+            content: `En VR, tes <span class="highlight">Pokéballs</span> sont sur ta ceinture !
+
+<span class="highlight">Baisse la tête</span> pour voir ta ceinture de Pokéballs.`,
+            tip: 'La ceinture apparaît automatiquement quand tu regardes vers le bas.'
+          },
+          {
+            title: 'Types de Balls',
+            content: `Sur ta ceinture tu trouveras :`,
+            items: [
+              { name: '🔴 Côté Gauche', desc: 'Pokéballs vides (pour capturer)' },
+              { name: '🔵 Côté Droit', desc: 'Pokéballs de ton équipe' }
+            ],
+            tip: 'Les balls de ton équipe contiennent tes Pokémon !'
+          },
+          {
+            title: 'Attraper une Ball',
+            content: `Pour prendre une Pokéball :
+
+1. <span class="highlight">Approche ta main</span> de la ceinture
+2. Appuie sur <span class="highlight">Grip</span> pour attraper
+3. La ball est dans ta main !`,
+            controls: [
+              { key: 'Grip (côté)', desc: 'Attraper / Lâcher' }
+            ]
+          },
+          {
+            title: 'Lancer !',
+            content: `Pour lancer la Pokéball :
+
+1. <span class="highlight">Tiens</span> la ball avec Grip
+2. Fais un <span class="highlight">mouvement de lancer</span>
+3. <span class="highlight">Relâche Grip</span> au bon moment !`,
+            tip: 'Plus tu lances fort, plus la ball va loin !'
+          },
+          {
+            title: 'Rappeler les Balls',
+            content: `Si tu rates ton lancer, pas de panique !
+
+Appuie sur <span class="highlight">X ou Y</span> (main gauche) pour rappeler toutes les balls sur ta ceinture.`,
+            tip: 'Les balls reviennent automatiquement après quelques secondes.'
+          }
+        ]
+      },
+
+      // Tutoriel VR - Combat
+      vrCombat: {
+        id: 'vrCombat',
+        title: 'Combat en VR',
+        icon: '⚔️',
+        subtitle: 'Combattre en VR',
+        canSkip: true,
+        isVR: true,
+        steps: [
+          {
+            title: 'Déclencher un Combat',
+            content: `Pour commencer un combat sauvage :
+
+1. Prends une <span class="highlight">ball de ton équipe</span> (côté droit)
+2. <span class="highlight">Lance-la</span> sur un Pokémon sauvage !
+
+Ton Pokémon sortira et le combat commencera.`,
+            tip: 'Les Pokémon sauvages sont visibles dans le monde.'
+          },
+          {
+            title: 'Interface de Combat',
+            content: `Pendant le combat, un <span class="highlight">panneau</span> apparaît devant toi.
+
+Utilise le laser et la gâchette pour sélectionner tes actions :`,
+            actions: [
+              { icon: '⚔️', name: 'ATTAQUE', desc: 'Utiliser une capacité' },
+              { icon: '🎒', name: 'SAC', desc: 'Utiliser un objet' },
+              { icon: '🔄', name: 'POKÉMON', desc: 'Changer de Pokémon' },
+              { icon: '🏃', name: 'FUITE', desc: 'Fuir (sauvage uniquement)' }
+            ]
+          },
+          {
+            title: 'Capturer en Combat',
+            content: `Pour capturer le Pokémon adverse :
+
+1. Prends une <span class="highlight">ball vide</span> (côté gauche)
+2. <span class="highlight">Lance-la</span> sur le Pokémon ennemi !
+
+Plus ses PV sont bas, plus la capture est facile !`,
+            tip: 'Tu ne peux pas capturer les Pokémon de dresseurs.'
+          }
+        ]
       }
     };
   }
@@ -431,6 +611,46 @@ Les objets sont vendus à <span class="highlight">la moitié</span> de leur prix
     this.currentStep = 0;
     this.isActive = true;
 
+    // Détecter si on est en VR et si c'est un tutoriel VR
+    const isVRMode = this.ui?.game?.renderer?.xr?.isPresenting || false;
+    const isVRTutorial = tutorial.isVR || false;
+
+    // Si on est en VR ET que c'est un tutoriel VR, utiliser le VRTutorialPanel
+    if (isVRMode && isVRTutorial) {
+      console.log(`[Tutorial] Mode VR détecté, utilisation du VRTutorialPanel`);
+      
+      // Initialiser le VR panel si nécessaire
+      if (!this.vrTutorialPanel) {
+        this.vrTutorialPanel = new VRTutorialPanel(this.ui.game);
+        
+        // Connecter les callbacks
+        this.vrTutorialPanel.onComplete = (tutorialId) => {
+          this.completedTutorials.add(tutorialId);
+          this.saveProgress();
+          this.isActive = false;
+          this.currentTutorial = null;
+          this.currentStep = 0;
+          
+          if (this.onTutorialComplete) {
+            this.onTutorialComplete(tutorialId);
+          }
+        };
+
+        this.vrTutorialPanel.onSkip = (tutorialId) => {
+          this.completedTutorials.add(tutorialId);
+          this.saveProgress();
+          this.isActive = false;
+          this.currentTutorial = null;
+          this.currentStep = 0;
+        };
+      }
+
+      // Afficher le tutoriel VR
+      this.vrTutorialPanel.showTutorial(tutorial, 0);
+      return;
+    }
+
+    // Mode Desktop: utiliser l'overlay HTML classique
     // Mettre à jour l'en-tête
     document.getElementById('tutorial-icon').textContent = tutorial.icon;
     document.getElementById('tutorial-title').textContent = tutorial.title;

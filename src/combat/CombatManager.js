@@ -106,10 +106,18 @@ export class CombatManager {
 
     // Tuto Combat
     if (this.uiManager.tutorialSystem) {
-         if (trainer) {
-             this.uiManager.tutorialSystem.showIfNotSeen('trainers');
+         const isVRMode = this.uiManager?.game?.renderer?.xr?.isPresenting || false;
+         
+         if (isVRMode) {
+             // VR Mode: use VR-specific combat tutorial
+             this.uiManager.tutorialSystem.showIfNotSeen('vrCombat');
          } else {
-             this.uiManager.tutorialSystem.showIfNotSeen('combat');
+             // Desktop Mode: use standard tutorials
+             if (trainer) {
+                 this.uiManager.tutorialSystem.showIfNotSeen('trainers');
+             } else {
+                 this.uiManager.tutorialSystem.showIfNotSeen('combat');
+             }
          }
     }
 
