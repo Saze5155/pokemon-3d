@@ -19,6 +19,10 @@ export class VRPokeball {
         // Pour le respawn
         this.hasHitTarget = false;
 
+        // FIX: Raycaster pour détection de sol (comme PokeballPhysics)
+        this.groundRaycaster = new THREE.Raycaster();
+        this.downDirection = new THREE.Vector3(0, -1, 0);
+
         // Setup initial
         this.mesh.userData.interactable = true;
         this.mesh.userData.vrPokeball = this;
@@ -31,19 +35,77 @@ export class VRPokeball {
 
             // Appliquer vélocité
             this.mesh.position.addScaledVector(this.velocity, delta);
-            
+
             // Rotation visuelle pendant le vol
             this.mesh.rotation.x -= 10 * delta;
 
 
-            // Collision Sol (Y=0 pour l'instant)
-            if (this.mesh.position.y <= this.radius) {
-                this.onLand();
+            // FIX: Collision Sol avec raycasting (comme PokeballPhysics)
+            const groundCheck = this.checkGroundCollision();
+            if (groundCheck.hit) {
+                this.onLand(groundCheck.groundY);
             }
 
             // Collision Pokemon
             this.checkCollisions();
         }
+    }
+
+    /**
+     * Vérifie la collision avec le sol en utilisant un raycasting
+     * (comme PokeballPhysics pour comportement uniforme)
+     */
+    checkGroundCollision() {
+        const pos = this.mesh.position;
+        const rayOrigin = new THREE.Vector3(pos.x, pos.y + 0.5, pos.z);
+        this.groundRaycaster.set(rayOrigin, this.downDirection);
+
+        // Obtenir la scène active
+        let scene = null;
+        if (this.game.useWorldMap && this.game.worldManager) {
+            scene = this.game.worldManager.worldScene;
+        } else if (this.game.sceneManager) {
+            scene = this.game.sceneManager.getActiveScene();
+        }
+
+        if (!scene) {
+            // Fallback: vérifier y <= radius
+            if (pos.y <= this.radius) {
+                return { hit: true, groundY: 0 };
+            }
+            return { hit: false, groundY: 0 };
+        }
+
+        // Raycast vers le bas pour trouver le sol
+        const intersects = this.groundRaycaster.intersectObjects(scene.children, true);
+        for (const hit of intersects) {
+            const name = hit.object.name.toLowerCase();
+            const parentName = hit.object.parent?.name?.toLowerCase() || "";
+
+            // Chercher des meshes de sol (même logique que PokeballPhysics)
+            if (
+                name.includes("ground") ||
+                name.includes("floor") ||
+                name.includes("_sol") ||
+                name.includes("terrain") ||
+                name.includes("_col") || // Meshes de collision
+                parentName.includes("ground") ||
+                parentName.includes("floor")
+            ) {
+                const groundY = hit.point.y;
+                // La pokéball touche le sol si elle est assez proche
+                if (pos.y - this.radius <= groundY + 0.05) {
+                    return { hit: true, groundY: groundY };
+                }
+            }
+        }
+
+        // Fallback ultime: y <= radius (ancien comportement)
+        if (pos.y <= this.radius) {
+            return { hit: true, groundY: 0 };
+        }
+
+        return { hit: false, groundY: 0 };
     }
 
     checkCollisions() {
@@ -185,14 +247,15 @@ export class VRPokeball {
         }
     }
 
-    onLand() {
+    onLand(groundY = 0) {
         if (this.hasHitTarget) return; // Déjà géré par onHitPokemon
 
         this.state = 'LANDED';
-        this.mesh.position.y = this.radius; // Poser au sol
+        // FIX: Utiliser la hauteur réelle du sol au lieu de supposer y=0
+        this.mesh.position.y = groundY + this.radius; // Poser au sol
         this.velocity.set(0, 0, 0);
 
-        console.log("🔴 Pokéball a atterri sans toucher de cible", this.data);
+        console.log(`🔴 Pokéball a atterri au sol (y=${groundY.toFixed(2)}) sans toucher de cible`, this.data);
 
         // Si c'est une ball d'équipe qui touche le sol, spawn le pokemon quand même
         if (this.data.isTeamBall && this.data.pokemonId) {

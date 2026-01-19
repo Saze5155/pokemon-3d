@@ -197,6 +197,7 @@ export class SceneManager {
               child.visible = false;
               child.userData.hasCollision = true;
               child.userData.isCollisionMesh = true;
+              console.log(`✅ Collision mesh détecté: ${child.name} (parent: ${child.parent?.name || 'none'})`);
             }
 
             // Flange (rebords) - vÃ©rifier aussi le parent
@@ -232,6 +233,15 @@ export class SceneManager {
 
         prefab.userData.isPrefab = true;
         prefab.userData.modelPath = data.prefabModel;
+
+        // FIX VR: Compter et afficher les meshes de collision chargés
+        let collisionCount = 0;
+        let flangeCount = 0;
+        prefab.traverse((child) => {
+          if (child.userData?.isCollisionMesh) collisionCount++;
+          if (child.userData?.isFlange) flangeCount++;
+        });
+        console.log(`📦 Prefab chargé: ${data.prefabModel} - ${collisionCount} collision meshes, ${flangeCount} flange meshes`);
 
         targetScene.add(prefab);
         resolve(prefab);

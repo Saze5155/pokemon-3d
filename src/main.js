@@ -229,11 +229,26 @@ class PokemonGame {
 
     this.ui.onSaveGame = async () => {
       // Récupérer la position actuelle du joueur
+      // FIX VR: En mode VR, utiliser la position mondiale de la caméra
+      let posX, posY, posZ;
+      if (this.useVR && this.vrManager && this.camera) {
+        const worldPos = new THREE.Vector3();
+        this.camera.getWorldPosition(worldPos);
+        posX = worldPos.x;
+        posY = worldPos.y;
+        posZ = worldPos.z;
+        console.log(`💾 VR Save: World position (${posX.toFixed(2)}, ${posY.toFixed(2)}, ${posZ.toFixed(2)})`);
+      } else {
+        posX = this.camera.position.x;
+        posY = this.camera.position.y;
+        posZ = this.camera.position.z;
+      }
+
       const playerPosition = {
         map: this.sceneManager.activeSceneName,
-        x: this.camera.position.x,
-        y: this.camera.position.y,
-        z: this.camera.position.z,
+        x: posX,
+        y: posY,
+        z: posZ,
         direction: "south", // TODO: calculer la direction réelle
       };
 
@@ -699,18 +714,40 @@ class PokemonGame {
              console.log("🌍 Coordonnées globales utilisées directement");
          }
 
-         this.camera.position.set(startX, startY, startZ);
+         // FIX VR: En mode VR, la position doit être appliquée au playerRig, pas à la caméra
+         if (this.useVR && this.vrManager && this.vrManager.playerRig) {
+           // En VR, startY est la hauteur des yeux (desktop), mais le rig doit être au sol
+           const rigY = Math.max(0, startY - 1.6);
+           this.vrManager.playerRig.position.set(startX, rigY, startZ);
+           console.log(`📍 VR: PlayerRig positioned at (${startX.toFixed(2)}, ${rigY.toFixed(2)}, ${startZ.toFixed(2)})`);
+         } else {
+           this.camera.position.set(startX, startY, startZ);
+         }
 
     } else if (this.sceneManager.scenes.has(startScene)) {
       // Fallback: Mode Classique (Intérieur, etc.)
       this.sceneManager.activeSceneName = startScene;
       this.audioManager.playMusic(startScene);
-      this.camera.position.set(startX, startY, startZ);
+      // FIX VR: En mode VR, appliquer la position au playerRig
+      if (this.useVR && this.vrManager && this.vrManager.playerRig) {
+        const rigY = Math.max(0, startY - 1.6);
+        this.vrManager.playerRig.position.set(startX, rigY, startZ);
+        console.log(`📍 VR Interior: PlayerRig positioned at (${startX.toFixed(2)}, ${rigY.toFixed(2)}, ${startZ.toFixed(2)})`);
+      } else {
+        this.camera.position.set(startX, startY, startZ);
+      }
     } else {
        console.warn(`⚠️ Scène "${startScene}" introuvable. Fallback sur maisonetage.`);
        if (this.sceneManager.scenes.has("maisonetage")) {
            this.sceneManager.activeSceneName = "maisonetage";
-           this.camera.position.set(5, 1.8, 5);
+           // FIX VR: En mode VR, appliquer la position au playerRig
+           if (this.useVR && this.vrManager && this.vrManager.playerRig) {
+             const rigY = Math.max(0, 1.8 - 1.6); // 0.2m au-dessus du sol
+             this.vrManager.playerRig.position.set(5, rigY, 5);
+             console.log(`📍 VR Fallback: PlayerRig positioned at (5, ${rigY.toFixed(2)}, 5)`);
+           } else {
+             this.camera.position.set(5, 1.8, 5);
+           }
        }
     }
 
@@ -1973,16 +2010,24 @@ class PokemonGame {
         this.npcManager.update(delta);
 
         // Vérifier si un dresseur repère le joueur
+        // FIX VR: Utiliser getWorldPosition() pour obtenir la position mondiale de la caméra
+        let detectionPos = this.camera.position;
+        if (this.useVR && this.vrManager && this.camera) {
+          const camWorldPos = new THREE.Vector3();
+          this.camera.getWorldPosition(camWorldPos);
+          detectionPos = camWorldPos;
+        }
         const spottingTrainer = this.npcManager.checkTrainerVision(
-          this.camera.position,
+          detectionPos,
           delta
         );
         if (spottingTrainer) {
           console.log(`👀 ${spottingTrainer.nom} vous a repéré !`);
-          
+
           // FIX: Sauvegarder la position exacte AVANT le dialogue/combat
-          this.lastSafePosition = this.camera.position.clone();
-          
+          // FIX VR: Utiliser detectionPos qui contient déjà la position mondiale correcte
+          this.lastSafePosition = detectionPos.clone();
+
           // LOCK IMMÉDIAT pour éviter les déclenchements multiples
           spottingTrainer.isBattling = true;
 
@@ -1995,7 +2040,7 @@ class PokemonGame {
             if (!this.dialogueSystem.isDialogueActive()) {
               this.npcManager.lookAtPlayer(
                 spottingTrainer,
-                this.camera.position
+                detectionPos
               );
               const dialogue = this.npcManager.startDialogue(spottingTrainer);
               this.dialogueSystem.start(
