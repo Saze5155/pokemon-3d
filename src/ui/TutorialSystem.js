@@ -448,7 +448,7 @@ Ce tutoriel va t'expliquer les contrôles spécifiques à la VR.`,
             content: `Sur ta ceinture tu trouveras :`,
             items: [
               { name: '🔴 Côté Gauche', desc: 'Pokéballs vides (pour capturer)' },
-              { name: '🔵 Côté Droit', desc: 'Pokéballs de ton équipe' }
+              { name: '🔵 Côté Droit', desc: 'Pokéballs de ton équipe (tes Pokémon)' }
             ],
             tip: 'Les balls de ton équipe contiennent tes Pokémon !'
           },
@@ -477,7 +477,20 @@ Ce tutoriel va t'expliquer les contrôles spécifiques à la VR.`,
             content: `Si tu rates ton lancer, pas de panique !
 
 Appuie sur <span class="highlight">X ou Y</span> (main gauche) pour rappeler toutes les balls sur ta ceinture.`,
+            controls: [
+              { key: 'X / Y', desc: 'Rappeler toutes les balls' }
+            ],
             tip: 'Les balls reviennent automatiquement après quelques secondes.'
+          },
+          {
+            title: 'Fermer les Menus',
+            content: `Pour fermer un panneau de menu en VR :
+
+Appuie sur le bouton <span class="highlight">B</span> (main droite).`,
+            controls: [
+              { key: 'B', desc: 'Fermer le menu actuel' }
+            ],
+            tip: 'Pratique pour revenir rapidement au jeu !'
           }
         ]
       },
