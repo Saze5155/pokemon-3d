@@ -4,6 +4,7 @@ import { VRBattlePanel } from '../ui/VRBattlePanel.js';
 import { VRBelt } from "../ui/VRBelt.js";
 import { VRDialoguePanel } from '../ui/VRDialoguePanel.js';
 import { VRWatchMenu } from "../ui/VRWatchMenu.js";
+import { VRShopPanel } from '../ui/VRShopPanel.js';
 import { VRInteractionManager } from "./VRInteractionManager.js";
 
   /**
@@ -71,8 +72,7 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
 
       // NOTE: Le panneau de dialogue et les hooks sont initialisés dans init() pour garantir que l'UI est prête.
       this.vrDialoguePanel = null;
-      this.interactionRaycaster = new THREE.Raycaster();
-      this.vrDialoguePanel = null;
+      this.vrShopPanel = null;
       this.interactionRaycaster = new THREE.Raycaster();
       this.lastTriggerState = { left: false, right: false };
       this.lastBButtonState = false; // For B button toggle
@@ -264,6 +264,7 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
       // 4. Initialiser le Dialogue Panel VR & Hook
       this.vrDialoguePanel = new VRDialoguePanel(this.game, 1024, 512); // Canvas plus large
       this.vrBattlePanel = new VRBattlePanel(this.game);
+      this.vrShopPanel = new VRShopPanel(this.game);
       // Indicateur de starter choisi (Flag)
       
       console.log("✅ VRManager initialized");
@@ -470,6 +471,29 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
           }
       });
       
+      // Hook pour le Shop VR
+      if (this.game.ui && this.game.ui.showShop && !this.game.ui._isVRShopHooked) {
+          const originalShowShop = this.game.ui.showShop.bind(this.game.ui);
+
+          this.game.ui.showShop = () => {
+              if (this.renderer.xr.isPresenting) {
+                  console.log("🛒 VR Shop Triggered");
+                  // Attacher au container de la montre (comme les autres panels)
+                  if (this.watchMenu && this.watchMenu.container) {
+                      this.watchMenu.container.visible = true;
+                      this.vrShopPanel.show(this.watchMenu.container);
+                  } else {
+                      // Fallback sur le playerRig
+                      this.vrShopPanel.show(this.playerRig);
+                  }
+              } else {
+                  originalShowShop();
+              }
+          };
+          this.game.ui._isVRShopHooked = true;
+          console.log("✅ VRManager: Shop System Hooked!");
+      }
+
       // Force refresh of Belt Data
       if (this.vrBelt) {
           console.log("🔄 VRManager: Refreshing Belt Data...");
@@ -506,9 +530,10 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
       // Gestion Montre (Apparition / Interaction)
       this.handleWatch(delta);
       
-      // Gestion Hover Dialogue
+      // Gestion Hover Dialogue, Battle, Shop
       this.handleDialogueHover();
       this.handleBattleHover();
+      this.handleShopHover();
 
       // Gestion Ceinture
       if (this.vrBelt) {
@@ -654,6 +679,12 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
                         // Action: Close Menu (Watch or Dialogue)
                         let closedSomething = false;
 
+                        if (this.vrShopPanel && this.vrShopPanel.isVisible) {
+                             console.log("[VRManager] B Button pressed: Closing Shop");
+                             this.vrShopPanel.hide();
+                             closedSomething = true;
+                        }
+
                         if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
                              console.log("[VRManager] B Button pressed: Closing Dialogue");
                              this.vrDialoguePanel.hide();
@@ -755,18 +786,36 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
 
     handleDialogueHover() {
         if (!this.vrDialoguePanel || !this.vrDialoguePanel.isVisible || !this.vrDialoguePanel.isShowingChoices) return;
-        
+
         if (this.controllers.right) {
             this.tempMatrix.identity().extractRotation(this.controllers.right.matrixWorld);
             this.raycaster.ray.origin.setFromMatrixPosition(this.controllers.right.matrixWorld);
             this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
-            
+
             const intersects = this.raycaster.intersectObject(this.vrDialoguePanel.mesh);
             if (intersects.length > 0) {
                 const uv = intersects[0].uv;
                 this.vrDialoguePanel.updateHover(uv);
             } else {
                 this.vrDialoguePanel.updateHover(null);
+            }
+        }
+    }
+
+    handleShopHover() {
+        if (!this.vrShopPanel || !this.vrShopPanel.isVisible) return;
+
+        if (this.controllers.right) {
+            this.tempMatrix.identity().extractRotation(this.controllers.right.matrixWorld);
+            this.raycaster.ray.origin.setFromMatrixPosition(this.controllers.right.matrixWorld);
+            this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+
+            const intersects = this.raycaster.intersectObject(this.vrShopPanel.mesh);
+            if (intersects.length > 0) {
+                const uv = intersects[0].uv;
+                this.vrShopPanel.updateHover(uv);
+            } else {
+                this.vrShopPanel.updateHover(null);
             }
         }
     }
@@ -1058,6 +1107,23 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
                           console.log(`[VR] Battle Click: ${button.label}`);
                           button.action();
                           this.vrBattlePanel.draw(); // Feedback
+                          return;
+                      }
+                 }
+            }
+
+            // Si Shop Panel ouvert
+            if (this.vrShopPanel && this.vrShopPanel.isVisible) {
+                 console.log("[VR] Shop panel visible");
+
+                 const intersects = this.interactionRaycaster.intersectObject(this.vrShopPanel.mesh);
+                 if (intersects.length > 0) {
+                      const uv = intersects[0].uv;
+                      const button = this.vrShopPanel.checkClick(uv);
+                      if (button && button.action) {
+                          console.log(`[VR] Shop Click: ${button.label}`);
+                          button.action();
+                          this.vrShopPanel.draw(); // Feedback
                           return;
                       }
                  }
