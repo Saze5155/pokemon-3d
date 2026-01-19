@@ -119,9 +119,6 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             // C'est une zone WorldMap - utiliser la worldScene
             targetScene = this.game.worldManager?.worldScene;
             console.log(`🗺️ VRManager: ${newSceneName} est une zone WorldMap, utilisation de worldScene`);
-            
-            // Ajustement hauteur WorldMap
-            this.playerRig.position.y += 20; // +20m offset
         } else {
             // Scène intérieure - chercher dans les scènes enregistrées
             targetScene = this.game.sceneManager.scenes.get(newSceneName);
