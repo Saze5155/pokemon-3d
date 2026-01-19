@@ -270,6 +270,7 @@ export class VRBattlePanel extends VRMenuPanel {
   drawPokemonSelection(x, y, w, h) {
       // List team members
       const currentTeam = this.game.saveManager.getTeam();
+      console.log(`[VRBattlePanel] drawPokemonSelection - Team size: ${currentTeam.length}`, currentTeam);
 
       const btnH = 60;
       const gap = 10;
@@ -277,12 +278,16 @@ export class VRBattlePanel extends VRMenuPanel {
       // FIX: Récupérer le Pokémon actuellement actif pour ne pas le montrer comme option
       const currentPokemonName = this.combatData?.playerPokemon?.name ||
                                   this.combatData?.playerPokemon?.surnom || "";
+      console.log(`[VRBattlePanel] Current Pokemon: ${currentPokemonName}`);
 
       let validCount = 0;
       currentTeam.forEach((pId, i) => {
           if (i >= 6) return;
           const pokemon = this.game.saveManager.getPokemon(pId);
-          if (!pokemon) return;
+          if (!pokemon) {
+              console.warn(`[VRBattlePanel] Pokemon ${pId} not found!`);
+              return;
+          }
 
           // FIX: Utiliser les helpers pour les HP (gère stats.hp vs hp)
           const currentHp = this.getPokemonHp(pokemon);
@@ -291,7 +296,12 @@ export class VRBattlePanel extends VRMenuPanel {
 
           // FIX: Skip le Pokémon actuellement en combat
           const isCurrentPokemon = pokemonName === currentPokemonName;
-          if (isCurrentPokemon) return;
+          if (isCurrentPokemon) {
+              console.log(`[VRBattlePanel] Skipping current Pokemon: ${pokemonName}`);
+              return;
+          }
+
+          console.log(`[VRBattlePanel] Drawing Pokemon button: ${pokemonName} (${currentHp}/${maxHp})`);
 
           const by = y + validCount * (btnH + gap);
           validCount++;
@@ -319,6 +329,8 @@ export class VRBattlePanel extends VRMenuPanel {
               }
           });
       });
+
+      console.log(`[VRBattlePanel] Total valid Pokemon drawn: ${validCount}`);
 
       // FIX: Cancel button at bottom SEULEMENT si ce n'est pas un switch forcé
       if (!this.isForcedSwitch) {

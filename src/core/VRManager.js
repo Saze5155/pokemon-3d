@@ -1026,6 +1026,26 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
                 }
             }
 
+            // Si Tutorial Panel ouvert (priorité haute)
+            if (this.game.ui && this.game.ui.tutorialSystem && this.game.ui.tutorialSystem.vrTutorialPanel) {
+                const tutorialPanel = this.game.ui.tutorialSystem.vrTutorialPanel;
+                if (tutorialPanel.isVisible) {
+                    console.log("[VR] Tutorial panel visible");
+                    
+                    const intersects = this.interactionRaycaster.intersectObject(tutorialPanel.mesh);
+                    if (intersects.length > 0) {
+                        const uv = intersects[0].uv;
+                        const button = tutorialPanel.checkClick(uv);
+                        if (button && button.action) {
+                            console.log(`[VR] Tutorial Click: ${button.label}`);
+                            button.action();
+                            tutorialPanel.draw(); // Feedback
+                            return;
+                        }
+                    }
+                }
+            }
+
             // Si Combat Panel ouvert
             if (this.vrBattlePanel && this.vrBattlePanel.isVisible) {
                  console.log("[VR] Battle panel visible");
