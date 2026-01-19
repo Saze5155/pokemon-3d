@@ -524,7 +524,43 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
       // Note: Right etait fait dans handleInputActions, on devrait bouger Left la bas aussi
       // Mais pour l'instant je l patch ici ou dans handleInputActions
     }
-    
+
+    /**
+     * Rappelle toutes les pokéballs lancées et les fait respawn sur la ceinture
+     */
+    recallAllBalls() {
+        const activeObjects = this.game.activePhysicsObjects;
+        if (!activeObjects || activeObjects.length === 0) {
+            console.log("[VRManager] Aucune ball à rappeler");
+            // Quand même refresh la ceinture au cas où
+            this.vrBelt?.refreshData();
+            return;
+        }
+
+        console.log(`[VRManager] Rappel de ${activeObjects.length} ball(s)`);
+
+        // Supprimer toutes les balls actives de la scène
+        const scene = this.game.sceneManager?.getActiveScene();
+        for (let i = activeObjects.length - 1; i >= 0; i--) {
+            const vrPokeball = activeObjects[i];
+
+            // Retirer le mesh de la scène
+            if (scene && vrPokeball.mesh) {
+                scene.remove(vrPokeball.mesh);
+                if (vrPokeball.mesh.geometry) vrPokeball.mesh.geometry.dispose();
+            }
+
+            // Retirer de la liste
+            activeObjects.splice(i, 1);
+        }
+
+        // Forcer le refresh de la ceinture pour faire réapparaître les balls
+        if (this.vrBelt) {
+            this.vrBelt.refreshData();
+            console.log("[VRManager] Ceinture rafraîchie");
+        }
+    }
+
     handleInputActions(delta) {
         const session = this.renderer.xr.getSession();
         if (!session) return;
@@ -533,18 +569,36 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
             const hand = source.handedness;
             const gp = source.gamepad;
             if (!gp) continue;
-            
+
             // GRIP (Index 1)
             const gripPressed = gp.buttons[1] && gp.buttons[1].pressed;
-            
+
             if (!this.lastGripState) this.lastGripState = { left: false, right: false };
-            
+
             if (gripPressed && !this.lastGripState[hand]) {
                  this.interactionManager?.handleGrab(hand);
             } else if (!gripPressed && this.lastGripState[hand]) {
                  this.interactionManager?.handleRelease(hand);
             }
             this.lastGripState[hand] = gripPressed;
+
+            // X/Y Buttons (Left controller) - Rappeler les balls
+            // buttons[4] = X, buttons[5] = Y
+            if (hand === 'left') {
+                if (!this.lastXYButtonState) this.lastXYButtonState = { x: false, y: false };
+
+                const xPressed = gp.buttons[4] && gp.buttons[4].pressed;
+                const yPressed = gp.buttons[5] && gp.buttons[5].pressed;
+
+                // X ou Y pressé = rappeler toutes les balls lancées
+                if ((xPressed && !this.lastXYButtonState.x) || (yPressed && !this.lastXYButtonState.y)) {
+                    console.log("[VRManager] X/Y Button pressed - Rappel des balls");
+                    this.recallAllBalls();
+                }
+
+                this.lastXYButtonState.x = xPressed;
+                this.lastXYButtonState.y = yPressed;
+            }
         }
 
         // Keep existing logic for Right Hand B Button specifically below...

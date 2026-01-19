@@ -55,14 +55,14 @@ export class VRPokeball {
         for (const pokemon of this.game.pokemonManager.pokemons) {
             if (!pokemon.model || pokemon.inCombat) continue;
 
-            // Calculer la bounding box du pokemon pour une meilleure précision
             const pokemonPos = pokemon.model.position.clone();
 
-            // Estimer la taille du pokemon
-            let collisionRadius = 1.0;
+            // Hitbox généreuse pour faciliter le gameplay VR
+            // Base de 2m de rayon + taille du pokemon
+            let collisionRadius = 2.0;
             if (pokemon.model.userData?.boundingBox) {
                 const box = pokemon.model.userData.boundingBox;
-                collisionRadius = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) / 2 + 0.5;
+                collisionRadius = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) / 2 + 1.5;
             }
 
             // Distance horizontale (ignorer Y pour plus de tolérance)
@@ -70,10 +70,10 @@ export class VRPokeball {
             const dz = pokeballPos.z - pokemonPos.z;
             const horizontalDist = Math.sqrt(dx * dx + dz * dz);
 
-            // Vérifier aussi la hauteur (la ball doit être à peu près à la bonne hauteur)
-            const heightDiff = Math.abs(pokeballPos.y - (pokemonPos.y + 0.5));
+            // Hauteur très tolérante (3m de marge)
+            const heightDiff = Math.abs(pokeballPos.y - (pokemonPos.y + 1.0));
 
-            if (horizontalDist < collisionRadius && heightDiff < 2.0) {
+            if (horizontalDist < collisionRadius && heightDiff < 3.0) {
                 this.onHitPokemon(pokemon);
                 break;
             }
