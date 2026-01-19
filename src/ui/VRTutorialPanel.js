@@ -74,7 +74,10 @@ export class VRTutorialPanel extends VRMenuPanel {
 
         // Ajouter à la scène si pas déjà fait
         if (!this.mesh.parent) {
-            this.game.scene.add(this.mesh);
+            const scene = this.game.sceneManager.getActiveScene();
+            if (scene) {
+                scene.add(this.mesh);
+            }
         }
 
         // Position: 1.5m devant le joueur, à hauteur des yeux

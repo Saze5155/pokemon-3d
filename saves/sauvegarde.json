@@ -137,5 +137,67 @@
     "dateCreation": "2026-01-19T06:16:27.309Z",
     "dateSauvegarde": "2026-01-19T06:16:48.084Z"
   },
-  "sauvegarde_3": null
+  "sauvegarde_3": {
+    "joueur": {
+      "nom": "RED",
+      "idDresseur": 53318,
+      "argent": 3000,
+      "badges": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "tempsJeu": 0,
+      "position": {
+        "map": "maisonetage",
+        "x": 5,
+        "y": 1.8,
+        "z": 5,
+        "direction": "south"
+      }
+    },
+    "equipe": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "pc": [],
+    "sac": {
+      "pokeballs": {},
+      "soins": {
+        "potion": 1
+      },
+      "pierres": {},
+      "boosts": {},
+      "cles": []
+    },
+    "pokedex": {
+      "vus": [],
+      "captures": []
+    },
+    "drapeaux": {
+      "intro_complete": false,
+      "starter_choisi": false,
+      "rival_battu_labo": false,
+      "pokedex_obtenu": false,
+      "carte_obtenue": false,
+      "pokeballs_debloquees": false,
+      "premier_pokemon": false,
+      "livraison_chen_faite": false,
+      "rival_battu_route22": false,
+      "foret_jade_traversee": false,
+      "badge_roche": false
+    },
+    "dresseursVaincus": [],
+    "dateCreation": "2026-01-19T09:02:24.218Z",
+    "dateSauvegarde": "2026-01-19T09:02:24.221Z"
+  }
 }
