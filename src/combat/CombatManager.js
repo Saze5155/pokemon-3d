@@ -290,6 +290,26 @@ export class CombatManager {
   }
 
   showCombatUI() {
+    // FIX: Support VR - Utiliser le VRPanel au lieu du DOM
+    if (this.uiManager && this.uiManager.game && this.uiManager.game.renderer.xr.isPresenting) {
+        console.log("⚔️ CombatManager: VR Mode detected -> Show VRBattlePanel");
+        // Update data first
+        this.uiManager.game.vrManager.updateBattlePanel({
+            playerPokemon: this.playerPokemon,
+            wildPokemon: this.wildPokemon,
+            message: `Un ${this.getPokemonName(this.wildPokemon)} apparaît !`
+        });
+        this.uiManager.game.vrManager.showBattlePanel({
+            playerPokemon: this.playerPokemon,
+            wildPokemon: this.wildPokemon
+        });
+        
+        // Hide standard HUD
+        if (this.uiManager.modernHUD) this.uiManager.modernHUD.hideForCombat();
+        
+        return;
+    }
+
     let combatContainer = document.getElementById("combat-ui");
 
     if (!combatContainer) {
@@ -1992,6 +2012,16 @@ export class CombatManager {
   }
 
   updateCombatUI() {
+      // FIX: VR Update
+      if (this.uiManager && this.uiManager.game && this.uiManager.game.renderer.xr.isPresenting) {
+            this.uiManager.game.vrManager.updateBattlePanel({
+                playerPokemon: this.playerPokemon,
+                wildPokemon: this.wildPokemon
+                // message updated separately via showMessage if needed
+            });
+            return;
+      }
+
       // Re-rend le UI complet (un peu bourrin mais sûr)
       this.showCombatUI();
   }

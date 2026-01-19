@@ -443,16 +443,38 @@ class PokemonGame {
     }, 2000); // Petit délai pour laisser le monde charger
   }
   syncNPCFlagsFromSave() {
-    if (!this.saveManager || !this.npcManager) return;
+    if (!this.npcManager || !this.saveManager) return;
 
-    const flags = this.saveManager.saveData?.drapeaux;
-    if (!flags) return;
+    const flags = this.saveManager.getFlags();
+    if (flags) {
+      for (const [flag, value] of Object.entries(flags)) {
+        if (value) {
+          this.npcManager.addStoryFlag(flag);
+        }
+      }
 
-    if (flags.starter_choisi || flags.premier_pokemon) {
-      this.npcManager.addStoryFlag("has_starter");
-    }
-    if (flags.pokedex_obtenu) {
-      this.npcManager.addStoryFlag("has_pokedex");
+      // ✅ FIX: Restaurer la variable {POKEMON} pour les dialogues (Prof Chen)
+      // Sinon ça affiche "Carapuce" ou vide par défaut si on recharge la page
+      if (flags.starter_choisi && this.dialogueSystem) {
+           const team = this.saveManager.getTeam();
+           // Le starter est généralement le premier Pokémon (slot 0)
+           // Ou on pourrait sauver l'ID du starter dans un flag dédié, mais l'équipe suffit souvent
+           if (team && team.length > 0 && team[0] !== null) {
+               const uniqueId = team[0];
+               // saveManager.myPokemon stores actual objects
+               const pkm = this.saveManager.myPokemon[this.saveManager.currentSlot ? `sauvegarde_${this.saveManager.currentSlot}` : Object.keys(this.saveManager.myPokemon)[0]]?.[uniqueId] 
+                           || (this.saveManager.myPokemon[uniqueId]); // Fallback access
+
+               // Access via saveManager helper is cleaner
+               const pokemonObj = this.saveManager.getPokemon(uniqueId);
+               
+               if (pokemonObj) {
+                   const name = pokemonObj.surnom || pokemonObj.name || pokemonObj.species;
+                   this.dialogueSystem.setVariable("POKEMON", name);
+                   console.log(`[Main] Variable dialogue restaurée: {POKEMON} = ${name}`);
+               }
+           }
+      }
     }
 
     // Synchroniser les dresseurs vaincus
@@ -2117,7 +2139,10 @@ class PokemonGame {
     moveTarget.position.x,
     moveTarget.position.z
   );
-  moveTarget.position.y = finalHeight + 1.6;
+  // En VR, le Rig est au sol (0). En Desktop, la Caméra est à 1.6m.
+  const isVRRig = (this.useVR && this.vrManager && moveTarget === this.vrManager.playerRig);
+  const heightOffset = isVRRig ? 0 : 1.6;
+  moveTarget.position.y = finalHeight + heightOffset;
 
   perfTimers.finalHeight = performance.now() - t;
   t = performance.now();

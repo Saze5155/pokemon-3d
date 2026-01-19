@@ -2,7 +2,7 @@
   "sauvegarde_1": {
     "joueur": {
       "nom": "RED",
-      "idDresseur": 44446,
+      "idDresseur": 9455,
       "argent": 3000,
       "badges": [
         false,
@@ -14,7 +14,7 @@
         false,
         false
       ],
-      "tempsJeu": 0,
+      "tempsJeu": 25,
       "position": {
         "map": "maisonetage",
         "x": 5,
@@ -24,7 +24,7 @@
       }
     },
     "equipe": [
-      null,
+      1,
       null,
       null,
       null,
@@ -42,25 +42,29 @@
       "cles": []
     },
     "pokedex": {
-      "vus": [],
-      "captures": []
+      "vus": [
+        4
+      ],
+      "captures": [
+        4
+      ]
     },
     "drapeaux": {
       "intro_complete": false,
-      "starter_choisi": false,
+      "starter_choisi": true,
       "rival_battu_labo": false,
-      "pokedex_obtenu": false,
+      "pokedex_obtenu": true,
       "carte_obtenue": false,
       "pokeballs_debloquees": false,
-      "premier_pokemon": false,
+      "premier_pokemon": true,
       "livraison_chen_faite": false,
       "rival_battu_route22": false,
       "foret_jade_traversee": false,
       "badge_roche": false
     },
     "dresseursVaincus": [],
-    "dateCreation": "2026-01-18T14:59:14.269Z",
-    "dateSauvegarde": "2026-01-18T14:59:14.270Z"
+    "dateCreation": "2026-01-19T00:29:11.534Z",
+    "dateSauvegarde": "2026-01-19T00:42:01.206Z"
   },
   "sauvegarde_2": {
     "joueur": {
@@ -77,7 +81,7 @@
         false,
         false
       ],
-      "tempsJeu": 0,
+      "tempsJeu": 22,
       "position": {
         "map": "maisonetage",
         "x": 5,
@@ -87,7 +91,7 @@
       }
     },
     "equipe": [
-      null,
+      1,
       null,
       null,
       null,
@@ -105,17 +109,21 @@
       "cles": []
     },
     "pokedex": {
-      "vus": [],
-      "captures": []
+      "vus": [
+        4
+      ],
+      "captures": [
+        4
+      ]
     },
     "drapeaux": {
       "intro_complete": false,
-      "starter_choisi": false,
+      "starter_choisi": true,
       "rival_battu_labo": false,
-      "pokedex_obtenu": false,
+      "pokedex_obtenu": true,
       "carte_obtenue": false,
       "pokeballs_debloquees": false,
-      "premier_pokemon": false,
+      "premier_pokemon": true,
       "livraison_chen_faite": false,
       "rival_battu_route22": false,
       "foret_jade_traversee": false,
@@ -123,7 +131,7 @@
     },
     "dresseursVaincus": [],
     "dateCreation": "2026-01-18T18:39:05.690Z",
-    "dateSauvegarde": "2026-01-18T18:39:05.690Z"
+    "dateSauvegarde": "2026-01-18T23:19:44.162Z"
   },
   "sauvegarde_3": null
 }

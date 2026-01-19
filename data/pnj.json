@@ -149,47 +149,6 @@
       "unique": true,
       "flags": ["story_important", "recurring_battle"]
     },
-    "pierre": {
-      "id": "pierre",
-      "nom": "Pierre",
-      "nomEN": "Brock",
-      "categorie": "champions",
-      "zone": "argenta",
-      "badge": "roche",
-      "type_specialite": "roche",
-      "description": "Champion d'Argenta. Expert des Pokémon Roche.",
-      "dialogues": {
-        "intro_arene": [
-          "Je suis Pierre ! Champion d'Argenta !",
-          "Je crois en la défense solide comme le roc !"
-        ],
-        "before_combat": ["Mes Pokémon Roche sont comme des forteresses !"],
-        "after_defeat": [
-          "Tu es vraiment fort.",
-          "Voici le Badge Roche !",
-          "Et la CT Tomberoche."
-        ],
-        "after_badge": [
-          "La prochaine Arène est à Azuria. Les types Plante et Électrik seront utiles !"
-        ]
-      },
-      "combat": true,
-      "champion": true,
-      "equipe": [
-        {
-          "pokemon": 74,
-          "niveau": null,
-          "attaques": ["charge", "armure", "tomberoche"]
-        },
-        {
-          "pokemon": 95,
-          "niveau": null,
-          "attaques": ["charge", "etreinte", "tomberoche", "grincement"]
-        }
-      ],
-      "recompenses": { "badge": "roche", "ct": "tomberoche" },
-      "unique": true
-    },
     "ondine": {
       "id": "ondine",
       "nom": "Ondine",
@@ -857,26 +816,6 @@
       "donne_pokemon_choix": [106, 107],
       "unique": true,
       "flags": ["gives_pokemon"]
-    },
-    "dresseur_insecte_1": {
-      "id": "dresseur_insecte_1",
-      "nom": "Chasseur d'Insectes Michel",
-      "nomEN": "Bug Catcher Rick",
-      "categorie": "dresseurs_insecte",
-      "zone": "foret_jade",
-      "dialogues": {
-        "before_combat": [
-          "Tu aimes les Insectes ? Je vais te montrer leur puissance !"
-        ],
-        "after_defeat": ["Mes insectes... Tu es vraiment fort..."]
-      },
-      "combat": true,
-      "equipe": [
-        { "pokemon": 10, "niveau": 4 },
-        { "pokemon": 13, "niveau": 5}
-      ],
-      "argent_base": 12,
-      "unique": false
     },
     "dresseur_shorts_joey": {
       "id": "dresseur_shorts_joey",

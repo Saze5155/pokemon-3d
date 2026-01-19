@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFactory.js";
+import { VRBattlePanel } from '../ui/VRBattlePanel.js';
 import { VRDialoguePanel } from '../ui/VRDialoguePanel.js';
 import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 
@@ -253,7 +254,9 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       });
       
       // 4. Initialiser le Dialogue Panel VR & Hook
-      this.vrDialoguePanel = new VRDialoguePanel(this.game);
+      this.vrDialoguePanel = new VRDialoguePanel(this.game, 1024, 512); // Canvas plus large
+      this.vrBattlePanel = new VRBattlePanel(this.game);
+      // Indicateur de starter choisi (Flag)
       
       console.log("✅ VRManager initialized");
       
@@ -477,19 +480,33 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       
       // Gestion Hover Dialogue
       this.handleDialogueHover();
+      this.handleBattleHover();
     }
     
     handleInputActions(delta) {
         const session = this.renderer.xr.getSession();
         if (!session) return;
-        
+
         for (const source of session.inputSources) {
-            // Right Hand B Button (Index 5 usually, check profile)
-            if (source.handedness === 'right' && source.gamepad && source.gamepad.buttons.length > 5) {
-                const bButton = source.gamepad.buttons[5]; // B Button
-                if (bButton && bButton.pressed) {
+            // Right Hand B Button
+            // WebXR Gamepad mapping for Oculus/Meta Quest:
+            // buttons[0] = trigger, buttons[1] = squeeze/grip
+            // buttons[3] = thumbstick press, buttons[4] = A/X, buttons[5] = B/Y
+            // Some devices may have different mappings, so we check multiple indices
+            if (source.handedness === 'right' && source.gamepad) {
+                const buttons = source.gamepad.buttons;
+
+                // Check B button (index 5) and fallback to index 4 (A button on some mappings)
+                // Also check index 2 which can be B on some controllers
+                const bButtonPressed =
+                    (buttons[5] && buttons[5].pressed) ||
+                    (buttons[4] && buttons[4].pressed);
+
+                if (bButtonPressed) {
                     if (!this.lastBButtonState) {
                         this.lastBButtonState = true;
+                        console.log("[VRManager] B/A Button pressed on right controller");
+
                         // Action: Close Menu (Watch or Dialogue)
                         let closedSomething = false;
 
@@ -505,7 +522,7 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                             this.watchMenu.currentPanel = null;
                             closedSomething = true;
                         }
-                        
+
                         if (!closedSomething && this.watchMenu && this.watchMenu.isVisible) {
                              // Force close watch menu container if it's open but no panel
                              this.watchMenu.isVisible = false;
@@ -517,7 +534,75 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             }
         }
     }
+    showBattlePanel(data) {
+        if (!this.vrBattlePanel) return;
+        
+        console.log("⚔️ VRManager: Showing Battle Panel");
+        this.vrBattlePanel.updateCombatState(data);
+        
+        // Show attached to Player Rig (so it follows head yaw if rig rotates, but mostly fixed to player pos)
+        this.vrBattlePanel.show(this.playerRig);
+        
+        // Override position/rotation (Overwriting VRMenuPanel defaults)
+        // Defaults was for Watch (Flat). We want HUD style (Vertical).
+        this.vrBattlePanel.mesh.position.set(0, 1.5, -2.5); // 2.5m in front, 1.5m high
+        this.vrBattlePanel.mesh.rotation.set(0, 0, 0); // Vertical facing camera (Rig Z is forward?)
+        // Rig forward is usually -Z.
+        // Plane defaults to +Z normal. So touching it needs rotation?
+        // No, Three.js PlaneGeometry faces +Z.
+        // If we put it at -2.5 (In front), and look at -Z.
+        // We see the BACK of the plane if it faces +Z.
+        // We need to rotate Y = 0? Or X?
+        // If Plane faces +Z, and we look at it from 0 towards -Z.
+        // We see its back.
+        // We need rotation Y = PI? No.
+        // Wait, if Plane faces +Z. We are at 0. Plane at -2.5.
+        // We look at -Z. We see the "Back" face.
+        // Valid.
+        // We need to rotate it so it faces +Z? No, it faces +Z by default.
+        // We need it to face the player (who is at 0).
+        // So Plane Normal should point to 0.
+        // Plane Normal is +Z. So it Points to Player (0) if Plane is at -2.5.
+        // So Rotation 0,0,0 is CORRECT. (Plane Normal +Z points to 0).
+    }
+
+    hideBattlePanel() {
+        if (this.vrBattlePanel) {
+            console.log("⚔️ VRManager: Hiding Battle Panel");
+            this.vrBattlePanel.hide();
+        }
+    }
     
+    updateBattlePanel(data) {
+        if (this.vrBattlePanel) this.vrBattlePanel.updateCombatState(data);
+    }
+    
+    handleBattleHover() {
+        if (!this.vrBattlePanel || !this.vrBattlePanel.isVisible) return;
+        
+        if (this.controllers.right) {
+            this.tempMatrix.identity().extractRotation(this.controllers.right.matrixWorld);
+            this.raycaster.ray.origin.setFromMatrixPosition(this.controllers.right.matrixWorld);
+            this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+            
+            const intersects = this.raycaster.intersectObject(this.vrBattlePanel.mesh);
+            if (intersects.length > 0) {
+                const uv = intersects[0].uv;
+                // Update hover state in panel (if simple checkClick doesn't do it, we force redraw)
+                // For now, let's assume checkClick logs for now, but we need visual feedback.
+                // We'll set a property interactively if needed, but VRBattlePanel relies on hoveredButton.
+                
+                // Let's assume VRBattlePanel has a method checkClick(uv) that returns button.
+                this.vrBattlePanel.hoveredButton = this.vrBattlePanel.checkClick(uv);
+            } else {
+                this.vrBattlePanel.hoveredButton = null;
+            }
+             // Trigger redraw logic if needed (usually handled by update loop if dirty)
+             // But VRBattlePanel has no loop. We force draw.
+             this.vrBattlePanel.draw();
+        }
+    }
+
     handleDialogueHover() {
         if (!this.vrDialoguePanel || !this.vrDialoguePanel.isVisible || !this.vrDialoguePanel.isShowingChoices) return;
         
@@ -756,8 +841,32 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 }
             }
             
-            // Si un dialogue est déjà ouvert
+                // Si un dialogue est déjà ouvert
             if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
+                 // ... (Existing Logic)
+            }
+            
+            // Si Combat Panel ouvert
+            if (this.vrBattlePanel && this.vrBattlePanel.isVisible) {
+                 console.log("[VR] Battle panel visible");
+                 this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
+                 this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
+                 this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+                 
+                 const intersects = this.interactionRaycaster.intersectObject(this.vrBattlePanel.mesh);
+                 if (intersects.length > 0) {
+                      const uv = intersects[0].uv;
+                      const button = this.vrBattlePanel.checkClick(uv);
+                      if (button && button.action) {
+                          console.log(`[VR] Battle Click: ${button.label}`);
+                          button.action();
+                          this.vrBattlePanel.draw(); // Feedback
+                          return;
+                      }
+                 }
+            }
+            
+            // Check Interactables (NPCs, etc.)
                 console.log(`[VR] Dialogue panel visible. isShowingChoices=${this.vrDialoguePanel.isShowingChoices}`);
                 
                 // Raycast sur le panel pour les choix
@@ -884,6 +993,6 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 }
             }
         }
-    }
+   }
 
-  }
+  

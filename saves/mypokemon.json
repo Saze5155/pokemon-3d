@@ -1,5 +1,129 @@
 {
-  "sauvegarde_1": {},
-  "sauvegarde_2": {},
+  "sauvegarde_1": {
+    "1": {
+      "uniqueId": 1,
+      "speciesId": 4,
+      "surnom": null,
+      "niveau": 5,
+      "xp": 135,
+      "xpNextLevel": 179,
+      "stats": {
+        "hp": 19,
+        "hpMax": 19,
+        "attack": 10,
+        "defense": 10,
+        "special": 11,
+        "speed": 12
+      },
+      "ivs": {
+        "hp": 6,
+        "attack": 0,
+        "defense": 12,
+        "special": 9,
+        "speed": 1
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "griffe",
+        "rugissement",
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        40,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        40,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "RED",
+      "idDO": 9455,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 5,
+        "date": "2026-01-19T00:41:59.475Z"
+      },
+      "name": "Salamèche"
+    }
+  },
+  "sauvegarde_2": {
+    "1": {
+      "uniqueId": 1,
+      "speciesId": 4,
+      "surnom": null,
+      "niveau": 5,
+      "xp": 135,
+      "xpNextLevel": 179,
+      "stats": {
+        "hp": 20,
+        "hpMax": 20,
+        "attack": 10,
+        "defense": 10,
+        "special": 11,
+        "speed": 12
+      },
+      "ivs": {
+        "hp": 13,
+        "attack": 10,
+        "defense": 5,
+        "special": 12,
+        "speed": 11
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "griffe",
+        "rugissement",
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        40,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        40,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "RED",
+      "idDO": 15478,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 5,
+        "date": "2026-01-18T23:19:44.156Z"
+      },
+      "name": "Salamèche"
+    }
+  },
   "sauvegarde_3": {}
 }
