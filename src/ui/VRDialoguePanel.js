@@ -40,7 +40,11 @@ export class VRDialoguePanel {
         // Choices
         this.choices = [];
         this.isShowingChoices = false;
+        // Choices
+        this.choices = [];
+        this.isShowingChoices = false;
         this.choiceButtons = []; // {x,y,w,h, index}
+        this.hoveredIndex = -1; // New state
 
         // Input Cooldown
         this.lastInputTime = 0;
@@ -112,6 +116,7 @@ export class VRDialoguePanel {
         console.log(`[VRDialoguePanel] showChoices called with ${choices.length} choices`);
         this.choices = choices;
         this.isShowingChoices = true;
+        this.hoveredIndex = -1; // Reset hover
         this.isVisible = true; // IMPORTANT: Re-show the panel
         this.mesh.visible = true;
         
@@ -209,8 +214,9 @@ export class VRDialoguePanel {
                 const btnY = startY + (btnHeight + gap) * i;
                 
                 // Button Rect
-                ctx.fillStyle = "rgba(0, 210, 255, 0.2)";
-                ctx.strokeStyle = "#00d2ff";
+                const isHovered = (this.hoveredIndex === i);
+                ctx.fillStyle = isHovered ? "rgba(0, 255, 255, 0.4)" : "rgba(0, 210, 255, 0.2)";
+                ctx.strokeStyle = isHovered ? "#ffffff" : "#00d2ff";
                 this.roundRect(ctx, 60, btnY, this.width - 120, btnHeight, 10, true, true);
                 
                 // Text
@@ -233,7 +239,34 @@ export class VRDialoguePanel {
         
         this.texture.needsUpdate = true;
     }
+        
+    updateHover(uv) {
+        if (!uv) {
+            if (this.hoveredIndex !== -1) {
+                this.hoveredIndex = -1;
+                this.draw();
+            }
+            return;
+        }
 
+        const x = uv.x * this.width;
+        const y = (1 - uv.y) * this.height;
+
+        let foundIndex = -1;
+        for (const btn of this.choiceButtons) {
+            if (x >= btn.x && x <= btn.x + btn.w &&
+                y >= btn.y && y <= btn.y + btn.h) {
+                foundIndex = btn.index;
+                break;
+            }
+        }
+        
+        if (this.hoveredIndex !== foundIndex) {
+            this.hoveredIndex = foundIndex;
+            this.draw();
+        }
+    }
+    
     /**
      * Vérifie le clic sur un bouton de choix via UV
      * @param {THREE.Vector2} uv - Coordonnées UV (0..1)

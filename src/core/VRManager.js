@@ -63,7 +63,10 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       // NOTE: Le panneau de dialogue et les hooks sont initialisés dans init() pour garantir que l'UI est prête.
       this.vrDialoguePanel = null;
       this.interactionRaycaster = new THREE.Raycaster();
+      this.vrDialoguePanel = null;
+      this.interactionRaycaster = new THREE.Raycaster();
       this.lastTriggerState = { left: false, right: false };
+      this.lastBButtonState = false; // For B button toggle
       
       this.watchHand = 'left'; // Default
     }
@@ -116,6 +119,9 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             // C'est une zone WorldMap - utiliser la worldScene
             targetScene = this.game.worldManager?.worldScene;
             console.log(`🗺️ VRManager: ${newSceneName} est une zone WorldMap, utilisation de worldScene`);
+            
+            // Ajustement hauteur WorldMap
+            this.playerRig.position.y += 20; // +20m offset
         } else {
             // Scène intérieure - chercher dans les scènes enregistrées
             targetScene = this.game.sceneManager.scenes.get(newSceneName);
@@ -463,9 +469,56 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       if (!this.enabled) return;
 
       this.handleLocomotion(delta);
+      this.handleInputActions(delta); // B Button check
       
       // Gestion Montre (Apparition / Interaction)
       this.handleWatch(delta);
+      
+      // Gestion Hover Dialogue
+      this.handleDialogueHover();
+    }
+    
+    handleInputActions(delta) {
+        const session = this.renderer.xr.getSession();
+        if (!session) return;
+        
+        for (const source of session.inputSources) {
+            // Right Hand B Button (Index 5 usually, check profile)
+            if (source.handedness === 'right' && source.gamepad && source.gamepad.buttons.length > 5) {
+                const bButton = source.gamepad.buttons[5]; // B Button
+                if (bButton && bButton.pressed) {
+                    if (!this.lastBButtonState) {
+                        this.lastBButtonState = true;
+                        // Action: Close Menu
+                        if (this.watchMenu && this.watchMenu.currentPanel && this.watchMenu.currentPanel.isVisible) {
+                            console.log("[VRManager] B Button pressed: Closing Menu");
+                            this.watchMenu.currentPanel.hide();
+                            this.watchMenu.currentPanel = null;
+                        }
+                    }
+                } else {
+                    this.lastBButtonState = false;
+                }
+            }
+        }
+    }
+    
+    handleDialogueHover() {
+        if (!this.vrDialoguePanel || !this.vrDialoguePanel.isVisible || !this.vrDialoguePanel.isShowingChoices) return;
+        
+        if (this.controllers.right) {
+            this.tempMatrix.identity().extractRotation(this.controllers.right.matrixWorld);
+            this.raycaster.ray.origin.setFromMatrixPosition(this.controllers.right.matrixWorld);
+            this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+            
+            const intersects = this.raycaster.intersectObject(this.vrDialoguePanel.mesh);
+            if (intersects.length > 0) {
+                const uv = intersects[0].uv;
+                this.vrDialoguePanel.updateHover(uv);
+            } else {
+                this.vrDialoguePanel.updateHover(null);
+            }
+        }
     }
 
     handleWatch(delta) {
