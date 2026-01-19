@@ -29,13 +29,19 @@ export class VRTeamPanel extends VRMenuPanel {
     // Récupérer l'équipe
     // myPokemon contient les IDs, on doit charger les données complètes
     const teamIds = this.game.saveManager?.myPokemon || {};
+    console.log(`[VRTeamPanel] Team IDs:`, teamIds);
+    
     const team = [];
     
     // Convertir les IDs en données Pokémon complètes
     for (let i = 0; i < 6; i++) {
       const pokemonId = teamIds[i + 1]; // Les IDs commencent à 1
+      console.log(`[VRTeamPanel] Slot ${i}: ID=${pokemonId}`);
+      
       if (pokemonId) {
         const pokemon = this.game.saveManager.getPokemon(pokemonId);
+        console.log(`[VRTeamPanel] Loaded Pokemon for ID ${pokemonId}:`, pokemon);
+        
         if (pokemon) {
           team.push(pokemon);
         } else {
@@ -46,7 +52,7 @@ export class VRTeamPanel extends VRMenuPanel {
       }
     }
     
-    console.log(`[VRTeamPanel] Team data:`, team);
+    console.log(`[VRTeamPanel] Final team data:`, team);
     
     // Reset buttons
     this.buttons = [];

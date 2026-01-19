@@ -356,6 +356,12 @@ export class VRWatchMenu {
   }
 
   setFocus(focused) {
+      // Ne pas zoomer si un panneau est ouvert
+      if (this.currentPanel && this.currentPanel.isVisible) {
+          this.isFocused = false;
+          return;
+      }
+      
       if (this.isFocused !== focused) {
           this.isFocused = focused;
           // Optionnel: petit son ou effet ui ?
