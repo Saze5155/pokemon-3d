@@ -3,7 +3,7 @@
     "joueur": {
       "nom": "RED",
       "idDresseur": 9455,
-      "argent": 3000,
+      "argent": 3060,
       "badges": [
         false,
         false,
@@ -14,12 +14,12 @@
         false,
         false
       ],
-      "tempsJeu": 25,
+      "tempsJeu": 114,
       "position": {
-        "map": "maisonetage",
-        "x": 5,
-        "y": 1.8,
-        "z": 5,
+        "map": "world",
+        "x": 15,
+        "y": 4.350002650543292,
+        "z": -15.489572973077053,
         "direction": "south"
       }
     },
@@ -46,7 +46,9 @@
         4
       ],
       "captures": [
-        4
+        4,
+        5,
+        6
       ]
     },
     "drapeaux": {
@@ -62,9 +64,11 @@
       "foret_jade_traversee": false,
       "badge_roche": false
     },
-    "dresseursVaincus": [],
+    "dresseursVaincus": [
+      "dresseur_insecte_1_5"
+    ],
     "dateCreation": "2026-01-19T00:29:11.534Z",
-    "dateSauvegarde": "2026-01-19T00:42:01.206Z"
+    "dateSauvegarde": "2026-01-19T04:45:24.029Z"
   },
   "sauvegarde_2": {
     "joueur": {

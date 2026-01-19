@@ -1228,6 +1228,12 @@ export class UIManager {
   }
 
   showDialogue(text, autoHide = false) {
+  // VR: Envoyer le message au VRBattlePanel si en mode VR combat
+  if (this.game?.renderer?.xr?.isPresenting && this.game?.vrManager?.vrBattlePanel?.isVisible) {
+      this.game.vrManager.vrBattlePanel.showMessage(text);
+      return;
+  }
+
   // FIX: Utiliser le système de dialogue moderne s'il est disponible
   if (this.modernHUD && this.game && this.game.modernDialogue) {
       if (autoHide) {
@@ -1265,13 +1271,19 @@ export class UIManager {
   }
 
   showNotification(message, type = "success") {
+    // VR: Envoyer le message au VRBattlePanel si en mode VR combat
+    if (this.game?.renderer?.xr?.isPresenting && this.game?.vrManager?.vrBattlePanel?.isVisible) {
+        this.game.vrManager.vrBattlePanel.showMessage(message);
+        return;
+    }
+
     // Si combat en cours, utiliser la boîte de dialogue de combat
     const combatContainer = document.getElementById("combat-dialogue-container");
     if (combatContainer && combatContainer.style.display !== "none") {
         this.showDialogue(message);
         // Auto-close le dialogue de combat après 2s si c'est une notification
         setTimeout(() => {
-            if (this.currentDialogueText === message) { 
+            if (this.currentDialogueText === message) {
                 combatContainer.style.display = "none";
             }
         }, 2000);

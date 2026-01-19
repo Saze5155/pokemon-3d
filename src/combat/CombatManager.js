@@ -1,4 +1,5 @@
 import * as THREE from "three";
+// FORCE REBUILD: 2026-01-19 05:08
 
 export class CombatManager {
   constructor(scene, camera, uiManager, pokemonManager, typeManager, moveManager, xpManager) {
@@ -120,7 +121,15 @@ export class CombatManager {
     this.setCombatCamera();
 
     // Initialiser l'UI de combat
-    this.showCombatUI();
+    console.log("🔍 startCombat: About to call showCombatUI()...");
+    console.log("🔍 typeof this.showCombatUI:", typeof this.showCombatUI);
+    console.log("🔍 this.showCombatUI exists?", !!this.showCombatUI);
+    
+    if (typeof this.showCombatUI === 'function') {
+        this.showCombatUI();
+    } else {
+        console.error("❌ showCombatUI is NOT a function! Type:", typeof this.showCombatUI);
+    }
     if (this.uiManager) {
       this.uiManager.showDialogue(`Un ${this.getPokemonName(wildPokemon)} sauvage apparaît !`);
     }
@@ -290,24 +299,43 @@ export class CombatManager {
   }
 
   showCombatUI() {
-    // FIX: Support VR - Utiliser le VRPanel au lieu du DOM
-    if (this.uiManager && this.uiManager.game && this.uiManager.game.renderer.xr.isPresenting) {
-        console.log("⚔️ CombatManager: VR Mode detected -> Show VRBattlePanel");
-        // Update data first
-        this.uiManager.game.vrManager.updateBattlePanel({
-            playerPokemon: this.playerPokemon,
-            wildPokemon: this.wildPokemon,
-            message: `Un ${this.getPokemonName(this.wildPokemon)} apparaît !`
-        });
-        this.uiManager.game.vrManager.showBattlePanel({
-            playerPokemon: this.playerPokemon,
-            wildPokemon: this.wildPokemon
+    console.log("🔍 CombatManager: showCombatUI ENTRY (BEFORE TRY) - CODE VERSION: 2026-01-19-05:02");
+    
+    try {
+        console.log("🔍 CombatManager: showCombatUI INSIDE TRY");
+        
+        // FIX: Support VR - Utiliser le VRPanel au lieu du DOM
+        const isVR = this.uiManager && this.uiManager.game && this.uiManager.game.renderer.xr.isPresenting;
+        console.log("🔍 CombatManager: showCombatUI VR Check:", {
+            hasUIManager: !!this.uiManager,
+            hasGame: !!this.uiManager?.game,
+            hasRenderer: !!this.uiManager?.game?.renderer,
+            hasXR: !!this.uiManager?.game?.renderer?.xr,
+            isPresenting: this.uiManager?.game?.renderer?.xr?.isPresenting,
+            finalIsVR: isVR
         });
         
-        // Hide standard HUD
-        if (this.uiManager.modernHUD) this.uiManager.modernHUD.hideForCombat();
-        
-        return;
+        if (isVR) {
+            console.log("⚔️ CombatManager: VR Mode detected -> Show VRBattlePanel");
+            // Update data first
+            this.uiManager.game.vrManager.updateBattlePanel({
+                playerPokemon: this.playerPokemon,
+                wildPokemon: this.wildPokemon,
+                message: `Un ${this.getPokemonName(this.wildPokemon)} apparaît !`
+            });
+            this.uiManager.game.vrManager.showBattlePanel({
+                playerPokemon: this.playerPokemon,
+                wildPokemon: this.wildPokemon
+            });
+            
+            // Hide standard HUD
+            if (this.uiManager.modernHUD) this.uiManager.modernHUD.hideForCombat();
+            
+            return;
+        }
+    } catch (error) {
+        console.error("❌ ERROR in showCombatUI:", error);
+        console.error("Stack:", error.stack);
     }
 
     let combatContainer = document.getElementById("combat-ui");
@@ -420,7 +448,7 @@ export class CombatManager {
     });
   }
 
-  handleCombatAction(action) {
+  handleCombatAction(action, moveId = null) {
     if (this.combatState !== "PLAYER_TURN") return;
 
     switch (action) {
@@ -428,9 +456,11 @@ export class CombatManager {
         this.showAttackMenu();
         break;
       case "use_move":
-        // Récupérer l'ID de l'attaque depuis dataset
-        const moveId = document.activeElement.dataset.moveId;
-        this.executePlayerMove(moveId);
+        // Support VR: moveId passé en paramètre, sinon récupérer depuis dataset (desktop)
+        const actualMoveId = moveId || document.activeElement?.dataset?.moveId;
+        if (actualMoveId) {
+          this.executePlayerMove(actualMoveId);
+        }
         break;
       case "back":
         this.showMainMenu();
@@ -829,27 +859,48 @@ export class CombatManager {
         this.scene.remove(this.wildPokemon.model);
     }
 
-    setTimeout(() => {
-      // IMPORTANT: Appeler le callback de victoire s'il existe (pour le dresseur)
-      if (this.onVictory) {
-          this.onVictory();
-      }
-      this.endCombat(false); // false = pas fuite
-    }, 2000);
+    // VR: Pas de délai, fin immédiate (pas de "click to continue")
+    const isVR = this.uiManager?.game?.renderer?.xr?.isPresenting;
+    if (isVR) {
+        // IMPORTANT: Appeler le callback de victoire s'il existe (pour le dresseur)
+        if (this.onVictory) {
+            this.onVictory();
+        }
+        this.endCombat(false); // false = pas fuite
+    } else {
+        setTimeout(() => {
+          // IMPORTANT: Appeler le callback de victoire s'il existe (pour le dresseur)
+          if (this.onVictory) {
+              this.onVictory();
+          }
+          this.endCombat(false); // false = pas fuite
+        }, 2000);
+    }
   }
 
   defeat() {
     console.log("💀 Défaite...");
     this.combatState = "DEFEAT";
 
-    setTimeout(() => {
-      // Cooldown aussi en cas de défaite pour éviter le spam
-      if (this.currentTrainer) {
-          this.currentTrainer.battleCooldown = Date.now() + 5000;
-          this.currentTrainer.isBattling = false; // Reset lock
-      }
-      this.endCombat(false);
-    }, 2000);
+    // VR: Pas de délai, fin immédiate
+    const isVR = this.uiManager?.game?.renderer?.xr?.isPresenting;
+    if (isVR) {
+        // Cooldown aussi en cas de défaite pour éviter le spam
+        if (this.currentTrainer) {
+            this.currentTrainer.battleCooldown = Date.now() + 5000;
+            this.currentTrainer.isBattling = false; // Reset lock
+        }
+        this.endCombat(false);
+    } else {
+        setTimeout(() => {
+          // Cooldown aussi en cas de défaite pour éviter le spam
+          if (this.currentTrainer) {
+              this.currentTrainer.battleCooldown = Date.now() + 5000;
+              this.currentTrainer.isBattling = false; // Reset lock
+          }
+          this.endCombat(false);
+        }, 2000);
+    }
   }
 
   // FIX: Nouvelle méthode pour gérer le KO d'un Pokémon
@@ -1267,17 +1318,22 @@ export class CombatManager {
     if (combatUI) {
       combatUI.remove();
     }
-    
+
     // FIX: Retirer aussi l'UI moderne (ModernCombatUI)
     const modernCombatUI = document.getElementById("modern-combat-ui");
     if (modernCombatUI) {
       if (typeof modernCombatUI.timeoutId !== 'undefined') clearTimeout(modernCombatUI.timeoutId);
       modernCombatUI.remove();
     }
-    
+
+    // VR: Cacher le VRBattlePanel
+    if (this.uiManager?.game?.vrManager) {
+        this.uiManager.game.vrManager.hideBattlePanel();
+    }
+
     // FIX: Retirer les infos flottantes (HP bars)
     document.querySelectorAll('.combat-pokemon-info').forEach(el => el.remove());
-    
+
     // Masquer le dialogue de combat
     if (this.uiManager) {
         this.uiManager.hideDialogue();
@@ -1349,6 +1405,29 @@ export class CombatManager {
 
   // Afficher le prompt "Voulez-vous changer de Pokémon ?"
   showSwitchPrompt(nextEnemyName, nextEnemyIndex) {
+      // VR Hook - utiliser isPresenting au lieu de isVR
+      const isVR = this.uiManager?.game?.renderer?.xr?.isPresenting;
+      if (isVR && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+          this.uiManager.game.vrManager.vrBattlePanel.showSwitchPrompt(
+              () => {
+                   // OUI
+                   const availablePokemon = this.uiManager.playerData.team.filter(
+                      (p) => this.getPokemonHp(p) > 0 && this.getPokemonName(p) !== this.getPokemonName(this.playerPokemon)
+                   );
+                   if (availablePokemon.length > 0) {
+                      this.showVoluntarySwitchForEnemyKO(availablePokemon, nextEnemyIndex);
+                   } else {
+                      this.switchEnemyPokemon(nextEnemyIndex);
+                   }
+              },
+              () => {
+                   // NON
+                   this.switchEnemyPokemon(nextEnemyIndex);
+              }
+          );
+          return;
+      }
+
       // Masquer le menu de combat
       const combatMenu = document.getElementById("combat-menu");
       if (combatMenu) {
@@ -1432,6 +1511,16 @@ export class CombatManager {
 
   // Menu de switch volontaire après KO ennemi (ne coûte pas de tour)
   showVoluntarySwitchForEnemyKO(availablePokemon, nextEnemyIndex) {
+    // VR Hook
+    if (this.uiManager.game.vrManager && this.uiManager.game.vrManager.isVR && this.uiManager.game.vrManager.vrBattlePanel) {
+         this.uiManager.game.vrManager.vrBattlePanel.showPokemonSelection(
+             (index) => {
+                  this.doVoluntarySwitchThenEnemySwitches(index, nextEnemyIndex);
+             }
+         );
+         return;
+    }
+
     this.combatState = "SELECTING_POKEMON";
 
     let selectionContainer = document.getElementById("pokemon-selection");
@@ -1627,6 +1716,15 @@ export class CombatManager {
 
         // Mettre à jour l'UI
         this.updateCombatUI();
+        
+        // VR: Forcer la mise à jour du VRBattlePanel avec le nouveau Pokemon
+        if (this.uiManager?.game?.renderer?.xr?.isPresenting && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+            this.uiManager.game.vrManager.vrBattlePanel.updateCombatState({
+                playerPokemon: this.playerPokemon,
+                wildPokemon: newEntity,
+                message: `${this.currentTrainer.nom} envoie ${nextPokemon.name} !`
+            });
+        }
         
         // Reprendre le tour du joueur
         this.combatState = "PLAYER_TURN";
@@ -1882,9 +1980,19 @@ export class CombatManager {
 
 
   showMainMenu(visible = true) {
+    // VR: Réinitialiser le menu du VRBattlePanel
+    if (this.uiManager?.game?.renderer?.xr?.isPresenting && this.uiManager?.game?.vrManager?.vrBattlePanel) {
+        if (visible) {
+            this.uiManager.game.vrManager.vrBattlePanel.setMenuState("MAIN");
+            this.uiManager.game.vrManager.vrBattlePanel.combatMessage = "";
+            this.uiManager.game.vrManager.vrBattlePanel.draw();
+        }
+        return;
+    }
+
     const mainMenu = document.getElementById("main-menu-buttons");
     const attackMenu = document.getElementById("attack-menu-buttons");
-    
+
     if (mainMenu && attackMenu) {
         if (!visible) {
             mainMenu.style.display = "none";

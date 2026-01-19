@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFactory.js";
 import { VRBattlePanel } from '../ui/VRBattlePanel.js';
+import { VRBelt } from "../ui/VRBelt.js";
 import { VRDialoguePanel } from '../ui/VRDialoguePanel.js';
 import { VRWatchMenu } from "../ui/VRWatchMenu.js";
+import { VRInteractionManager } from "./VRInteractionManager.js";
 
   /**
    * VRManager - Gère l'intégration WebXR
@@ -36,9 +38,15 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       // Factory pour les modèles de manettes
       this.controllerModelFactory = new XRControllerModelFactory();
       
-      // UI Montre
       this.watchMenu = new VRWatchMenu(game);
       
+      // Ceinture VR
+      // Sera initialisée dans init() ou setupVR() car elle dépend du PlayerRig
+      this.vrBelt = null;
+      
+      // Interaction Manager
+      this.interactionManager = null;
+
       // Laser Pointer
       this.raycaster = new THREE.Raycaster();
       this.tempMatrix = new THREE.Matrix4();
@@ -266,6 +274,14 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       
       // Setup Laser Visual
       this.createLaserPointer();
+
+      // 5. Initialiser la Ceinture
+      // IMPORTANT: PlayerRig doit déjà être prêt et avoir la caméra
+      this.vrBelt = new VRBelt(this.game, this.playerRig);
+      // Forcer une première update
+      this.vrBelt.refreshData();
+      
+      this.interactionManager = new VRInteractionManager(this.game, this);
     }
 
     createLaserPointer() {
@@ -453,6 +469,12 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
               console.log(`✅ VRManager: ${name}.showChoices Hooked!`);
           }
       });
+      
+      // Force refresh of Belt Data
+      if (this.vrBelt) {
+          console.log("🔄 VRManager: Refreshing Belt Data...");
+          this.vrBelt.refreshData();
+      }
     }
 
     onSessionEnd() {
@@ -481,6 +503,26 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
       // Gestion Hover Dialogue
       this.handleDialogueHover();
       this.handleBattleHover();
+
+      // Gestion Ceinture
+      if (this.vrBelt) {
+          this.vrBelt.update(delta);
+      }
+      
+      // Update Physics / Interactions
+      if (this.interactionManager) {
+          this.interactionManager.update(delta);
+          
+          // Update objets physiques actifs (Pokeballs lancées)
+          if (this.game.activePhysicsObjects) {
+              this.game.activePhysicsObjects.forEach(obj => obj.update(delta));
+              // Nettoyage objets finis ?
+          }
+      }
+      
+      // Gestion Input Gauche (Grip)
+      // Note: Right etait fait dans handleInputActions, on devrait bouger Left la bas aussi
+      // Mais pour l'instant je l patch ici ou dans handleInputActions
     }
     
     handleInputActions(delta) {
@@ -488,7 +530,28 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
         if (!session) return;
 
         for (const source of session.inputSources) {
+            const hand = source.handedness;
+            const gp = source.gamepad;
+            if (!gp) continue;
+            
+            // GRIP (Index 1)
+            const gripPressed = gp.buttons[1] && gp.buttons[1].pressed;
+            
+            if (!this.lastGripState) this.lastGripState = { left: false, right: false };
+            
+            if (gripPressed && !this.lastGripState[hand]) {
+                 this.interactionManager?.handleGrab(hand);
+            } else if (!gripPressed && this.lastGripState[hand]) {
+                 this.interactionManager?.handleRelease(hand);
+            }
+            this.lastGripState[hand] = gripPressed;
+        }
+
+        // Keep existing logic for Right Hand B Button specifically below...
+         for (const source of session.inputSources) {
             // Right Hand B Button
+            // ... (legacy code for B button)
+
             // WebXR Gamepad mapping for Oculus/Meta Quest:
             // buttons[0] = trigger, buttons[1] = squeeze/grip
             // buttons[3] = thumbstick press, buttons[4] = A/X, buttons[5] = B/Y
@@ -496,6 +559,22 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
             if (source.handedness === 'right' && source.gamepad) {
                 const buttons = source.gamepad.buttons;
 
+                // GRIP BUTTON (Side Trigger) - Index 1 usually
+                // Detection de flanc montant/descendant pour Grab/Release
+                const gripPressed = buttons[1] && buttons[1].pressed;
+                
+                // State tracking pour Right
+                if (gripPressed && !this.lastGripState?.right) {
+                    // PRESS
+                    this.interactionManager?.handleGrab('right');
+                } else if (!gripPressed && this.lastGripState?.right) {
+                    // RELEASE
+                    this.interactionManager?.handleRelease('right');
+                }
+                
+                if (!this.lastGripState) this.lastGripState = {};
+                this.lastGripState.right = gripPressed;
+                
                 // Check B button (index 5) and fallback to index 4 (A button on some mappings)
                 // Also check index 2 which can be B on some controllers
                 const bButtonPressed =
@@ -535,35 +614,44 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
         }
     }
     showBattlePanel(data) {
-        if (!this.vrBattlePanel) return;
+        console.log("⚔️ VRManager: showBattlePanel called", {
+            hasBattlePanel: !!this.vrBattlePanel,
+            hasWatchMenu: !!this.watchMenu,
+            hasWatchContainer: !!this.watchMenu?.container,
+            data: data
+        });
         
-        console.log("⚔️ VRManager: Showing Battle Panel");
+        if (!this.vrBattlePanel) {
+            console.error("❌ VRManager: vrBattlePanel is NULL!");
+            return;
+        }
+        
+        console.log("⚔️ VRManager: Updating combat state...");
         this.vrBattlePanel.updateCombatState(data);
         
-        // Show attached to Player Rig (so it follows head yaw if rig rotates, but mostly fixed to player pos)
-        this.vrBattlePanel.show(this.playerRig);
-        
-        // Override position/rotation (Overwriting VRMenuPanel defaults)
-        // Defaults was for Watch (Flat). We want HUD style (Vertical).
-        this.vrBattlePanel.mesh.position.set(0, 1.5, -2.5); // 2.5m in front, 1.5m high
-        this.vrBattlePanel.mesh.rotation.set(0, 0, 0); // Vertical facing camera (Rig Z is forward?)
-        // Rig forward is usually -Z.
-        // Plane defaults to +Z normal. So touching it needs rotation?
-        // No, Three.js PlaneGeometry faces +Z.
-        // If we put it at -2.5 (In front), and look at -Z.
-        // We see the BACK of the plane if it faces +Z.
-        // We need to rotate Y = 0? Or X?
-        // If Plane faces +Z, and we look at it from 0 towards -Z.
-        // We see its back.
-        // We need rotation Y = PI? No.
-        // Wait, if Plane faces +Z. We are at 0. Plane at -2.5.
-        // We look at -Z. We see the "Back" face.
-        // Valid.
-        // We need to rotate it so it faces +Z? No, it faces +Z by default.
-        // We need it to face the player (who is at 0).
-        // So Plane Normal should point to 0.
-        // Plane Normal is +Z. So it Points to Player (0) if Plane is at -2.5.
-        // So Rotation 0,0,0 is CORRECT. (Plane Normal +Z points to 0).
+        // Show attached to Watch Container (comme les autres menus)
+        // CRITICAL FIX: Ensure Watch Container is VISIBLE even if menu is closed
+        if (this.watchMenu && this.watchMenu.container) {
+            console.log("⚔️ VRManager: Watch container found, forcing visibility...");
+            // Force visibility of the container wrapper
+            this.watchMenu.container.visible = true; 
+            
+            console.log("⚔️ VRManager: Calling vrBattlePanel.show()...");
+            this.vrBattlePanel.show(this.watchMenu.container);
+            
+            console.log("⚔️ Battle Panel attached to Watch Container", {
+                panelVisible: this.vrBattlePanel.mesh.visible,
+                panelIsVisible: this.vrBattlePanel.isVisible,
+                panelParent: this.vrBattlePanel.mesh.parent?.name || 'no parent',
+                containerVisible: this.watchMenu.container.visible
+            });
+        } else {
+            console.warn("⚠️ VRManager: No watch container, using fallback to Player Rig");
+            // Fallback si pas de montre
+            this.vrBattlePanel.show(this.playerRig);
+            this.vrBattlePanel.mesh.position.set(0, 1.5, -2.5);
+            console.warn("⚠️ Battle Panel attached to Player Rig (No Watch)");
+        }
     }
 
     hideBattlePanel() {
@@ -592,14 +680,11 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 // For now, let's assume checkClick logs for now, but we need visual feedback.
                 // We'll set a property interactively if needed, but VRBattlePanel relies on hoveredButton.
                 
-                // Let's assume VRBattlePanel has a method checkClick(uv) that returns button.
-                this.vrBattlePanel.hoveredButton = this.vrBattlePanel.checkClick(uv);
+                // Utiliser updateHover pour le hover (pas checkClick qui a un cooldown)
+                this.vrBattlePanel.updateHover(uv);
             } else {
-                this.vrBattlePanel.hoveredButton = null;
+                this.vrBattlePanel.updateHover(null);
             }
-             // Trigger redraw logic if needed (usually handled by update loop if dirty)
-             // But VRBattlePanel has no loop. We force draw.
-             this.vrBattlePanel.draw();
         }
     }
 

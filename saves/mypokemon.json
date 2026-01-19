@@ -2,18 +2,18 @@
   "sauvegarde_1": {
     "1": {
       "uniqueId": 1,
-      "speciesId": 4,
+      "speciesId": 6,
       "surnom": null,
       "niveau": 5,
-      "xp": 135,
+      "xp": 78629,
       "xpNextLevel": 179,
       "stats": {
-        "hp": 19,
-        "hpMax": 19,
-        "attack": 10,
-        "defense": 10,
-        "special": 11,
-        "speed": 12
+        "hp": 109,
+        "hpMax": 135,
+        "attack": 92,
+        "defense": 86,
+        "special": 114,
+        "speed": 106
       },
       "ivs": {
         "hp": 6,
@@ -32,8 +32,8 @@
       "attaques": [
         "griffe",
         "rugissement",
-        null,
-        null
+        "flammeche",
+        "griffe_acier"
       ],
       "ppActuels": [
         35,
@@ -59,7 +59,23 @@
         "niveau": 5,
         "date": "2026-01-19T00:41:59.475Z"
       },
-      "name": "Salamèche"
+      "name": "Dracaufeu",
+      "isOut": true,
+      "level": 44,
+      "species": "Dracaufeu",
+      "nom": "Dracaufeu",
+      "baseStats": {
+        "hp": 78,
+        "attack": 84,
+        "defense": 78,
+        "special": 109,
+        "speed": 100
+      },
+      "types": [
+        "feu",
+        "vol"
+      ],
+      "hp": 109
     }
   },
   "sauvegarde_2": {

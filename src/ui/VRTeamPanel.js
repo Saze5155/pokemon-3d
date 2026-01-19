@@ -131,7 +131,7 @@ export class VRTeamPanel extends VRMenuPanel {
     // Niveau
     ctx.fillStyle = '#ffd700';
     ctx.font = 'bold 24px Arial';
-    ctx.fillText(`Niv. ${pokemon.niveau || pokemon.level || 5}`, x + w / 2, y + 105);
+    ctx.fillText(`Niv. ${pokemon.level || pokemon.level || 5}`, x + w / 2, y + 105);
     
     // Barre de HP
     const hpBarX = x + 30;
@@ -260,7 +260,7 @@ export class VRTeamPanel extends VRMenuPanel {
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 30px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(`Niveau ${p.niveau || p.level}`, leftW / 2, 320);
+      ctx.fillText(`Niveau ${p.level}`, leftW / 2, 320);
       
       // Barre XP
       const xpBarW = 300;

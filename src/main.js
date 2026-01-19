@@ -1998,10 +1998,21 @@ class PokemonGame {
 
   // Gestion des PNJ en mode WorldMap
   if (this.npcManager && !this.dialogueSystem?.isDialogueActive()) {
-    this.npcManager.update(delta, moveTarget.position);
+    // FIX VR: Utiliser la position réelle de la tête (projetée au sol) pour la détection
+    // Cela permet de détecter le joueur même s'il marche physiquement (Room Scale) loin du centre du Rig
+    let detectionPos = moveTarget.position;
+    
+    if (this.useVR && this.vrManager && this.camera) {
+        const camWorldPos = new THREE.Vector3();
+        this.camera.getWorldPosition(camWorldPos);
+        // On projette au sol (hauteur du Rig) pour que la logique "EyeHeight + 1.5" du NPCManager reste valide
+        detectionPos = new THREE.Vector3(camWorldPos.x, moveTarget.position.y, camWorldPos.z);
+    }
+
+    this.npcManager.update(delta, detectionPos);
 
     // Vérifier vision dresseurs
-    const spottingTrainer = this.npcManager.checkTrainerVision(moveTarget.position, delta);
+    const spottingTrainer = this.npcManager.checkTrainerVision(detectionPos, delta);
     if (spottingTrainer) {
       console.log(`👀 ${spottingTrainer.nom} vous a repéré (WorldMap)!`);
       this.dialogueSystem.showTrainerAlert();

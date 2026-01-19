@@ -359,6 +359,13 @@ export function hookCombatUI(combatManager, uiManager) {
   // Remplacer showCombatUI
   const originalShowCombatUI = combatManager.showCombatUI.bind(combatManager);
   combatManager.showCombatUI = function() {
+    // En mode VR, utiliser l'original qui gère le VRBattlePanel
+    const isVR = uiManager?.game?.renderer?.xr?.isPresenting;
+    if (isVR) {
+      originalShowCombatUI();
+      return;
+    }
+
     // Utiliser l'UI moderne au lieu de l'ancienne
     const isTrainer = !!combatManager.currentTrainer;
     modernCombatUI.show(
