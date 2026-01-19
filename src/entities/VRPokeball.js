@@ -116,7 +116,7 @@ export class VRPokeball {
         }
 
         // Récupérer le pokemon depuis SaveManager
-        const playerPokemonData = this.game.saveManager.getPokemonById(teamPokemonId);
+        const playerPokemonData = this.game.saveManager.getPokemon(teamPokemonId);
         if (!playerPokemonData) {
             console.error("❌ Pokemon non trouvé dans l'équipe:", teamPokemonId);
             return;
@@ -173,7 +173,7 @@ export class VRPokeball {
         const teamPokemonId = this.data.pokemonId;
         if (!teamPokemonId || !this.game.saveManager) return;
 
-        const pokemonData = this.game.saveManager.getPokemonById(teamPokemonId);
+        const pokemonData = this.game.saveManager.getPokemon(teamPokemonId);
         if (!pokemonData) return;
 
         console.log("🐾 Spawn pokemon d'équipe:", pokemonData.name || pokemonData.species);
