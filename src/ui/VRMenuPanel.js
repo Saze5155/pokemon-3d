@@ -27,6 +27,15 @@ export class VRMenuPanel {
     this.lastInputTime = 0;
     this.inputCooldown = 300; // ms
     
+    // Chargement des sprites
+    this.pokemonSpriteSheet = new Image();
+    this.pokemonSpriteSheet.src = "assets/sprites/sprite_pokemon.png";
+    this.pokemonSpriteSheet.onload = () => { if (this.isVisible) this.draw(); };
+    
+    this.itemSpriteSheet = new Image();
+    this.itemSpriteSheet.src = "assets/sprites/sprite_objet.png";
+    this.itemSpriteSheet.onload = () => { if (this.isVisible) this.draw(); };
+
     this.createMesh();
   }
   
@@ -263,9 +272,36 @@ export class VRMenuPanel {
     }
     
     // Texte
-    ctx.fillStyle = button.disabled ? '#666' : (isHovered ? '#fff' : '#ddd');
-    ctx.font = button.font || 'bold 24px Arial';
     ctx.textAlign = 'center';
     ctx.fillText(button.label, button.x + button.w / 2, button.y + button.h / 2 + 8);
+  }
+
+  drawPokemonSprite(id, x, y, w, h) {
+      if (!this.pokemonSpriteSheet.complete || this.pokemonSpriteSheet.naturalWidth === 0) {
+          // Fallback circle
+          const ctx = this.ctx;
+          ctx.fillStyle = '#fff';
+          ctx.beginPath();
+          ctx.arc(x + w/2, y + h/2, Math.min(w,h)/2, 0, Math.PI*2);
+          ctx.fill();
+          return;
+      }
+      
+      const config = { width: 70, height: 58, cols: 10 };
+      const index = Math.max(0, parseInt(id) - 1);
+      
+      const col = index % config.cols;
+      const row = Math.floor(index / config.cols);
+      
+      const sx = col * config.width;
+      const sy = row * config.height;
+      
+      // Image pixelated
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.drawImage(
+          this.pokemonSpriteSheet,
+          sx, sy, config.width, config.height,
+          x, y, w, h
+      );
   }
 }

@@ -187,16 +187,9 @@ export class VRTeamPanel extends VRMenuPanel {
       });
     }
     
-    // Icône Pokéball (simple)
-    ctx.fillStyle = isHovered ? '#ff0000' : '#cc0000';
-    ctx.beginPath();
-    ctx.arc(x + w - 30, y + 30, 12, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(x + w - 30, y + 30, 5, 0, Math.PI * 2);
-    ctx.fill();
+    // Sprite
+    const spriteSize = 70;
+    this.drawPokemonSprite(pokemon.speciesId || pokemon.id, x + w - 80, y + 20, spriteSize, spriteSize/70*58);
   }
   
   drawEmptySlot(x, y, w, h, slotNumber) {
@@ -260,7 +253,8 @@ export class VRTeamPanel extends VRMenuPanel {
       ctx.arc(leftW / 2, 200, 80, 0, Math.PI * 2);
       ctx.fill();
       
-      // TODO: Render Sprite if available
+      // Render Sprite
+      this.drawPokemonSprite(p.speciesId || p.id, leftW / 2 - 70, 200 - 58, 140, 116); // Scale 2x approximately
       
       // Infos de base
       ctx.fillStyle = '#fff';

@@ -126,12 +126,9 @@ export class VRStoragePanel extends VRMenuPanel {
           ctx.font = '14px Arial';
           ctx.fillText(`Niv. ${pokemon.niveau}`, btn.x + btn.w/2, iy + 55);
           
-          // HP Bar (Mini)
-          const hpPct = (pokemon.stats?.hp || 10) / (pokemon.stats?.hpMax || 10);
-          ctx.fillStyle = '#333';
-          this.roundRect(ctx, btn.x + 20, iy + 65, btn.w - 40, 8, 4, true);
-          ctx.fillStyle = hpPct > 0.5 ? '#4ade80' : '#ef4444';
-          this.roundRect(ctx, btn.x + 20, iy + 65, (btn.w - 40) * hpPct, 8, 4, true);
+          
+          // Sprite Team
+          this.drawPokemonSprite(pokemon.speciesId || pokemon.id, x + 20, iy + 5, 50, 50/70*58);
           
           this.buttons.push(btn);
       }
@@ -199,11 +196,8 @@ export class VRStoragePanel extends VRMenuPanel {
         ctx.fillStyle = isSelected ? '#cc0000' : (isHovered ? '#333355' : '#252540');
         this.roundRect(ctx, bx, by, itemW, itemH, 8, true);
         
-        // Sprite Placeholder
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(bx + itemW/2, by + itemH/2 - 10, 20, 0, Math.PI*2);
-        ctx.fill();
+        // Sprite
+        this.drawPokemonSprite(pokemon.speciesId || pokemon.id, bx + 10, by + 10, itemW - 20, (itemW - 20)/70*58);
         
         // Nom
         ctx.font = 'bold 10px Arial';
@@ -238,11 +232,15 @@ export class VRStoragePanel extends VRMenuPanel {
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 30px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(name, x + w/2, y + 60);
+      
+      // Details Sprite
+      this.drawPokemonSprite(p.speciesId || p.id, x + w/2 - 60, y + 20, 120, 120/70*58);
+      
+      ctx.fillText(name, x + w/2, y + 150);
       
       ctx.font = '20px Arial';
       ctx.fillStyle = '#ffd700';
-      ctx.fillText(`Niveau ${p.niveau}`, x + w/2, y + 90);
+      ctx.fillText(`Niveau ${p.niveau}`, x + w/2, y + 180);
       
       // Action Button
       let actionLabel = "";

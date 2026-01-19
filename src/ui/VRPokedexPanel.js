@@ -125,12 +125,11 @@ export class VRPokedexPanel extends VRMenuPanel {
           ctx.font = 'bold 24px Arial';
           ctx.fillText(name, btn.x + 110, btn.y + 38);
           
-          // Icône Pokéball si capturé
+          // Icône Pokéball / Sprite si capturé
           if (isCaught) {
-              ctx.fillStyle = '#ff4444';
-              ctx.beginPath();
-              ctx.arc(btn.x + btn.w - 30, btn.y + itemH/2, 10, 0, Math.PI*2);
-              ctx.fill();
+              const spriteH = 40;
+              const spriteW = spriteH * (70/58);
+              this.drawPokemonSprite(id, btn.x + btn.w - 60, btn.y + itemH/2 - spriteH/2, spriteW, spriteH);
           }
           
           this.buttons.push(btn);
@@ -224,13 +223,16 @@ export class VRPokedexPanel extends VRMenuPanel {
            ctx.fillText(types.join(" / ").toUpperCase(), x + w/2, y + 120);
       }
       
-      // Placeholder Image Area
-      ctx.fillStyle = '#333';
-      ctx.fillRect(x + w/2 - 100, y + 160, 200, 200);
+      // Placeholder Image Area -> Sprite
+      // ctx.fillStyle = '#333';
+      // ctx.fillRect(x + w/2 - 100, y + 160, 200, 200);
       
-      ctx.fillStyle = '#666';
-      ctx.font = '40px Arial';
-      ctx.fillText("?", x + w/2, y + 270);
+      const spriteSize = 200;
+      this.drawPokemonSprite(id, x + w/2 - spriteSize/2, y + 160, spriteSize, spriteSize/70*58);
+      
+      // ctx.fillStyle = '#666';
+      // ctx.font = '40px Arial';
+      // ctx.fillText("?", x + w/2, y + 270);
       
       // Description (Placeholder)
       ctx.fillStyle = '#ddd';
