@@ -153,11 +153,13 @@ export class VRWatchMenu {
       const starterRequired = ["ÉQUIPE", "SAC", "STOCKAGE", "POKÉDEX"];
       if (starterRequired.includes(label)) {
           // Vérifier si on a un starter via SaveManager
-          // Note: game.saveManager.myPokemon est le tableau
-          if (this.game.saveManager && this.game.saveManager.myPokemon && this.game.saveManager.myPokemon.length > 0) {
-              return false; // Débloqué
+          // myPokemon est un tableau d'IDs, on vérifie s'il y a au moins un ID non-null
+          if (this.game.saveManager && this.game.saveManager.myPokemon) {
+              const hasStarter = this.game.saveManager.myPokemon.some(id => id !== null && id !== undefined);
+              console.log(`[Watch] Checking unlock for ${label}: hasStarter=${hasStarter}, team=${JSON.stringify(this.game.saveManager.myPokemon)}`);
+              return !hasStarter; // Verrouillé si pas de starter
           }
-          return true; // Verrouillé
+          return true; // Verrouillé par défaut
       }
       return false;
   }

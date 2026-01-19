@@ -69,8 +69,10 @@ export class VRMenuPanel {
       0.05    // Légèrement vers l'avant
     );
     
-    // Rotation pour faire face au joueur
-    this.mesh.rotation.x = -Math.PI / 6; // Incliné vers le joueur (30°)
+    // Rotation pour faire face au joueur ET matcher l'orientation de la montre
+    // La montre a rotation.z = PI/2, donc on fait pareil
+    this.mesh.rotation.x = -Math.PI / 2; // Couché à plat
+    this.mesh.rotation.z = Math.PI / 2;  // Tourné 90° comme la montre
     
     // Animation d'apparition
     this.mesh.scale.set(0.01, 0.01, 0.01);
@@ -161,6 +163,7 @@ export class VRMenuPanel {
   checkClick(uv) {
     // Cooldown pour éviter les clics multiples
     if (Date.now() - this.lastInputTime < this.inputCooldown) {
+      console.log(`[VRMenuPanel] Click ignored - cooldown active`);
       return null;
     }
     
@@ -168,10 +171,14 @@ export class VRMenuPanel {
     const x = uv.x * this.width;
     const y = (1 - uv.y) * this.height;
     
+    console.log(`[VRMenuPanel] Click at canvas coords: (${x.toFixed(0)}, ${y.toFixed(0)})`);
+    
     // Chercher le bouton cliqué
     for (const button of this.buttons) {
       if (x >= button.x && x <= button.x + button.w &&
           y >= button.y && y <= button.y + button.h) {
+        
+        console.log(`[VRMenuPanel] Button found: ${button.label || 'unnamed'} at (${button.x}, ${button.y}, ${button.w}x${button.h})`);
         
         // Vérifier si le bouton est disabled
         if (button.disabled) {
@@ -184,6 +191,7 @@ export class VRMenuPanel {
       }
     }
     
+    console.log(`[VRMenuPanel] No button found at this position. Total buttons: ${this.buttons.length}`);
     return null;
   }
   
