@@ -43,7 +43,7 @@ export class VRStoragePanel extends VRMenuPanel {
     // Bouton Fermer (Header)
     const closeBtn = {
       x: this.width - 160,
-      y: 15,
+      y: 25, // Easier to hit
       w: 140,
       h: 50,
       label: 'FERMER',

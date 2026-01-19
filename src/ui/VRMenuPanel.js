@@ -288,7 +288,22 @@ export class VRMenuPanel {
       }
       
       const config = { width: 70, height: 58, cols: 10 };
-      const index = Math.max(0, parseInt(id) - 1);
+      
+      // Gestion des variantes (Méga, Alola, etc.)
+      const POKEMON_WITH_EXTRA = [
+        3, 6, 9, 15, 18, 19, 20, 25, 26, 27, 28, 37, 38, 50, 51, 52, 53, 
+        65, 74, 75, 76, 80, 88, 89, 94, 102, 103, 105, 115, 127, 130, 133, 142, 150
+      ];
+      
+      const pId = parseInt(id);
+      let offset = 0;
+      for (const megaId of POKEMON_WITH_EXTRA) {
+        if (pId > megaId) {
+          offset++;
+        }
+      }
+      
+      const index = Math.max(0, pId - 1 + offset);
       
       const col = index % config.cols;
       const row = Math.floor(index / config.cols);

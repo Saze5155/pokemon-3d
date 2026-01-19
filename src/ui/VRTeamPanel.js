@@ -88,9 +88,9 @@ export class VRTeamPanel extends VRMenuPanel {
     
     // Bouton Fermer
     const closeBtn = {
-      x: this.width - 180,
-      y: this.height - 80,
-      w: 150,
+      x: this.width - 150,
+      y: this.height - 85, // Slightly higher margin from bottom
+      w: 120,
       h: 60,
       label: 'FERMER',
       action: () => this.hide()
@@ -361,14 +361,17 @@ export class VRTeamPanel extends VRMenuPanel {
           }
       }
       
-      // Bouton Retour
+      // Bouton Retour (Header)
       const backBtn = {
           x: 20,
-          y: 15,
-          w: 120,
+          y: 25, // Easier to hit
+          w: 140,
           h: 50,
           label: 'RETOUR',
-          action: () => this.showPokemonDetails(null)
+          action: () => {
+              this.selectedPokemon = null;
+              this.draw();
+          }
       };
       
       const isBackHovered = this.hoveredButton === backBtn;

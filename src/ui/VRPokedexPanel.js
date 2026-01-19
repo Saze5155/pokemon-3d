@@ -45,7 +45,7 @@ export class VRPokedexPanel extends VRMenuPanel {
     // Bouton Fermer (Custom position to not overlap stats)
     const closeBtn = {
       x: 20,
-      y: 15,
+      y: 25, // Easier to hit
       w: 120,
       h: 50,
       label: 'FERMER',
