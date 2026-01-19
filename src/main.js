@@ -458,7 +458,6 @@ class PokemonGame {
       if (flags.starter_choisi && this.dialogueSystem) {
            const team = this.saveManager.getTeam();
            // Le starter est généralement le premier Pokémon (slot 0)
-           // Ou on pourrait sauver l'ID du starter dans un flag dédié, mais l'équipe suffit souvent
            if (team && team.length > 0 && team[0] !== null) {
                const uniqueId = team[0];
                // saveManager.myPokemon stores actual objects
@@ -470,7 +469,17 @@ class PokemonGame {
                
                if (pokemonObj) {
                    const name = pokemonObj.surnom || pokemonObj.name || pokemonObj.species;
+                   
+                   // Legacy System
                    this.dialogueSystem.setVariable("POKEMON", name);
+                   
+                   // Modern System
+                   if (this.game?.modernDialogue) {
+                        this.game.modernDialogue.setVariable("POKEMON", name);
+                   } else if (this.modernDialogue) { 
+                        this.modernDialogue.setVariable("POKEMON", name);
+                   }
+
                    console.log(`[Main] Variable dialogue restaurée: {POKEMON} = ${name}`);
                }
            }
