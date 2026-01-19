@@ -448,11 +448,18 @@ class WildPokemon {
     
     this.collisionRadius = 0.5;
 
-    this.maxHp = this.calculateHP(pokemonData, level);
-    this.hp = this.maxHp;
-    
-    // CALCUL DES STATS (Pour le combat)
+    // CALCUL DES STATS (Pour le combat) - Format standard
     this.stats = this.calculateStats(pokemonData, level);
+
+    // Rétrocompatibilité - getters/setters pour hp et maxHp
+    Object.defineProperty(this, 'hp', {
+      get() { return this.stats.hp; },
+      set(value) { this.stats.hp = value; }
+    });
+    Object.defineProperty(this, 'maxHp', {
+      get() { return this.stats.hpMax; },
+      set(value) { this.stats.hpMax = value; }
+    });
 
     this.isMoving = false;
     this.moveSpeed = 0.8;
@@ -487,14 +494,18 @@ class WildPokemon {
       const defense = baseFn('defense');
       const speed = baseFn('speed');
       const special = baseFn('special');
+      const baseHP = baseFn('hp');
 
       // Formule simple Gen 1 (sans EVs)
       // Stat = floor(((Base * 2 + IV) * Level) / 100) + 5
       const calc = (base) => Math.floor(((base * 2 + 15) * level) / 100) + 5;
 
+      // HP spécial : floor(((Base * 2 + IV) * Level) / 100) + Level + 10
+      const hpMax = Math.floor(((baseHP * 2 + 15) * level) / 100) + level + 10;
+
       return {
-          hp: this.maxHp, // redondant mais utile
-          hpMax: this.maxHp,
+          hp: hpMax,
+          hpMax: hpMax,
           attack: calc(attack),
           defense: calc(defense),
           speed: calc(speed),

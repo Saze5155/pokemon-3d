@@ -1147,9 +1147,8 @@ export class SaveManager {
     const team = this.getTeam();
 
     team.forEach((pokemon) => {
-      // Restaurer les PV
+      // Restaurer les PV (format standardisé)
       pokemon.stats.hp = pokemon.stats.hpMax;
-      pokemon.hp = pokemon.stats.hpMax; // ✅ SYNC UI
 
       // Restaurer les PP
       pokemon.ppActuels = [...pokemon.ppMax];

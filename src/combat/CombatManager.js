@@ -2015,33 +2015,27 @@ export class CombatManager {
     return pokemon.surnom || pokemon.name || pokemon.species || "Unknown";
   }
 
+  // ✅ Format standardisé - Tous les Pokemon utilisent stats.hp/hpMax
   getPokemonHp(pokemon) {
-    if (pokemon.stats && pokemon.stats.hp !== undefined) {
-      return pokemon.stats.hp;
-    }
-    return pokemon.hp || 0;
+    return pokemon.stats?.hp || pokemon.hp || 0;
   }
 
   getPokemonMaxHp(pokemon) {
-    if (pokemon.stats && pokemon.stats.hpMax !== undefined) {
-      return pokemon.stats.hpMax;
-    }
-    return pokemon.maxHp || pokemon.hp || 100;
+    return pokemon.stats?.hpMax || pokemon.maxHp || 100;
   }
 
   setPokemonHp(pokemon, value) {
-    if (pokemon.stats && pokemon.stats.hp !== undefined) {
+    if (pokemon.stats) {
       pokemon.stats.hp = value;
-    } else {
+    }
+    // Rétrocompatibilité : si pas de stats, utiliser hp direct
+    if (pokemon.hasOwnProperty('hp')) {
       pokemon.hp = value;
     }
   }
 
   getPokemonLevel(pokemon) {
-    if (pokemon.stats && pokemon.stats.level !== undefined) {
-      return pokemon.stats.level;
-    }
-    return pokemon.level || 1;
+    return pokemon.stats?.level || pokemon.niveau || pokemon.level || 1;
   }
 
 
@@ -2149,11 +2143,23 @@ export class CombatManager {
       this.uiManager.showNotification(useResult.message);
       this.updateCombatUI();
 
-      // Consommer l'objet de l'inventaire
-      if (this.uiManager.playerData && this.uiManager.playerData.inventory) {
-          // TODO: Implémenter la consommation réelle dans SaveManager/Inventory
-          // Pour l'instant on assume infinité ou géré par UI
-          console.log(`Objet ${itemId} utilisé (Consommation TODO)`);
+      // ✅ Consommer l'objet de l'inventaire
+      if (this.uiManager.game && this.uiManager.game.saveManager) {
+          const saveManager = this.uiManager.game.saveManager;
+          const consumed = saveManager.removeItem(itemId, 1);
+          if (consumed) {
+              console.log(`✅ Objet ${itemId} consommé (quantité: -1)`);
+
+              // Sauvegarder après consommation
+              saveManager.save();
+
+              // Mettre à jour l'UI de l'inventaire si disponible
+              if (this.uiManager.updateInventoryUI) {
+                  this.uiManager.updateInventoryUI();
+              }
+          } else {
+              console.warn(`⚠️ Impossible de consommer ${itemId} (non trouvé dans l'inventaire)`);
+          }
       }
 
       setTimeout(() => {

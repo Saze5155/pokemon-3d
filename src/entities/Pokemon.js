@@ -38,9 +38,23 @@ export class Pokemon {
 
     // Stats gameplay
     this.level = Math.floor(Math.random() * 3) + 3;
-    this.maxHp = 20 + this.level * 5;
-    this.hp = this.maxHp;
+    const calculatedMaxHp = 20 + this.level * 5;
+    this.stats = {
+      hp: calculatedMaxHp,
+      hpMax: calculatedMaxHp,
+      level: this.level
+    };
     this.species = name;
+
+    // Rétrocompatibilité - getters/setters pour hp et maxHp
+    Object.defineProperty(this, 'hp', {
+      get() { return this.stats.hp; },
+      set(value) { this.stats.hp = value; }
+    });
+    Object.defineProperty(this, 'maxHp', {
+      get() { return this.stats.hpMax; },
+      set(value) { this.stats.hpMax = value; }
+    });
 
     // Charger le modèle
     this.loadModel();
