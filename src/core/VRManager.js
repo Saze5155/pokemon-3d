@@ -840,19 +840,14 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                     }
                 }
             }
-            
-                // Si un dialogue est déjà ouvert
-            if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
-                 // ... (Existing Logic)
-            }
-            
+
             // Si Combat Panel ouvert
             if (this.vrBattlePanel && this.vrBattlePanel.isVisible) {
                  console.log("[VR] Battle panel visible");
                  this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
                  this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
                  this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
-                 
+
                  const intersects = this.interactionRaycaster.intersectObject(this.vrBattlePanel.mesh);
                  if (intersects.length > 0) {
                       const uv = intersects[0].uv;
@@ -865,56 +860,57 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                       }
                  }
             }
-            
-            // Check Interactables (NPCs, etc.)
+
+            // Si un dialogue est déjà ouvert
+            if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {
                 console.log(`[VR] Dialogue panel visible. isShowingChoices=${this.vrDialoguePanel.isShowingChoices}`);
-                
+
                 // Raycast sur le panel pour les choix
                 if (this.vrDialoguePanel.isShowingChoices) {
                      console.log(`[VR] Checking raycast on dialogue panel...`);
                      this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
                      this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
                      this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
-                     
+
                      const intersects = this.interactionRaycaster.intersectObject(this.vrDialoguePanel.mesh);
                      console.log(`[VR] Raycast intersects: ${intersects.length}`);
-                     
+
                      if (intersects.length > 0) {
                          const uv = intersects[0].uv;
                          console.log(`[VR] Hit UV: (${uv.x.toFixed(3)}, ${uv.y.toFixed(3)})`);
                          const choiceIndex = this.vrDialoguePanel.checkClick(uv);
                          console.log(`[VR] Choice index: ${choiceIndex}`);
-                         
+
                          if (choiceIndex >= 0) {
                              const choice = this.vrDialoguePanel.choices[choiceIndex];
                              console.log("✅ VR Choice Selected:", choice);
-                             
+
                              // Immediately hide choices to prevent re-selection
                              this.vrDialoguePanel.isShowingChoices = false;
                              this.vrDialoguePanel.draw(); // Redraw to hide buttons immediately
-                             
+
                              // Add cooldown to prevent immediate re-trigger
                              this.vrDialoguePanel.lastInputTime = Date.now();
-                             
+
                              // Handle choice directly in VR
                              // 1. Call the onChoiceMade callback if it exists (this sets the starter_choisi flag)
                              if (this.game.dialogueSystem && this.game.dialogueSystem.onChoiceMade) {
                                  this.game.dialogueSystem.onChoiceMade(choiceIndex, choice, this.vrDialoguePanel.npc);
                              }
-                             
+
                              // 2. After flag is set, re-fetch dialogue based on new game state
                              setTimeout(() => {
                                  const npc = this.vrDialoguePanel.npc;
-                                 
+
                                  // Verify the flag was actually set
                                  const hasStarter = this.game.saveManager?.saveData?.drapeaux?.starter_choisi;
                                  console.log(`[VR] After choice, starter_choisi flag: ${hasStarter}`);
-                                 
+
                                  if (hasStarter) {
                                      // Flag is set, show post-starter dialogue
                                      const dialogueData = this.game.npcManager.startDialogue(npc);
                                      console.log(`[VR] Re-fetched dialogue key: ${dialogueData?.key}`);
-                                     
+
                                      if (dialogueData && dialogueData.dialogues && dialogueData.dialogues.length > 0) {
                                          this.vrDialoguePanel.dialogues = dialogueData.dialogues;
                                          this.vrDialoguePanel.currentIndex = 0;
@@ -935,57 +931,46 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                                      }
                                  }
                              }, 500); // Increased delay to ensure flag propagation
-                             
+
                              return;
                          }
                      }
                 }
-                
+
                 // Sinon clic simple pour avancer
                 this.vrDialoguePanel.advance();
                 return;
             }
-            
+
             // Sinon, Raycast pour trouver un PNJ
             this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
             this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
             this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
-            
+
             // Objets interactifs : On cherche dans la scène active
             const activeScene = this.game.sceneManager.getActiveScene();
             if (!activeScene) return;
-            
-            // On veut toucher les meshes des PNJ qui ont userData.isNPC = true
-            // On traverse ou on récupère une liste depuis NPCManager (plus optimisé) if possible.
-            // Pour l'instant, intersectObjects sur children de la scène (peut être lourd)
-            // Mieux: this.game.npcManager.npcs.get(sceneName) -> map to meshes
-            
+
             let candidates = [];
             // Collecter les meshes PNJ
             activeScene.traverse(obj => {
-                if (obj.userData && obj.userData.isNPC) { // Ou userData.npcData
+                if (obj.userData && obj.userData.isNPC) {
                     candidates.push(obj);
                 }
             });
-            
-            // Ajout indicateurs indicateurs visuels (userData.isNPCIndicator)
-            
-            const intersects = this.interactionRaycaster.intersectObjects(candidates, true); // true = recursive pour les groupes
-            
+
+            const intersects = this.interactionRaycaster.intersectObjects(candidates, true);
+
             if (intersects.length > 0) {
-                // Trouver le premier objet qui est lié à un PNJ
-                // Le mesh touché peut être un enfant du groupe PNJ
                 let hitObj = intersects[0].object;
                 while(hitObj && !hitObj.userData.npcData && hitObj.parent) {
                     hitObj = hitObj.parent;
                 }
-                
+
                 if (hitObj && hitObj.userData.npcData) {
                     const npc = hitObj.userData.npcData;
                     console.log("🎯 Hit NPC: " + npc.nom);
-                    
-                    // Déclencher le dialogue via l'UI Manager
-                    // (Cela appellera notre hook start())
+
                     const dialogue = this.game.npcManager.startDialogue(npc);
                     if (this.game.dialogueSystem) {
                          this.game.dialogueSystem.start(npc, dialogue.dialogues, dialogue.key);
@@ -993,6 +978,5 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 }
             }
         }
-   }
-
-  
+    }
+}
