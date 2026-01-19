@@ -11,6 +11,14 @@ export class VRTeamPanel extends VRMenuPanel {
   }
   
   draw() {
+    if (this.selectedPokemon) {
+        this.drawDetailsView();
+    } else {
+        this.drawTeamGrid();
+    }
+  }
+
+  drawTeamGrid() {
     const ctx = this.ctx;
     
     // Fond
@@ -216,7 +224,170 @@ export class VRTeamPanel extends VRMenuPanel {
   
   showPokemonDetails(pokemon) {
     console.log(`[VRTeamPanel] Showing details for:`, pokemon);
-    // TODO: Afficher un sous-panneau avec les détails complets
-    // Pour l'instant, juste un log
+    this.selectedPokemon = pokemon;
+    this.draw();
+  }
+
+  drawDetailsView() {
+      const p = this.selectedPokemon;
+      const ctx = this.ctx;
+      
+      if (!p) return;
+
+      // Fond
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, this.width, this.height);
+      
+      // Reset buttons
+      this.buttons = [];
+      
+      // Header: Nom du Pokémon
+      ctx.fillStyle = '#cc0000';
+      ctx.fillRect(0, 0, this.width, 80);
+      
+      const name = p.surnom || p.name || p.nom || '???';
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 40px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(name.toUpperCase(), this.width / 2, 55);
+      
+      // Colonne Gauche: Info & Stats
+      const leftW = this.width * 0.4;
+      
+      // Sprite (Cercle fond)
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(leftW / 2, 200, 80, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // TODO: Render Sprite if available
+      
+      // Infos de base
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 30px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Niveau ${p.niveau || p.level}`, leftW / 2, 320);
+      
+      // Barre XP
+      const xpBarW = 300;
+      const xpBarH = 15;
+      const xpBarX = (leftW - xpBarW) / 2;
+      const xpBarY = 340;
+      
+      ctx.fillStyle = '#333';
+      this.roundRect(ctx, xpBarX, xpBarY, xpBarW, xpBarH, 5, true);
+      
+      const xpPercent = (p.xp - 0) / (p.xpNextLevel - 0); // TODO: Min XP for level
+      ctx.fillStyle = '#4ade80';
+      this.roundRect(ctx, xpBarX, xpBarY, xpBarW * Math.min(1, Math.max(0, xpPercent)), xpBarH, 5, true);
+      
+      // Stats
+      const statY = 400;
+      const statH = 40;
+      const stats = [
+          { label: 'PV', val: `${p.stats.hp}/${p.stats.hpMax}` },
+          { label: 'Attaque', val: p.stats.attack },
+          { label: 'Défense', val: p.stats.defense },
+          { label: 'Spécial', val: p.stats.special },
+          { label: 'Vitesse', val: p.stats.speed }
+      ];
+      
+      ctx.font = '24px Arial';
+      stats.forEach((s, i) => {
+          const y = statY + i * statH;
+          ctx.fillStyle = '#aaa';
+          ctx.textAlign = 'left';
+          ctx.fillText(s.label, 50, y);
+          
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'right';
+          ctx.fillText(s.val, leftW - 50, y);
+      });
+      
+      // Colonne Droite: Attaques
+      const rightX = leftW;
+      const rightW = this.width - leftW;
+      
+      ctx.fillStyle = '#252540';
+      this.roundRect(ctx, rightX + 20, 100, rightW - 40, this.height - 120, 20, true);
+      
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 30px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('ATTAQUES', rightX + rightW / 2, 150);
+      
+      // Moves
+      const moves = p.attaques || [];
+      
+      const moveH = 80;
+      const moveGap = 20;
+      const moveStartY = 180;
+      
+      for(let i=0; i<4; i++) {
+          const moveName = moves[i] || '--';
+          // Check ppActuels safely
+          const pp = (p.ppActuels && p.ppActuels[i] !== undefined) ? p.ppActuels[i] : '--';
+          const ppMax = (p.ppMax && p.ppMax[i] !== undefined) ? p.ppMax[i] : '--';
+          
+          const y = moveStartY + i * (moveH + moveGap);
+          const x = rightX + 40;
+          const w = rightW - 80;
+          
+          const btn = {
+              x, y, w, h: moveH,
+              label: moveName,
+              action: () => console.log('Move clicked:', moveName)
+          };
+          
+          const isHovered = this.hoveredButton?.label === moveName;
+          
+          // Fond Move
+          ctx.fillStyle = isHovered ? '#333355' : '#1f1f35';
+          this.roundRect(ctx, x, y, w, moveH, 10, true);
+          
+          // Type (Placeholder couleur)
+          ctx.fillStyle = '#666'; 
+          this.roundRect(ctx, x, y, 80, moveH, 10, true); // Left stripe
+          
+          // Nom
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 24px Arial';
+          ctx.textAlign = 'left';
+          ctx.fillText(typeof moveName === 'string' ? moveName.toUpperCase() : '--', x + 100, y + 50);
+          
+          // PP
+          if (moveName !== '--') {
+              ctx.fillStyle = '#ffd700';
+              ctx.textAlign = 'right';
+              ctx.fillText(`PP ${pp}/${ppMax}`, x + w - 20, y + 50);
+          }
+          
+          if (moveName !== '--') {
+             this.buttons.push(btn);
+          }
+      }
+      
+      // Bouton Retour
+      const backBtn = {
+          x: 20,
+          y: 15,
+          w: 120,
+          h: 50,
+          label: 'RETOUR',
+          action: () => this.showPokemonDetails(null)
+      };
+      
+      const isBackHovered = this.hoveredButton === backBtn;
+      ctx.fillStyle = isBackHovered ? '#444' : '#333';
+      this.roundRect(ctx, backBtn.x, backBtn.y, backBtn.w, backBtn.h, 10, true);
+      
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 24px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(backBtn.label, backBtn.x + backBtn.w / 2, backBtn.y + 35);
+      
+      this.buttons.push(backBtn);
+      
+      this.texture.needsUpdate = true;
   }
 }
