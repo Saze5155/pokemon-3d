@@ -275,28 +275,47 @@ export class VRBattlePanel extends VRMenuPanel {
       const btnH = 60;
       const gap = 10;
 
-      // FIX: Récupérer l'ID du Pokémon actuellement actif (plus fiable que le nom)
-      const currentPokemonId = this.combatData?.playerPokemon?.id || null;
-      console.log(`[VRBattlePanel] Current Pokemon ID: ${currentPokemonId}`);
+      // FIX: Récupérer l'uniqueId du Pokémon actuellement actif
+      const currentPokemonUniqueId = this.combatData?.playerPokemon?.uniqueId || null;
+      console.log(`[VRBattlePanel] Current Pokemon uniqueId: ${currentPokemonUniqueId}`);
+      console.log(`[VRBattlePanel] Current Pokemon full data:`, this.combatData?.playerPokemon);
 
       let validCount = 0;
-      currentTeam.forEach((pId, i) => {
+      currentTeam.forEach((pIdOrPokemon, i) => {
           if (i >= 6) return;
-          const pokemon = this.game.saveManager.getPokemon(pId);
+          
+          // FIX: L'équipe peut contenir soit des IDs soit des objets Pokemon complets
+          let pokemon;
+          let pokemonUniqueId;
+          
+          if (typeof pIdOrPokemon === 'object') {
+              // C'est déjà un objet Pokemon
+              pokemon = pIdOrPokemon;
+              pokemonUniqueId = pokemon.uniqueId;
+          } else {
+              // C'est un ID, on doit le récupérer
+              pokemon = this.game.saveManager.getPokemon(pIdOrPokemon);
+              pokemonUniqueId = pIdOrPokemon;
+          }
+          
           if (!pokemon) {
-              console.warn(`[VRBattlePanel] Pokemon ${pId} not found!`);
+              console.warn(`[VRBattlePanel] Pokemon ${pIdOrPokemon} not found!`);
               return;
           }
+
+          console.log(`[VRBattlePanel] Checking Pokemon ${i}: uniqueId=${pokemonUniqueId}, name=${pokemon.name || pokemon.surnom}`);
 
           // FIX: Utiliser les helpers pour les HP (gère stats.hp vs hp)
           const currentHp = this.getPokemonHp(pokemon);
           const maxHp = this.getPokemonMaxHp(pokemon);
           const pokemonName = this.getPokemonName(pokemon);
 
-          // FIX: Skip le Pokémon actuellement en combat (comparaison par ID)
-          const isCurrentPokemon = (pId === currentPokemonId);
+          // FIX: Skip le Pokémon actuellement en combat (comparaison par uniqueId)
+          const isCurrentPokemon = (pokemonUniqueId === currentPokemonUniqueId);
+          console.log(`[VRBattlePanel] Is current? uniqueId(${pokemonUniqueId}) === currentUniqueId(${currentPokemonUniqueId}) = ${isCurrentPokemon}`);
+          
           if (isCurrentPokemon) {
-              console.log(`[VRBattlePanel] Skipping current Pokemon: ${pokemonName} (ID: ${pId})`);
+              console.log(`[VRBattlePanel] Skipping current Pokemon: ${pokemonName} (uniqueId: ${pokemonUniqueId})`);
               return;
           }
 

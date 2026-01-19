@@ -85,7 +85,7 @@
         false,
         false
       ],
-      "tempsJeu": 20,
+      "tempsJeu": 53,
       "position": {
         "map": "maisonetage",
         "x": 5,
@@ -96,7 +96,7 @@
     },
     "equipe": [
       1,
-      null,
+      2,
       null,
       null,
       null,
@@ -114,10 +114,12 @@
     },
     "pokedex": {
       "vus": [
-        4
+        4,
+        19
       ],
       "captures": [
-        4
+        4,
+        19
       ]
     },
     "drapeaux": {
@@ -135,7 +137,7 @@
     },
     "dresseursVaincus": [],
     "dateCreation": "2026-01-19T06:16:27.309Z",
-    "dateSauvegarde": "2026-01-19T06:16:48.084Z"
+    "dateSauvegarde": "2026-01-19T09:50:25.329Z"
   },
   "sauvegarde_3": {
     "joueur": {

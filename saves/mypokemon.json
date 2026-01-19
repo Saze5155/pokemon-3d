@@ -138,7 +138,69 @@
         "niveau": 5,
         "date": "2026-01-19T06:16:48.076Z"
       },
-      "name": "Salamèche"
+      "name": "Salamèche",
+      "isOut": true
+    },
+    "2": {
+      "uniqueId": 2,
+      "speciesId": 19,
+      "surnom": null,
+      "niveau": 3,
+      "xp": 57,
+      "xpNextLevel": 96,
+      "stats": {
+        "hp": 16,
+        "hpMax": 16,
+        "attack": 8,
+        "defense": 8,
+        "special": 8,
+        "speed": 8
+      },
+      "ivs": {
+        "hp": 4,
+        "attack": 8,
+        "defense": 12,
+        "special": 7,
+        "speed": 1
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "charge",
+        null,
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "RED",
+      "idDO": 33844,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 3,
+        "date": "2026-01-19T09:50:25.329Z"
+      },
+      "name": "Rattata"
     }
   },
   "sauvegarde_3": {}
