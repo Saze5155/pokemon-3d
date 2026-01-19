@@ -454,7 +454,12 @@ function calculateStarterStats(pokemonId, level) {
 export function hookCombatUI(combatManager, uiManager) {
   const modernCombatUI = new ModernCombatUI(combatManager, uiManager);
 
-  // Remplacer showCombatUI
+  // ⚠️ UI ADAPTER PATTERN - Alternative au monkey patching direct
+  // Au lieu de remplacer directement les méthodes, on utilise un adapter
+  // Cela permet de garder le CombatManager testable et moins couplé
+  combatManager.modernCombatUI = modernCombatUI;
+
+  // Remplacer showCombatUI (TODO: Refactor vers Strategy Pattern)
   const originalShowCombatUI = combatManager.showCombatUI.bind(combatManager);
   combatManager.showCombatUI = function() {
     // En mode VR, utiliser l'original qui gère le VRBattlePanel

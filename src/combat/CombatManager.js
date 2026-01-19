@@ -230,22 +230,6 @@ export class CombatManager {
     if (this.wildPokemon.model) {
         this.wildPokemon.model.lookAt(this.playerPokemonPosition.x, this.wildPokemon.model.position.y, this.playerPokemonPosition.z);
     }
-
-    /* 
-    const dirToPlayerPokemon = new THREE.Vector3()
-      .subVectors(this.playerPokemonPosition, this.wildPokemonPosition)
-      .normalize();
-
-    // FIX: Angle corrigé pour faire face au Pokémon joueur
-    const angleWild = Math.atan2(-dirToPlayerPokemon.x, -dirToPlayerPokemon.z);
-    this.wildPokemon.model.rotation.y = angleWild;
-
-    console.log(
-      `🔄 Pokémon sauvage regarde vers Pokémon joueur, angle=${angleWild.toFixed(
-        2
-      )}`
-    );
-    */
   }
 
   setupCameraToggle() {

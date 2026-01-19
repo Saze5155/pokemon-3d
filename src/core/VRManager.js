@@ -72,8 +72,6 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
       // NOTE: Le panneau de dialogue et les hooks sont initialisés dans init() pour garantir que l'UI est prête.
       this.vrDialoguePanel = null;
       this.interactionRaycaster = new THREE.Raycaster();
-      this.vrDialoguePanel = null;
-      this.interactionRaycaster = new THREE.Raycaster();
       this.lastTriggerState = { left: false, right: false };
       this.lastBButtonState = false; // For B button toggle
       

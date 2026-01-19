@@ -6,16 +6,15 @@
  * - Gestion des Pokémon capturés
  */
 
+import { PATHS } from '../config/paths.js';
+import { handleError, ErrorSeverity } from '../utils/ErrorHandler.js';
+
 export class SaveManager {
   constructor() {
     this.currentSlot = null; // 1, 2 ou 3
     this.saveData = null;
     this.myPokemon = {};
     this.nextPokemonId = 1;
-
-    // Chemins des fichiers (pour le serveur)
-    this.savePath = "../../save/sauvegarde.json";
-    this.pokemonPath = "../../save/mypokemon.json";
 
     // Données en mémoire
     this.allSaves = {
@@ -37,20 +36,20 @@ export class SaveManager {
   async init() {
     try {
       // Charger les sauvegardes depuis le serveur (Cache busting)
-      const saveResponse = await fetch(`/load-save?t=${Date.now()}`);
+      const saveResponse = await fetch(`${PATHS.API.LOAD_SAVE}?t=${Date.now()}`);
       if (saveResponse.ok) {
         this.allSaves = await saveResponse.json();
       }
 
       const pokemonResponse = await fetch(
-        `/load-mypokemon?t=${Date.now()}`
+        `${PATHS.API.LOAD_MYPOKEMON}?t=${Date.now()}`
       );
       if (pokemonResponse.ok) {
         this.allMyPokemon = await pokemonResponse.json();
       }
 
       // ✅ FIX: Charger la base de données des Pokémon pour les stats
-      const dbResponse = await fetch("data/pokemons.json");
+      const dbResponse = await fetch(PATHS.DATA.POKEMON);
       if (dbResponse.ok) {
           const data = await dbResponse.json();
           // Convertir en tableau
@@ -65,7 +64,7 @@ export class SaveManager {
       }
 
       // ✅ FIX: Charger les movesets pour l'apprentissage
-      const movesetsResponse = await fetch("data/movesets.json");
+      const movesetsResponse = await fetch(PATHS.DATA.MOVESETS);
       if (movesetsResponse.ok) {
           this.movesetDatabase = await movesetsResponse.json();
           console.log(`[SaveManager] Movesets chargés, ${Object.keys(this.movesetDatabase).length} entrées`);
@@ -75,7 +74,7 @@ export class SaveManager {
       }
 
       // ✅ FIX: Charger les objets pour la boutique
-      const itemsResponse = await fetch("data/objets.json");
+      const itemsResponse = await fetch(PATHS.DATA.ITEMS);
       if (itemsResponse.ok) {
           this.itemsDatabase = await itemsResponse.json();
           console.log(`[SaveManager] Objets chargés`);
@@ -87,9 +86,12 @@ export class SaveManager {
       console.log("[SaveManager] Sauvegardes chargées");
       return true;
     } catch (error) {
-      console.warn(
-        "[SaveManager] Impossible de charger les sauvegardes, utilisation des valeurs par défaut"
+      handleError(
+        error,
+        ErrorSeverity.WARNING,
+        'SaveManager.init'
       );
+      console.warn("[SaveManager] Utilisation des valeurs par défaut");
       return false;
     }
   }
@@ -371,7 +373,7 @@ export class SaveManager {
       console.log(`[SaveManager] Pokemon à sauvegarder (Memory):`, Object.keys(this.myPokemon || {}));
       console.log(`[SaveManager] Pokemon à sauvegarder (Global):`, Object.keys(this.allMyPokemon[key] || {}));
 
-      const response = await fetch("/save-game", {
+      const response = await fetch(PATHS.API.SAVE_GAME, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -386,11 +388,15 @@ export class SaveManager {
         console.log("[SaveManager] Sauvegarde réussie!");
         return true;
       } else {
-        console.error("[SaveManager] Erreur serveur lors de la sauvegarde");
+        handleError(
+          new Error('Erreur serveur lors de la sauvegarde'),
+          ErrorSeverity.ERROR,
+          'SaveManager.saveToServer'
+        );
         return false;
       }
     } catch (error) {
-      console.error("[SaveManager] Erreur de connexion:", error);
+      handleError(error, ErrorSeverity.ERROR, 'SaveManager.saveToServer');
       // Fallback: sauvegarder en localStorage
       this.saveToLocalStorage();
       return false;
@@ -402,17 +408,14 @@ export class SaveManager {
    */
   saveToLocalStorage() {
     try {
-      localStorage.setItem("pokemon_saves", JSON.stringify(this.allSaves));
+      localStorage.setItem(PATHS.STORAGE.SAVES, JSON.stringify(this.allSaves));
       localStorage.setItem(
-        "pokemon_mypokemon",
+        PATHS.STORAGE.MY_POKEMON,
         JSON.stringify(this.allMyPokemon)
       );
       console.log("[SaveManager] Sauvegarde locale effectuée (localStorage)");
     } catch (e) {
-      console.error(
-        "[SaveManager] Impossible de sauvegarder en localStorage:",
-        e
-      );
+      handleError(e, ErrorSeverity.ERROR, 'SaveManager.saveToLocalStorage');
     }
   }
 
@@ -421,8 +424,8 @@ export class SaveManager {
    */
   loadFromLocalStorage() {
     try {
-      const saves = localStorage.getItem("pokemon_saves");
-      const pokemon = localStorage.getItem("pokemon_mypokemon");
+      const saves = localStorage.getItem(PATHS.STORAGE.SAVES);
+      const pokemon = localStorage.getItem(PATHS.STORAGE.MY_POKEMON);
 
       if (saves) this.allSaves = JSON.parse(saves);
       if (pokemon) this.allMyPokemon = JSON.parse(pokemon);
