@@ -21,6 +21,13 @@
         "y": 4.350002650543292,
         "z": -15.489572973077053,
         "direction": "south"
+      },
+      "inventory": {
+        "potion": 5,
+        "super_potion": 2,
+        "antidote": 3,
+        "parl_healer": 3,
+        "pokeball": 10
       }
     },
     "equipe": [
@@ -68,7 +75,7 @@
       "dresseur_insecte_1_5"
     ],
     "dateCreation": "2026-01-19T00:29:11.534Z",
-    "dateSauvegarde": "2026-01-19T04:45:24.029Z"
+    "dateSauvegarde": "2026-01-19T10:58:06.323Z"
   },
   "sauvegarde_2": {
     "joueur": {
@@ -92,6 +99,13 @@
         "y": 1.8,
         "z": 5,
         "direction": "south"
+      },
+      "inventory": {
+        "potion": 5,
+        "super_potion": 2,
+        "antidote": 3,
+        "parl_healer": 3,
+        "pokeball": 10
       }
     },
     "equipe": [
@@ -137,7 +151,7 @@
     },
     "dresseursVaincus": [],
     "dateCreation": "2026-01-19T06:16:27.309Z",
-    "dateSauvegarde": "2026-01-19T09:50:25.329Z"
+    "dateSauvegarde": "2026-01-19T10:54:02.404Z"
   },
   "sauvegarde_3": {
     "joueur": {

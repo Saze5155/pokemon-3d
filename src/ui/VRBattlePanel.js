@@ -112,7 +112,40 @@ export class VRBattlePanel extends VRMenuPanel {
      ctx.fillStyle = "white";
      ctx.font = "bold 32px Arial";
      ctx.textAlign = "left";
-     ctx.fillText(`${this.getPokemonName(pokemon)} Lv.${this.getPokemonLevel(pokemon)}`, x + 20, y + 45);
+     
+     let displayName = `${this.getPokemonName(pokemon)} Lv.${this.getPokemonLevel(pokemon)}`;
+     ctx.fillText(displayName, x + 20, y + 45);
+
+     // Status Badge (si présent)
+     if (pokemon.status) {
+         const statusLabels = { 'poison': 'PSN', 'paralysis': 'PAR', 'sleep': 'SLP', 'burn': 'BRN', 'freeze': 'FRZ' };
+         // Mapping couleurs
+         const statusColors = { 
+             'poison': '#a040a0', 
+             'paralysis': '#f8d030', 
+             'sleep': '#8c888c', 
+             'burn': '#f08030', 
+             'freeze': '#98d8d8' 
+         };
+         
+         const label = statusLabels[pokemon.status] || "STS";
+         const color = statusColors[pokemon.status] || "#888";
+         
+         // Mesurer le texte du nom pour positionner le badge après
+         const metrics = ctx.measureText(displayName);
+         const badgeX = x + 20 + metrics.width + 15;
+         const badgeY = y + 20; // Un peu plus haut que la ligne de base
+         const badgeW = 60;
+         const badgeH = 30;
+
+         ctx.fillStyle = color;
+         this.roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 5, true);
+         
+         ctx.fillStyle = "white";
+         ctx.font = "bold 18px Arial";
+         ctx.textAlign = "center";
+         ctx.fillText(label, badgeX + badgeW/2, badgeY + 22);
+     }
 
      // HP Bar - utiliser les helpers comme CombatManager
      const maxHp = this.getPokemonMaxHp(pokemon);
@@ -133,9 +166,6 @@ export class VRBattlePanel extends VRMenuPanel {
      // Simple rect logic for fill
      ctx.fillRect(barX, barY, barW * hpPercent, barH);
      
-     // HP Text (Only for player usually, but let's show for both or just player as per user preference? 
-     // "comme le desktop" suggests Player sees numbers, Enemy doesn't? But user said "point de vie ... a droite".)
-     // Let's show numbers for Player only to be safe/clean.
      if (isPlayer) {
          ctx.fillStyle = "white";
          ctx.font = "24px Monospace";
@@ -156,7 +186,58 @@ export class VRBattlePanel extends VRMenuPanel {
            this.drawSwitchPrompt(x, y, w, h);
       } else if (this.menuState === "POKEMON_SELECT") {
            this.drawPokemonSelection(x, y, w, h);
+      } else if (this.menuState === "ITEMS") {
+           this.drawItemMenu(x, y, w, h);
       }
+  }
+
+  drawItemMenu(x, y, w, h) {
+       const inventory = this.game.ui.playerData.inventory || {};
+       const itemManager = this.game.combatManager.itemManager;
+       let itemsList = [];
+
+       const validCategories = [
+           "soin", "soins", 
+           "statut", "status", 
+           "ball", "balls", "pokeballs", 
+           "combat", "boosts_combat"
+       ];
+
+       // Filter items
+       for (const [itemId, count] of Object.entries(inventory)) {
+           if (count <= 0) continue;
+           const item = itemManager ? itemManager.getItem(itemId) : null;
+           
+           if (item && validCategories.includes(item.category)) {
+               itemsList.push({ id: itemId, name: item.nom, count: count });
+           }
+       }
+
+       const btnH = 60;
+       const gap = 10;
+       
+       if (itemsList.length === 0) {
+            this.ctx.fillStyle = "white";
+            this.ctx.font = "24px Arial";
+            this.ctx.textAlign = "center";
+            this.ctx.fillText("Sac vide", x + w/2, y + 100);
+       } else {
+           itemsList.forEach((item, i) => {
+               if (i > 5) return; // Limit display
+               const bx = x;
+               const by = y + i * (btnH + gap);
+               
+               this.drawButton(this.ctx, bx, by, w, btnH, `${item.name} x${item.count}`, "#cc8800", () => {
+                    this.game.combatManager.useItem(item.id);
+                    this.setMenuState("MAIN");
+               });
+           });
+       }
+
+       // Back Button
+       this.drawButton(this.ctx, x, y + h - 60, w, 60, "RETOUR", "#666", () => {
+           this.setMenuState("MAIN");
+       });
   }
   
   drawMainButtons(x, y, w, h) {
@@ -168,14 +249,14 @@ export class VRBattlePanel extends VRMenuPanel {
           // Combat dresseur: 3 boutons (pas de fuite)
           buttons = [
               { label: "ATTAQUE", color: "#cc0000", action: () => this.setMenuState("ATTACKS") },
-              { label: "SAC", color: "#cc8800", action: () => console.log("Sac clicked") },
+              { label: "SAC", color: "#cc8800", action: () => this.setMenuState("ITEMS") },
               { label: "POKÉMON", color: "#008800", action: () => this.setMenuState("POKEMON_SELECT") }
           ];
       } else {
           // Combat sauvage: 4 boutons
           buttons = [
               { label: "ATTAQUE", color: "#cc0000", action: () => this.setMenuState("ATTACKS") },
-              { label: "SAC", color: "#cc8800", action: () => console.log("Sac clicked") },
+              { label: "SAC", color: "#cc8800", action: () => this.setMenuState("ITEMS") },
               { label: "POKÉMON", color: "#008800", action: () => this.setMenuState("POKEMON_SELECT") },
               { label: "FUITE", color: "#0000cc", action: () => this.game.combatManager.attemptRun() }
           ];

@@ -43,7 +43,8 @@ export class UIManager {
       name: "Dresseur",
       money: 3000,
       team: [],
-      bag: {},
+      inventory: {}, // Nouveau standard (unifié)
+      bag: {},       // Legacy
       pokedex: { vus: [], captures: [] },
     };
 
@@ -83,7 +84,16 @@ export class UIManager {
     this.playerData.name = save.joueur.nom;
     this.playerData.money = save.joueur.argent;
     this.playerData.pokedex = save.pokedex || { vus: [], captures: [] };
-    this.playerData.bag = this.flattenBag(save.sac);
+    
+    // FIX: Fusionner 'save.sac' (legacy) et 'save.joueur.inventory' (nouveau)
+    // On aplatit tout dans playerData.inventory
+    const legacyBag = this.flattenBag(save.sac);
+    const newInventory = save.joueur.inventory || {};
+    this.playerData.inventory = { ...legacyBag, ...newInventory };
+
+    // Legacy support pour 'bag'
+    this.playerData.bag = this.playerData.inventory;
+
     this.playerData.team = this.saveManager.getTeam() || [];
 
     this.updateUnlocks(save.drapeaux);
@@ -92,6 +102,7 @@ export class UIManager {
     console.log("[UI] Sync:", {
       name: this.playerData.name,
       teamSize: this.playerData.team.length,
+      itemCount: Object.keys(this.playerData.inventory).length,
       flags: save.drapeaux,
     });
   }
@@ -100,6 +111,7 @@ export class UIManager {
     const flat = {};
     if (!sac) return flat;
     for (const [category, items] of Object.entries(sac)) {
+      if (items === null) continue;
       if (typeof items === "object" && !Array.isArray(items)) {
         Object.assign(flat, items);
       }

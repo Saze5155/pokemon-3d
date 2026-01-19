@@ -24,6 +24,29 @@ export class ModernCombatUI {
       link.rel = 'stylesheet';
       link.href = 'assets/css/modern-ui.css';
       document.head.appendChild(link);
+
+      // Styles inline supplémentaires pour les statuts
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            margin-left: 8px;
+            vertical-align: middle;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+        }
+        .status-poison { background-color: #a040a0; }
+        .status-paralysis { background-color: #f8d030; color: #444; text-shadow: none; }
+        .status-sleep { background-color: #8c888c; }
+        .status-burn { background-color: #f08030; }
+        .status-freeze { background-color: #98d8d8; color: #444; text-shadow: none; }
+      `;
+      document.head.appendChild(style);
     }
   }
 
@@ -85,8 +108,24 @@ export class ModernCombatUI {
     div.className = `combat-pokemon-info ${type}`;
     div.id = `combat-${type}-info`;
 
+    // Gestion du statut
+    let statusHtml = '';
+    if (pokemon.status) {
+        // Mappage code statut -> libellé court
+        const statusLabels = {
+            'poison': 'PSN',
+            'paralysis': 'PAR',
+            'sleep': 'SLP',
+            'burn': 'BRN',
+            'freeze': 'FRZ'
+        };
+        const label = statusLabels[pokemon.status] || pokemon.status.toUpperCase().substring(0, 3);
+        const colorClass = pokemon.status.toLowerCase(); // CSS pour couleur (via css status-poison, etc.)
+        statusHtml = `<span class="status-badge status-${colorClass}">${label}</span>`;
+    }
+
     let html = `
-      <div class="combat-pokemon-name">${this.getPokemonName(pokemon)}</div>
+      <div class="combat-pokemon-name">${this.getPokemonName(pokemon)} ${statusHtml}</div>
       <div class="combat-pokemon-level">Niv. ${this.getPokemonLevel(pokemon)}</div>
       <div class="combat-hp-container">
         <div class="combat-hp-bar ${hpClass}" style="width: ${hpPercent}%"></div>
@@ -174,31 +213,55 @@ export class ModernCombatUI {
    * Rend le menu du sac
    */
   renderBagMenu() {
-    const bag = this.uiManager.playerData.bag;
-    const usableItems = ['pokeball', 'superball', 'hyperball', 'masterball', 'potion', 'super_potion', 'hyper_potion', 'potion_max'];
+    // FIX: Utiliser le standard 'inventory' et non 'bag' (le SaveManager utilise inventory)
+    const inventory = this.uiManager.playerData.inventory || {};
+    const itemManager = this.combatManager.itemManager; // On a besoin de l'ItemManager pour les noms et infos
 
+    console.log("🎒 [ModernCombatUI] renderBagMenu - Inventory:", inventory);
+    console.log("📋 [ModernCombatUI] ItemManager exists?", !!itemManager);
+
+    // Liste des items utilisables en combat (pourrait être dans ItemManager.getBattleItems())
+    // On itère sur l'inventaire et on vérifie si l'item existe
     let itemsHtml = '';
-    for (const [key, count] of Object.entries(bag)) {
+    
+    for (const [itemId, count] of Object.entries(inventory)) {
+      console.log(`🔍 Checking item: ${itemId}, count: ${count}`);
       if (count <= 0) continue;
-      if (!usableItems.some(item => key.includes(item))) continue;
+      
+      const item = itemManager ? itemManager.getItem(itemId) : null;
+      console.log(`   -> Found in Manager?`, item ? `YES (Cat: ${item.category})` : "NO");
 
-      const displayName = key.replace(/_/g, ' ').toUpperCase();
-      itemsHtml += `
-        <button class="combat-item-btn" data-action="use_item" data-item-key="${key}">
-          <div>${displayName}</div>
-          <div class="combat-item-count">×${count}</div>
-        </button>
-      `;
+      // FIX: Check plurals and singulars (Match objets.json keys!)
+      // Categories in JSON: "pokeballs", "soins", "pierres", "boosts_combat", "vitamines", "repousses", "peche", "divers"
+      const validCategories = [
+          "soin", "soins", 
+          "statut", "status", 
+          "ball", "balls", "pokeballs", // objets.json uses "pokeballs"
+          "combat", "boosts_combat"     // objets.json uses "boosts_combat"
+      ];
+      
+      if (item && validCategories.includes(item.category)) {
+          itemsHtml += `
+            <button class="combat-item-btn" data-action="use_item" data-item-id="${itemId}">
+              <div class="combat-item-icon">💊</div>
+              <div class="combat-item-details">
+                  <div class="combat-item-name">${item.nom}</div>
+                  <div class="combat-item-desc">${item.description || "Objet"}</div>
+              </div>
+              <div class="combat-item-count">×${count}</div>
+            </button>
+          `;
+      }
     }
 
     if (!itemsHtml) {
-      itemsHtml = '<div style="grid-column: span 3; text-align: center; color: #64748b; padding: 20px;">Aucun objet utilisable</div>';
+      itemsHtml = '<div style="grid-column: span 2; text-align: center; color: #64748b; padding: 20px;">Sac vide</div>';
     }
 
     return `
       <div class="combat-items-grid" id="combat-actions">
         ${itemsHtml}
-        <button class="combat-back-btn" data-action="back" style="grid-column: span 3;">← RETOUR</button>
+        <button class="combat-back-btn" data-action="back" style="grid-column: span 2;">← RETOUR</button>
       </div>
     `;
   }
@@ -286,7 +349,8 @@ export class ModernCombatUI {
         this.showMainMenu();
         break;
       case 'use_item':
-        this.combatManager.useCombatItem(data.itemKey);
+        // FIX: useItem attend itemId
+        this.combatManager.useItem(data.itemId);
         this.showMainMenu();
         break;
       case 'switch_pokemon':
@@ -375,8 +439,17 @@ export class ModernCombatUI {
       if (hpText) {
         hpText.textContent = `PV: ${enemyHp} / ${enemyMaxHp}`;
       }
-      // FIX: Force update text content
-      if (nameText) nameText.textContent = this.getPokemonName(enemyPokemon);
+      // FIX: Force update text content with status
+      if (nameText) {
+          let statusHtml = '';
+          if (enemyPokemon.status) {
+              const statusLabels = { 'poison': 'PSN', 'paralysis': 'PAR', 'sleep': 'SLP', 'burn': 'BRN', 'freeze': 'FRZ' };
+              const label = statusLabels[enemyPokemon.status] || enemyPokemon.status.toUpperCase().substring(0, 3);
+              const colorClass = enemyPokemon.status.toLowerCase();
+              statusHtml = `<span class="status-badge status-${colorClass}">${label}</span>`;
+          }
+          nameText.innerHTML = `${this.getPokemonName(enemyPokemon)} ${statusHtml}`;
+      }
       if (levelText) levelText.textContent = `Niv. ${this.getPokemonLevel(enemyPokemon)}`;
     }
 
@@ -403,8 +476,17 @@ export class ModernCombatUI {
       if (hpText) {
         hpText.textContent = `PV: ${playerHp} / ${playerMaxHp}`;
       }
-      // FIX: Force update text content
-      if (nameText) nameText.textContent = this.getPokemonName(playerPokemon);
+      // FIX: Force update text content with status
+      if (nameText) {
+          let statusHtml = '';
+          if (playerPokemon.status) {
+              const statusLabels = { 'poison': 'PSN', 'paralysis': 'PAR', 'sleep': 'SLP', 'burn': 'BRN', 'freeze': 'FRZ' };
+              const label = statusLabels[playerPokemon.status] || playerPokemon.status.toUpperCase().substring(0, 3);
+              const colorClass = playerPokemon.status.toLowerCase();
+              statusHtml = `<span class="status-badge status-${colorClass}">${label}</span>`;
+          }
+          nameText.innerHTML = `${this.getPokemonName(playerPokemon)} ${statusHtml}`;
+      }
       if (levelText) levelText.textContent = `Niv. ${this.getPokemonLevel(playerPokemon)}`;
     }
   }

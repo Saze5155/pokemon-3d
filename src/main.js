@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import { CombatManager } from "./combat/CombatManager.js";
+import { ItemManager } from "./combat/ItemManager.js";
 import { MoveManager } from "./combat/MoveManager.js";
 import { PokeballPhysics } from "./combat/PokeballPhysics.js";
 import { TypeManager } from "./combat/TypeManager.js";
@@ -175,6 +176,33 @@ class PokemonGame {
              this.ui.showNotification(`Cheat: ${firstPokemon.nom} +${result.xpGained} XP`);
          }
       }
+      // Cheat: 'T' pour Test Mode (Objets + Statut)
+      if (e.key.toLowerCase() === "t") {
+          console.log("🧪 ACTIVATION MODE TEST");
+          
+          // 1. Ajouter des objets
+          if (this.ui.playerData && !this.ui.playerData.inventory) {
+              this.ui.playerData.inventory = {};
+          }
+          const inv = this.ui.playerData.inventory;
+          inv['potion'] = (inv['potion'] || 0) + 5;
+          inv['super_potion'] = (inv['super_potion'] || 0) + 2;
+          inv['antidote'] = (inv['antidote'] || 0) + 3;
+          inv['attaque_plus'] = (inv['attaque_plus'] || 0) + 2;
+          inv['total_soin'] = (inv['total_soin'] || 0) + 1;
+          
+          this.ui.showNotification("TEST: Objets ajoutés ! (Potion, Antidote, etc.)", "success");
+
+          // 2. Si en combat, infliger poison au joueur
+          if (this.combatManager && this.combatManager.isInCombat) {
+              const pkm = this.combatManager.playerPokemon;
+              if (pkm && this.combatManager.statusManager) {
+                  this.combatManager.statusManager.applyStatus(pkm, this.combatManager.statusManager.STATUS.POISON);
+                  this.combatManager.updateCombatUI();
+                  this.ui.showNotification("TEST: Votre Pokémon est empoisonné !", "warning");
+              }
+          }
+      }
     });
 
     // Managers
@@ -186,7 +214,7 @@ class PokemonGame {
     this.saveManager = new SaveManager();
     this.typeManager = new TypeManager();
     this.moveManager = new MoveManager();
-    this.xpManager = new XPManager(this.ui);
+    this.itemManager = new ItemManager(this);
     this.xpManager = new XPManager(this.ui);
     this.audioManager = new AudioManager();
 
@@ -398,6 +426,23 @@ class PokemonGame {
 
     // Synchroniser l'UI avec les données de sauvegarde
     this.ui.syncFromSaveManager();
+    
+    // FIX: S'assurer que le joueur a des objets de départ
+    if (!this.saveManager.saveData.joueur.inventory) {
+        this.saveManager.saveData.joueur.inventory = {};
+    }
+    const inv = this.saveManager.saveData.joueur.inventory;
+    if (Object.keys(inv).length === 0) {
+        console.log("🎒 Inventaire vide détecté : Ajout du kit de départ !");
+        inv['potion'] = 5;
+        inv['super_potion'] = 2;
+        inv['antidote'] = 3;
+        inv['parl_healer'] = 3; // Anti-Para
+        inv['pokeball'] = 10;
+        this.saveManager.save(); // Sauvegarder immédiatement
+        this.ui.showNotification("Kit de départ reçu (Potions, Balls, etc.) !");
+    }
+
     this.syncNPCFlagsFromSave();
 
     // Initialiser l'UI moderne (tutoriels, dialogue moderne, HUD)
@@ -1070,7 +1115,8 @@ class PokemonGame {
         this.pokemonManager,
         this.typeManager,
         this.moveManager,
-        this.xpManager
+        this.xpManager,
+        this.itemManager // ✅ INJECTION ITEM MANAGER
     );
 
     // Hook l'UI de combat moderne

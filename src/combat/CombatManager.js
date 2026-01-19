@@ -3,7 +3,7 @@ import { StatusManager } from "./StatusManager.js";
 // FORCE REBUILD: 2026-01-19 05:08
 
 export class CombatManager {
-  constructor(scene, camera, uiManager, pokemonManager, typeManager, moveManager, xpManager) {
+  constructor(scene, camera, uiManager, pokemonManager, typeManager, moveManager, xpManager, itemManager = null) {
     this.scene = scene;
     this.camera = camera;
     this.uiManager = uiManager;
@@ -11,6 +11,7 @@ export class CombatManager {
     this.typeManager = typeManager;
     this.moveManager = moveManager;
     this.xpManager = xpManager;
+    this.itemManager = itemManager;
     this.statusManager = new StatusManager(); // Initialize StatusManager
 
     // FIX: Fallback si MoveManager est mal injecté
@@ -2126,6 +2127,39 @@ export class CombatManager {
             });
         });
     }
+  }
+
+  useItem(itemId) {
+      if (this.isActionInProgress) return;
+      if (!this.itemManager) {
+          console.error("ItemManager not initialized in CombatManager");
+          return;
+      }
+
+      const result = this.itemManager.canUseItem(itemId, this.playerPokemon, 'combat');
+      if (!result.success) {
+          this.uiManager.showNotification(result.message);
+          return;
+      }
+
+      this.isActionInProgress = true;
+
+      // Utiliser l'objet
+      const useResult = this.itemManager.useItem(itemId, this.playerPokemon, this);
+      this.uiManager.showNotification(useResult.message);
+      this.updateCombatUI();
+
+      // Consommer l'objet de l'inventaire
+      if (this.uiManager.playerData && this.uiManager.playerData.inventory) {
+          // TODO: Implémenter la consommation réelle dans SaveManager/Inventory
+          // Pour l'instant on assume infinité ou géré par UI
+          console.log(`Objet ${itemId} utilisé (Consommation TODO)`);
+      }
+
+      setTimeout(() => {
+          this.nextTurn();
+          this.isActionInProgress = false;
+      }, 1000);
   }
 
   executePlayerMove(moveId) {
