@@ -226,6 +226,12 @@ function receiveStarter(game, data) {
   game.ui.syncFromSaveManager();
   game.ui.unlockFeature('team');
 
+  // ✅ FIX: Mettre à jour la variable pour les dialogues suivants
+  if (game.modernDialogue) {
+      game.modernDialogue.setVariable('POKEMON', starterData.name);
+      console.log(`[ModernUI] Variable dialogue mise à jour: {POKEMON} = ${starterData.name}`);
+  }
+
   // Notification
   game.modernHUD?.showNotification(`Tu as reçu ${starterData.name} !`, 'success');
 
