@@ -123,15 +123,9 @@ export class VRPokeball {
         }
 
         // Utiliser PokeballPhysics pour spawn le pokemon et démarrer le combat
+        // startCombat(playerPokemon, wildPokemon) - le pokemon du joueur en premier !
         if (this.game.pokeballPhysics) {
-            // Créer un mock pokeball avec les données du pokemon d'équipe
-            const mockPokeball = {
-                pokemon: playerPokemonData,
-                mesh: this.mesh
-            };
-
-            // PokeballPhysics.startCombat va spawner le pokemon et appeler onCombatStart
-            this.game.pokeballPhysics.startCombat(wildPokemon, mockPokeball);
+            this.game.pokeballPhysics.startCombat(playerPokemonData, wildPokemon);
         }
 
         // Cacher la ball VR (le pokemon est sorti)
