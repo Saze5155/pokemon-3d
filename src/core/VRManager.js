@@ -496,6 +496,16 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
                 
                 // Mettre à jour l'UI de la montre
                 this.watchMenu.update(this.raycaster);
+                
+                // Mettre à jour le hover sur les panneaux de menu
+                if (this.watchMenu.currentPanel && this.watchMenu.currentPanel.isVisible) {
+                    const intersects = this.raycaster.intersectObject(this.watchMenu.currentPanel.mesh);
+                    if (intersects.length > 0) {
+                        this.watchMenu.currentPanel.updateHover(intersects[0].uv);
+                    } else {
+                        this.watchMenu.currentPanel.updateHover(null);
+                    }
+                }
             }
         }
     }
@@ -630,6 +640,28 @@ import { VRWatchMenu } from "../ui/VRWatchMenu.js";
         
         if (interactingHand) {
             console.log("🔫 VR Interaction Triggered!");
+            
+            // Vérifier si un panneau de menu est ouvert
+            if (this.vrWatchMenu.currentPanel && this.vrWatchMenu.currentPanel.isVisible) {
+                console.log(`[VR] Menu panel visible: ${this.vrWatchMenu.currentPanel.constructor.name}`);
+                
+                this.tempMatrix.identity().extractRotation(interactingHand.matrixWorld);
+                this.interactionRaycaster.ray.origin.setFromMatrixPosition(interactingHand.matrixWorld);
+                this.interactionRaycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+                
+                const intersects = this.interactionRaycaster.intersectObject(this.vrWatchMenu.currentPanel.mesh);
+                
+                if (intersects.length > 0) {
+                    const uv = intersects[0].uv;
+                    const button = this.vrWatchMenu.currentPanel.checkClick(uv);
+                    
+                    if (button) {
+                        console.log(`[VR] Menu button clicked: ${button.label || 'unnamed'}`);
+                        button.action();
+                        return;
+                    }
+                }
+            }
             
             // Si un dialogue est déjà ouvert
             if (this.vrDialoguePanel && this.vrDialoguePanel.isVisible) {

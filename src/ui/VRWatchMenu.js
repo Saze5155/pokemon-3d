@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { VROptionsPanel } from './VROptionsPanel.js';
+import { VRTeamPanel } from './VRTeamPanel.js';
 
 export class VRWatchMenu {
   constructor(game) {
@@ -20,6 +22,11 @@ export class VRWatchMenu {
     
     // État
     this.hoveredButton = null;
+    
+    // Panneaux de menus VR
+    this.teamPanel = new VRTeamPanel(game);
+    this.optionsPanel = new VROptionsPanel(game);
+    this.currentPanel = null;
   }
 
   init(parentController) {
@@ -125,8 +132,8 @@ export class VRWatchMenu {
      const gap = 12;
      const startY = 70;
      
-     // Liste des menus
-     const labels = ["ÉQUIPE", "SAC", "STOCKAGE", "POKÉDEX", "SAUVER", "QUITTER"];
+      // Liste des menus
+      const labels = ["ÉQUIPE", "SAC", "STOCKAGE", "POKÉDEX", "OPTIONS", "SAUVER", "QUITTER"];
      
      this.buttons = labels.map((label, index) => {
          return {
@@ -242,8 +249,18 @@ export class VRWatchMenu {
   handleAction(action) {
       console.log(`[Watch] Action: ${action}`);
       
+      // Vérifier si le bouton est verrouillé
+      if (this.isButtonLocked(action)) {
+          console.log(`[Watch] Menu ${action} verrouillé - Starter requis`);
+          // Flash rouge pour indiquer verrouillage
+          this.ctx.fillStyle = "#ff0000";
+          this.ctx.fillRect(0, 0, this.width, this.height);
+          this.texture.needsUpdate = true;
+          setTimeout(() => this.drawMainMenu(), 150);
+          return;
+      }
+      
       // Feedback visuel immédiat (Flash)
-      const prevColor = this.ctx.fillStyle;
       this.ctx.fillStyle = "#ffffff";
       this.ctx.fillRect(0,0, this.width, this.height);
       this.texture.needsUpdate = true;
@@ -252,14 +269,44 @@ export class VRWatchMenu {
           this.drawMainMenu();
       }, 100);
 
-      if (action === "QUITTER") {
-           if (this.game.vrManager.session) {
-               this.game.vrManager.session.end();
-           }
-      } else {
-          // Pour l'instant, log seulement car pas d'UI 3D pour le sac
-          console.log("Menu non implémenté en VR : " + action);
+      // Gérer les actions
+      switch(action) {
+          case "ÉQUIPE":
+              this.openPanel(this.teamPanel);
+              break;
+          
+          case "OPTIONS":
+              this.openPanel(this.optionsPanel);
+              break;
+          
+          case "SAUVER":
+              console.log("[Watch] Sauvegarde...");
+              this.game.saveManager?.save();
+              break;
+          
+          case "QUITTER":
+              if (this.game.vrManager.session) {
+                  this.game.vrManager.session.end();
+              }
+              break;
+          
+          default:
+              console.log("Menu non implémenté en VR : " + action);
+              break;
       }
+  }
+  
+  openPanel(panel) {
+      console.log(`[Watch] Opening panel: ${panel.constructor.name}`);
+      
+      // Fermer le panneau actuel si ouvert
+      if (this.currentPanel && this.currentPanel.isVisible) {
+          this.currentPanel.hide();
+      }
+      
+      // Ouvrir le nouveau panneau
+      this.currentPanel = panel;
+      panel.show(this.container);
   }
 
   update(raycaster) {
