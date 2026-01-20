@@ -408,6 +408,13 @@ export class ModernHUD {
   }
 
   showResumeOverlay() {
+      // FIX: Vérifier si l'overlay existe déjà pour éviter les doublons
+      const existingOverlay = document.getElementById('resume-overlay');
+      if (existingOverlay) {
+          console.log("⚠️ Resume overlay déjà présent, ignoré");
+          return;
+      }
+
       const overlay = document.createElement('div');
       overlay.id = 'resume-overlay';
       overlay.style.cssText = `

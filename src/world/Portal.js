@@ -49,6 +49,10 @@ export class Portal {
 
     this.scene.add(this.portalMesh);
 
+    // ============= EFFET GLOW / BORDURE LUMINEUSE =============
+    // Créer un cadre lumineux autour du portail pour le rendre plus visible
+    this.createPortalFrame(portalPosition, portalRotation, portalSize);
+
     // Transform du portail cible (où spawner dans l'autre scène)
     this.linkedPortalPosition = new THREE.Vector3();
     this.linkedPortalRotation = new THREE.Euler();
@@ -96,9 +100,12 @@ export class Portal {
     this.renderer.setRenderTarget(oldRenderTarget);
 
     this.portalMesh.visible = true;
-    
+
     // RÉACTIVER XR
     this.renderer.xr.enabled = currentXrEnabled;
+
+    // Animer le glow du portail
+    this.animateGlow(0.016); // ~60fps
   }
 
   // Vérifier si joueur traverse le portail
@@ -115,5 +122,112 @@ export class Portal {
       position: this.linkedPortalPosition.clone(),
       rotation: this.linkedPortalRotation.clone(),
     };
+  }
+
+  /**
+   * Crée un cadre lumineux autour du portail pour le rendre plus visible
+   */
+  createPortalFrame(position, rotation, size) {
+    // Groupe pour contenir le cadre
+    this.frameGroup = new THREE.Group();
+    this.frameGroup.position.copy(position);
+    this.frameGroup.rotation.copy(rotation);
+
+    const frameWidth = 0.15;
+    const glowColor = 0x00ffff; // Cyan lumineux
+    const glowIntensity = 2;
+
+    // Matériau émissif pour le glow
+    const frameMaterial = new THREE.MeshBasicMaterial({
+      color: glowColor,
+      transparent: true,
+      opacity: 0.9,
+    });
+
+    // Créer les 4 côtés du cadre
+    // Haut
+    const topGeom = new THREE.BoxGeometry(size.width + frameWidth * 2, frameWidth, frameWidth);
+    const topMesh = new THREE.Mesh(topGeom, frameMaterial);
+    topMesh.position.y = size.height / 2 + frameWidth / 2;
+    this.frameGroup.add(topMesh);
+
+    // Bas
+    const bottomMesh = new THREE.Mesh(topGeom, frameMaterial);
+    bottomMesh.position.y = -size.height / 2 - frameWidth / 2;
+    this.frameGroup.add(bottomMesh);
+
+    // Gauche
+    const sideGeom = new THREE.BoxGeometry(frameWidth, size.height, frameWidth);
+    const leftMesh = new THREE.Mesh(sideGeom, frameMaterial);
+    leftMesh.position.x = -size.width / 2 - frameWidth / 2;
+    this.frameGroup.add(leftMesh);
+
+    // Droite
+    const rightMesh = new THREE.Mesh(sideGeom, frameMaterial);
+    rightMesh.position.x = size.width / 2 + frameWidth / 2;
+    this.frameGroup.add(rightMesh);
+
+    // Ajouter un effet de particules / lueur pulsante
+    // Créer un halo semi-transparent derrière le portail
+    const haloGeom = new THREE.PlaneGeometry(size.width + 0.5, size.height + 0.5);
+    const haloMaterial = new THREE.MeshBasicMaterial({
+      color: glowColor,
+      transparent: true,
+      opacity: 0.3,
+      side: THREE.DoubleSide,
+    });
+    this.haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
+    this.haloMesh.position.z = -0.05; // Légèrement derrière le portail
+    this.frameGroup.add(this.haloMesh);
+
+    // Point light pour illuminer les environs
+    this.portalLight = new THREE.PointLight(glowColor, glowIntensity, 8);
+    this.portalLight.position.z = 0.5;
+    this.frameGroup.add(this.portalLight);
+
+    // Marquer comme portail
+    this.frameGroup.userData.isPortalFrame = true;
+
+    this.scene.add(this.frameGroup);
+
+    // Stocker pour animation
+    this._animTime = 0;
+  }
+
+  /**
+   * Anime le glow du portail (à appeler dans update)
+   */
+  animateGlow(delta) {
+    if (!this.haloMesh || !this.portalLight) return;
+
+    this._animTime = (this._animTime || 0) + delta;
+
+    // Pulsation de l'opacité du halo
+    const pulse = 0.2 + Math.sin(this._animTime * 3) * 0.15;
+    this.haloMesh.material.opacity = pulse;
+
+    // Pulsation de l'intensité de la lumière
+    this.portalLight.intensity = 1.5 + Math.sin(this._animTime * 2.5) * 0.5;
+  }
+
+  /**
+   * Nettoie les ressources du portail
+   */
+  dispose() {
+    if (this.portalMesh) {
+      this.scene.remove(this.portalMesh);
+      this.portalMesh.geometry.dispose();
+      this.portalMesh.material.dispose();
+    }
+    if (this.frameGroup) {
+      this.scene.remove(this.frameGroup);
+      this.frameGroup.traverse((child) => {
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) child.material.dispose();
+      });
+    }
+    if (this.renderTarget) {
+      this.renderTarget.dispose();
+    }
   }
 }

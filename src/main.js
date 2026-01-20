@@ -177,33 +177,7 @@ class PokemonGame {
              this.ui.showNotification(`Cheat: ${firstPokemon.nom} +${result.xpGained} XP`);
          }
       }
-      // Cheat: 'T' pour Test Mode (Objets + Statut)
-      if (e.key.toLowerCase() === "t") {
-          console.log("🧪 ACTIVATION MODE TEST");
-          
-          // 1. Ajouter des objets
-          if (this.ui.playerData && !this.ui.playerData.inventory) {
-              this.ui.playerData.inventory = {};
-          }
-          const inv = this.ui.playerData.inventory;
-          inv['potion'] = (inv['potion'] || 0) + 5;
-          inv['super_potion'] = (inv['super_potion'] || 0) + 2;
-          inv['antidote'] = (inv['antidote'] || 0) + 3;
-          inv['attaque_plus'] = (inv['attaque_plus'] || 0) + 2;
-          inv['total_soin'] = (inv['total_soin'] || 0) + 1;
-          
-          this.ui.showNotification("TEST: Objets ajoutés ! (Potion, Antidote, etc.)", "success");
-
-          // 2. Si en combat, infliger poison au joueur
-          if (this.combatManager && this.combatManager.isInCombat) {
-              const pkm = this.combatManager.playerPokemon;
-              if (pkm && this.combatManager.statusManager) {
-                  this.combatManager.statusManager.applyStatus(pkm, this.combatManager.statusManager.STATUS.POISON);
-                  this.combatManager.updateCombatUI();
-                  this.ui.showNotification("TEST: Votre Pokémon est empoisonné !", "warning");
-              }
-          }
-      }
+  
     });
 
     // Managers
@@ -471,7 +445,7 @@ class PokemonGame {
     // FIX: Détection proactive du mode WorldMap
     // Si la sauvegarde indique une zone seamless, on active le mode AVANT de charger
     const savedMap = this.saveManager.saveData?.joueur?.position?.map;
-    const seamlessMaps = ["world", "argenta", "route1", "bourg-palette", "route2", "jadeto2", "foret-jade"];
+    const seamlessMaps = ["world", "argenta", "route1", "bourg-palette", "route2", "jadeto2", "foretjade", "jadeto2nord"];
     
     if (savedMap && seamlessMaps.includes(savedMap)) {
          console.log(`🌍 Sauvegarde détectée dans une zone Seamless (${savedMap}) -> Activation WorldMap`);
@@ -1306,6 +1280,11 @@ class PokemonGame {
       }
     }
 
+    // FIX: Définir la caméra pour les raycasts des dresseurs (évite erreur Sprite)
+    if (this.camera) {
+        this.npcManager.setCamera(this.camera);
+    }
+
     // Configurer les callbacks
     this.setupNPCCallbacks();
 
@@ -1876,7 +1855,7 @@ class PokemonGame {
       console.log("✅ Téléportation effectuée vers:", crossedPortal.targetScene);
 
       // Vérifier si on retourne vers le monde (bourg-palette = partie du worldmap)
-      const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foret-jade"];
+      const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foretjade", "jadeto2nord"];
       if (worldMapZones.includes(crossedPortal.targetScene) && this.worldManager?.worldScene) {
           console.log("🌍 Retour vers le monde - Réactivation WorldMap");
           this.useWorldMap = true;

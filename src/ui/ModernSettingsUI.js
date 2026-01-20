@@ -108,7 +108,8 @@ export class ModernSettingsUI {
         btnResetTutos.addEventListener('click', () => {
              if (this.ui.tutorialSystem) {
                  this.ui.tutorialSystem.resetProgress();
-                 if(this.ui.modernHUD) this.ui.modernHUD.showNotification("Tutoriels réinitialisés ! Rechargez le jeu.", "info");
+                 this.ui.tutorialSystem.resetProgress();
+                 // if(this.ui.modernHUD) this.ui.modernHUD.showNotification("Tutoriels réinitialisés !", "info");
              }
         });
     }

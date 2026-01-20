@@ -38,6 +38,16 @@ export class NPCManager {
     this.onDialogueStart = null;
     this.onDialogueEnd = null;
     this.onTrainerBattle = null;
+
+    // Référence à la caméra pour les raycasts (nécessaire pour les sprites)
+    this.camera = null;
+  }
+
+  /**
+   * Définit la caméra pour les raycasts (nécessaire pour intersect avec sprites)
+   */
+  setCamera(camera) {
+    this.camera = camera;
   }
 
   async loadPNJDatabase() {
@@ -818,7 +828,12 @@ export class NPCManager {
              const direction = new THREE.Vector3().subVectors(end, start).normalize();
              
              const raycaster = new THREE.Raycaster(start, direction, 0, distance);
-             
+
+             // FIX: Définir la caméra pour que les sprites puissent être raycastés
+             if (this.camera) {
+                 raycaster.camera = this.camera;
+             }
+
              let obstacles = [];
              const activeSceneObj = this.sceneManager.scenes.get(this.sceneManager.activeSceneName);
              

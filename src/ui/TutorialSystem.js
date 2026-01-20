@@ -629,6 +629,8 @@ Plus ses PV sont bas, plus la capture est facile !`,
     const isVRMode = this.ui?.game?.renderer?.xr?.isPresenting || false;
     const isVRTutorial = tutorial.isVR || false;
 
+    console.log(`[Tutorial] Debug - VRMode: ${isVRMode}, VRTutorial: ${isVRTutorial}, ID: ${tutorialId}`);
+
     // Si on est en VR ET que c'est un tutoriel VR, utiliser le VRTutorialPanel
     if (isVRMode && isVRTutorial) {
       console.log(`[Tutorial] Mode VR détecté, utilisation du VRTutorialPanel`);
@@ -665,23 +667,37 @@ Plus ses PV sont bas, plus la capture est facile !`,
     }
 
     // Mode Desktop: utiliser l'overlay HTML classique
+    // Vérifier si l'overlay est toujours dans le DOM
+    if (!this.overlay.isConnected) {
+        console.warn('[Tutorial] Overlay détaché du DOM ! Tentative de réparation...');
+        document.body.appendChild(this.overlay);
+    }
+
     // Mettre à jour l'en-tête
-    document.getElementById('tutorial-icon').textContent = tutorial.icon;
-    document.getElementById('tutorial-title').textContent = tutorial.title;
-    document.getElementById('tutorial-subtitle').textContent = tutorial.subtitle;
+    const iconEl = document.getElementById('tutorial-icon');
+    const titleEl = document.getElementById('tutorial-title');
+    const subtitleEl = document.getElementById('tutorial-subtitle');
+
+    if (iconEl) iconEl.textContent = tutorial.icon;
+    if (titleEl) titleEl.textContent = tutorial.title;
+    if (subtitleEl) subtitleEl.textContent = tutorial.subtitle;
 
     // Afficher/Masquer bouton Passer
     const skipBtn = document.getElementById('tutorial-skip');
-    skipBtn.style.display = tutorial.canSkip ? 'block' : 'none';
+    if (skipBtn) skipBtn.style.display = tutorial.canSkip ? 'block' : 'none';
 
     // Créer les points de progression
     this.updateProgress();
 
     // Afficher le premier pas
-    this.showStep();
-
-    // Afficher l'overlay
-    this.overlay.style.display = 'flex';
+    try {
+        this.showStep();
+        // Afficher l'overlay
+        this.overlay.style.display = 'flex';
+        console.log(`[Tutorial] Overlay affiché (display: flex). Z-index: ${this.overlay.style.zIndex || getComputedStyle(this.overlay).zIndex}`);
+    } catch (e) {
+        console.error("[Tutorial] Erreur lors de l'affichage de l'étape:", e);
+    }
   }
 
   /**
@@ -879,6 +895,12 @@ Plus ses PV sont bas, plus la capture est facile !`,
     this.completedTutorials.clear();
     localStorage.removeItem('pokemon3d_tutorials');
     console.log('[Tutorial] Progression réinitialisée');
+    this.completedTutorials = new Set(); // S'assurer que le Set est vide
+    
+    // Si on est en jeu, proposer le tutoriel de bienvenue
+    if (confirm("Tutoriels réinitialisés ! Voulez-vous lancer le tutoriel de bienvenue maintenant ?")) {
+        this.start('welcome', true);
+    }
   }
 
   /**

@@ -3,8 +3,8 @@ import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFa
 import { VRBattlePanel } from '../ui/VRBattlePanel.js';
 import { VRBelt } from "../ui/VRBelt.js";
 import { VRDialoguePanel } from '../ui/VRDialoguePanel.js';
-import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 import { VRShopPanel } from '../ui/VRShopPanel.js';
+import { VRWatchMenu } from "../ui/VRWatchMenu.js";
 import { VRInteractionManager } from "./VRInteractionManager.js";
 
   /**
@@ -119,7 +119,7 @@ import { VRInteractionManager } from "./VRInteractionManager.js";
         }
 
         // Liste des zones WorldMap
-        const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foret-jade", "jadielle", "route2nord", "world"];
+        const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foretjade", "jadielle", "route2nord", "jadeto2nord", "world"];
 
         // Ajouter à la nouvelle scène
         let targetScene = null;

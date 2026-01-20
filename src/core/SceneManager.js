@@ -666,7 +666,7 @@ export class SceneManager {
     let needsZoneOffset = false;
 
     // Liste des zones WorldMap pour savoir si on doit appliquer l'offset
-    const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foret-jade", "jadielle", "route2nord"];
+    const worldMapZones = ["bourg-palette", "route1", "argenta", "route2", "jadeto2", "foretjade", "jadielle", "route2nord", "jadeto2nord"];
 
     // DEBUG: Lister les portails disponibles qui pourraient correspondre
     console.log("🔎 Portails disponibles pour target=" + portalInfo.targetScene + ":");
@@ -878,7 +878,10 @@ export class SceneManager {
   updatePortals(camera) {
     const maxRenderDistance = 30; // Distance pour render la texture
     const maxVisibleDistance = 50; // Distance pour voir le portail
-    const cameraPos = camera.position;
+
+    // FIX VR: Utiliser getWorldPosition pour obtenir la position mondiale de la caméra
+    const cameraWorldPos = new THREE.Vector3();
+    camera.getWorldPosition(cameraWorldPos);
 
     for (const portalInfo of this.portals) {
       // Seulement les portails de la scène courante ou world
@@ -895,20 +898,25 @@ export class SceneManager {
       const portalWorldPos = new THREE.Vector3();
       portal.portalMesh.getWorldPosition(portalWorldPos);
 
-      // Calculer la distance au portail
-      const distance = cameraPos.distanceTo(portalWorldPos);
+      // Calculer la distance au portail (avec positions mondiales)
+      const distance = cameraWorldPos.distanceTo(portalWorldPos);
 
       if (distance > maxVisibleDistance) {
         // Trop loin - invisible
         portal.portalMesh.visible = false;
+        // FIX: Cacher aussi le cadre glow
+        if (portal.frameGroup) portal.frameGroup.visible = false;
       } else if (distance > maxRenderDistance) {
         // Distance moyenne - visible mais couleur unie
         portal.portalMesh.visible = true;
         portal.portalMesh.material.color.setHex(0x4444ff);
+        // FIX: Afficher le cadre glow
+        if (portal.frameGroup) portal.frameGroup.visible = true;
         // Ne pas faire le render de la scène
       } else {
         // Proche - render complet
         portal.portalMesh.visible = true;
+        if (portal.frameGroup) portal.frameGroup.visible = true;
         portal.update(camera);
       }
     }

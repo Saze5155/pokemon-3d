@@ -20,8 +20,9 @@ export class WorldManager {
     this.portals = []; // Portails du monde ouvert
 
     // Configuration
-    this.preloadDistance = 100; // Distance pour précharger une zone adjacente
-    this.unloadDistance = 150; // Distance pour décharger une zone
+    // FIX: Augmenter les distances pour que les portails soient visibles de plus loin
+    this.preloadDistance = 200; // Distance pour précharger une zone adjacente
+    this.unloadDistance = 250; // Distance pour décharger une zone
 
     // Scène combinée pour le monde ouvert
     this.worldScene = null;

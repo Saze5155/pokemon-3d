@@ -4,7 +4,7 @@
 
 Un jeu Pokémon en 3D à la première personne, développé dans le cadre du programme MMI (Métiers du Multimédia et de l'Internet). Ce projet vise à recréer l'expérience authentique de la 1ère génération Pokémon avec des technologies web modernes.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![Three.js](https://img.shields.io/badge/Three.js-0.181.1-green)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-yellow)
 
@@ -68,7 +68,9 @@ Ce projet représente **la première partie de l'aventure Pokémon**, couvrant :
 | Portails temps réel | ✅ | Aperçu des scènes intérieures |
 | Optimisations | ✅ | Cache collisions, LOD, culling |
 | Éditeur de niveaux | ✅ | Création complète de scènes |
-| Support VR | 🔜 | Prévu (WebXR) |
+| Support VR | ✅ | WebXR avec interface boutique VR |
+| Cycle jour/nuit | ✅ | Changement dynamique d'ambiance |
+| Système météo | ✅ | Pluie, neige, brouillard (contrôles numpad) |
 
 ---
 
@@ -128,6 +130,18 @@ npm start
 | `E` | Interagir (PNJ, objets, portes) |
 | `F3` | Afficher/Masquer debug (FPS, position, etc.) |
 | `Clic` | Verrouiller la souris (mode FPS) |
+
+### Cycle jour/nuit et météo
+| Touche | Action |
+|--------|--------|
+| `Numpad 1` | Matin |
+| `Numpad 2` | Midi |
+| `Numpad 3` | Soir |
+| `Numpad 4` | Nuit |
+| `Numpad 5` | Temps clair |
+| `Numpad 6` | Pluie |
+| `Numpad 7` | Neige |
+| `Numpad 8` | Brouillard |
 
 ### Raccourcis (Debug/Cheat)
 | Touche | Action |
@@ -427,7 +441,7 @@ pokemon-3d/
 
 ## 🛣️ Roadmap
 
-### Version actuelle (1.0)
+### Version 1.0
 - [x] Exploration FPS
 - [x] Combat Gen 1 complet
 - [x] Système de capture
@@ -437,9 +451,16 @@ pokemon-3d/
 - [x] Éditeur de niveaux
 - [x] Zones jusqu'à Argenta
 
+### Version 1.1 (actuelle)
+- [x] Support VR complet (WebXR)
+- [x] Interface boutique VR
+- [x] Cycle jour/nuit dynamique
+- [x] Système météo (pluie, neige, brouillard)
+- [x] Corrections physique et collisions VR
+
 ### Prochaines versions
-- [ ] Support VR (WebXR)
 - [ ] Multijoueur (échanges)
+- [ ] Plus de zones et badges
 
 ---
 

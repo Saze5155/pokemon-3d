@@ -2,104 +2,25 @@
   "sauvegarde_1": {
     "1": {
       "uniqueId": 1,
-      "speciesId": 6,
-      "surnom": null,
-      "niveau": 5,
-      "xp": 78629,
-      "xpNextLevel": 179,
-      "stats": {
-        "hp": 109,
-        "hpMax": 135,
-        "attack": 92,
-        "defense": 86,
-        "special": 114,
-        "speed": 106
-      },
-      "ivs": {
-        "hp": 6,
-        "attack": 0,
-        "defense": 12,
-        "special": 9,
-        "speed": 1
-      },
-      "evs": {
-        "hp": 0,
-        "attack": 0,
-        "defense": 0,
-        "special": 0,
-        "speed": 0
-      },
-      "attaques": [
-        "griffe",
-        "rugissement",
-        "flammeche",
-        "griffe_acier"
-      ],
-      "ppActuels": [
-        35,
-        40,
-        0,
-        0
-      ],
-      "ppMax": [
-        35,
-        40,
-        0,
-        0
-      ],
-      "objetTenu": null,
-      "statut": null,
-      "bonheur": 70,
-      "pokeball": "pokeball",
-      "isShiny": false,
-      "DO": "RED",
-      "idDO": 9455,
-      "rencontre": {
-        "lieu": "Inconnu",
-        "niveau": 5,
-        "date": "2026-01-19T00:41:59.475Z"
-      },
-      "name": "Dracaufeu",
-      "isOut": true,
-      "level": 44,
-      "species": "Dracaufeu",
-      "nom": "Dracaufeu",
-      "baseStats": {
-        "hp": 78,
-        "attack": 84,
-        "defense": 78,
-        "special": 109,
-        "speed": 100
-      },
-      "types": [
-        "feu",
-        "vol"
-      ],
-      "hp": 109
-    }
-  },
-  "sauvegarde_2": {
-    "1": {
-      "uniqueId": 1,
       "speciesId": 4,
       "surnom": null,
       "niveau": 5,
-      "xp": 135,
+      "xp": 162,
       "xpNextLevel": 179,
       "stats": {
         "hp": 19,
         "hpMax": 19,
-        "attack": 10,
-        "defense": 10,
+        "attack": 11,
+        "defense": 9,
         "special": 12,
-        "speed": 11
+        "speed": 12
       },
       "ivs": {
-        "hp": 5,
-        "attack": 9,
-        "defense": 2,
-        "special": 11,
-        "speed": 6
+        "hp": 4,
+        "attack": 8,
+        "defense": 1,
+        "special": 10,
+        "speed": 15
       },
       "evs": {
         "hp": 0,
@@ -132,18 +53,98 @@
       "pokeball": "pokeball",
       "isShiny": false,
       "DO": "RED",
-      "idDO": 33844,
+      "idDO": 31228,
       "rencontre": {
         "lieu": "Inconnu",
         "niveau": 5,
-        "date": "2026-01-19T06:16:48.076Z"
+        "date": "2026-01-20T13:25:47.885Z"
       },
       "name": "Salamèche",
-      "isOut": true
+      "hp": 19,
+      "statModifiers": {
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0,
+        "accuracy": 0,
+        "evasion": 0
+      },
+      "status": null,
+      "statusTurn": 0
+    }
+  },
+  "sauvegarde_2": {
+    "1": {
+      "uniqueId": 1,
+      "speciesId": 1,
+      "surnom": null,
+      "niveau": 5,
+      "xp": 198,
+      "xpNextLevel": 179,
+      "stats": {
+        "hp": 23,
+        "hpMax": 23,
+        "attack": 12,
+        "defense": 12,
+        "special": 14,
+        "speed": 12
+      },
+      "ivs": {
+        "hp": 15,
+        "attack": 2,
+        "defense": 3,
+        "special": 13,
+        "speed": 15
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "charge",
+        "rugissement"
+      ],
+      "ppActuels": [
+        35,
+        40
+      ],
+      "ppMax": [
+        35,
+        40
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "SAM",
+      "idDO": 18821,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 5,
+        "date": "2026-01-20T13:49:13.901Z"
+      },
+      "name": "Bulbizarre",
+      "isOut": false,
+      "statModifiers": {
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0,
+        "accuracy": 0,
+        "evasion": 0
+      },
+      "status": null,
+      "statusTurn": 0,
+      "hp": 23,
+      "level": 6
     },
     "2": {
       "uniqueId": 2,
-      "speciesId": 19,
+      "speciesId": 43,
       "surnom": null,
       "niveau": 3,
       "xp": 57,
@@ -157,11 +158,11 @@
         "speed": 8
       },
       "ivs": {
-        "hp": 4,
-        "attack": 8,
-        "defense": 12,
-        "special": 7,
-        "speed": 1
+        "hp": 8,
+        "attack": 7,
+        "defense": 5,
+        "special": 9,
+        "speed": 2
       },
       "evs": {
         "hp": 0,
@@ -193,14 +194,139 @@
       "bonheur": 70,
       "pokeball": "pokeball",
       "isShiny": false,
-      "DO": "RED",
-      "idDO": 33844,
+      "DO": "SAM",
+      "idDO": 18821,
       "rencontre": {
         "lieu": "Inconnu",
         "niveau": 3,
-        "date": "2026-01-19T09:50:25.329Z"
+        "date": "2026-01-20T13:49:55.314Z"
       },
-      "name": "Rattata"
+      "name": "Mystherbe",
+      "hp": 16
+    },
+    "3": {
+      "uniqueId": 3,
+      "speciesId": 16,
+      "surnom": null,
+      "niveau": 4,
+      "xp": 96,
+      "xpNextLevel": 135,
+      "stats": {
+        "hp": 18,
+        "hpMax": 18,
+        "attack": 9,
+        "defense": 10,
+        "special": 9,
+        "speed": 10
+      },
+      "ivs": {
+        "hp": 13,
+        "attack": 8,
+        "defense": 4,
+        "special": 9,
+        "speed": 5
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "charge",
+        null,
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "SAM",
+      "idDO": 18821,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 4,
+        "date": "2026-01-20T13:50:01.733Z"
+      },
+      "name": "Roucool",
+      "hp": 18
+    },
+    "4": {
+      "uniqueId": 4,
+      "speciesId": 16,
+      "surnom": null,
+      "niveau": 4,
+      "xp": 96,
+      "xpNextLevel": 135,
+      "stats": {
+        "hp": 18,
+        "hpMax": 18,
+        "attack": 9,
+        "defense": 9,
+        "special": 9,
+        "speed": 9
+      },
+      "ivs": {
+        "hp": 10,
+        "attack": 9,
+        "defense": 6,
+        "special": 4,
+        "speed": 3
+      },
+      "evs": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "special": 0,
+        "speed": 0
+      },
+      "attaques": [
+        "charge",
+        null,
+        null,
+        null
+      ],
+      "ppActuels": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "ppMax": [
+        35,
+        0,
+        0,
+        0
+      ],
+      "objetTenu": null,
+      "statut": null,
+      "bonheur": 70,
+      "pokeball": "pokeball",
+      "isShiny": false,
+      "DO": "SAM",
+      "idDO": 18821,
+      "rencontre": {
+        "lieu": "Inconnu",
+        "niveau": 4,
+        "date": "2026-01-20T13:50:13.706Z"
+      },
+      "name": "Roucool",
+      "hp": 18
     }
   },
   "sauvegarde_3": {}
